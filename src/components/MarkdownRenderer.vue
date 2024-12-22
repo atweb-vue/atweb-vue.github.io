@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { MDXComponents, MDXModule } from '@/lib/markdown/mdx-types';
 
-const { markdown } = defineProps<{
+const { markdown, disableComponents } = defineProps<{
     markdown: string;
+    disableComponents?: boolean;
 }>();
 
 import { renderMarkdown } from '@/lib/markdown/render-markdown';
@@ -40,7 +41,7 @@ await watchImmediateAsync(() => markdown, async markdown => {
 <template>
     <div class="mdx-root">
         <Suspense>
-            <module.default v-if="module" :components="components" />
+            <module.default v-if="module" :components="disableComponents ? components : {}" />
         </Suspense>
     </div>
 </template>
