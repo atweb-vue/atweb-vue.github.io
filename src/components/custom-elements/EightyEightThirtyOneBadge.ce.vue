@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { badgeUrls } from '@/lib/badges';
-
 const props = defineProps<{
     name: string;
 }>();
+
+const { badgeUrls } = await import('@/lib/badges');
 
 // console.log(badgeUrls);
 
