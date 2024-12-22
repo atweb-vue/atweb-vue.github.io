@@ -6,8 +6,9 @@ import { ref, watch } from 'vue';
 import { useVanillaCss } from './lib/shared-globals';
 import { watchImmediate } from '@vueuse/core';
 
-const isInPage = ref(false);
-watchImmediate(router.currentRoute, route => {
+const isInPage = ref<boolean>();
+
+watch(router.currentRoute, route => {
     isInPage.value = route.path.startsWith('/page/');
 });
 
@@ -23,7 +24,7 @@ authenticateOnStartup();
 </script>
 
 <template>
-    <header v-if="!isInPage">
+    <header v-if="isInPage === false">
         <div class="wrapper">
             <nav>
                 <RouterLink to="/">Home</RouterLink>
