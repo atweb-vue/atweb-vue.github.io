@@ -23,6 +23,8 @@ watchImmediate(() => markdown, async markdown => {
 
 <template>
     <div class="mdx-root">
-        <module.default v-if="module" :components="components" />
+        <Suspense>
+            <module.default v-if="module" :components="components" />
+        </Suspense>
     </div>
 </template>
