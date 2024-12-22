@@ -15,9 +15,9 @@
   },
   "imports": {
     "#webamp-lazy": {
-      "require": "./src/external/webamp/built/webamp.lazy-bundle.js",
+      "types": "./src/external/webamp/built/types/js/webampLazy.d.ts",
       "import": "./src/external/webamp/built/webamp.lazy-bundle.min.mjs",
-      "types": "./src/external/webamp/built/types/js/webampLazy.d.ts"
+      "require": "./src/external/webamp/built/webamp.lazy-bundle.js"
     }
   },
   "dependencies": {
