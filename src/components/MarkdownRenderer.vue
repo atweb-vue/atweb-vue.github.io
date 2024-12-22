@@ -8,14 +8,8 @@ const { markdown } = defineProps<{
 import { renderMarkdown } from '@/lib/markdown/render-markdown';
 import { ref, shallowRef, watch } from 'vue';
 import { compileStringAsync as sassCompileString } from 'sass';
-import AtImg from './custom-elements/AtImg.vue';
-import AtLink from './custom-elements/AtLink.vue';
-import AtAnchor from './custom-elements/AtAnchor.vue';
-import AtWebStylesheet from './custom-elements/AtWebStylesheet.vue';
-import OmitVanillaCss from './custom-elements/OmitVanillaCss.vue';
 import { watchImmediate } from '@vueuse/core';
-import AtStyle from './custom-elements/AtStyle.vue';
-import AtWebTitle from './custom-elements/AtWebTitle.vue';
+import { components } from '@/lib/markdown/components';
 
 const module = shallowRef<MDXModule>();
 
@@ -24,16 +18,6 @@ watchImmediate(() => markdown, async markdown => {
     module.value = markdown ? await renderMarkdown(markdown) : undefined;
     console.log('set module.value', module.value);
 });
-
-const components: MDXComponents = {
-    img: AtImg,
-    link: AtLink,
-    a: AtAnchor,
-    Stylesheet: AtWebStylesheet,
-    OmitVanillaCss: OmitVanillaCss,
-    style: AtStyle,
-    title: AtWebTitle,
-};
 
 </script>
 
