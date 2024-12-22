@@ -124,7 +124,7 @@ export function resolveRoute(route: RouteLocationAsString | RouteLocationAsRelat
     return absoluteURL;
 }
 
-export function computedAtUrlProperty(src: string | undefined, elementName: string) {
+export function computedAtUrlProperty(src: string | undefined, elementName: string, useCdn = false) {
     return computedAsync(async () => {
         if (!pageMeta.value) {
             console.warn(`no pageMeta for ${elementName} ${src}`);
@@ -135,7 +135,7 @@ export function computedAtUrlProperty(src: string | undefined, elementName: stri
             return await getRelativeOrAbsoluteBlobUrl(
                 src,
                 { path: pageMeta.value.filePath, repo: pageMeta.value.did },
-                true
+                useCdn
             );
         } catch (err) {
             console.warn(err);

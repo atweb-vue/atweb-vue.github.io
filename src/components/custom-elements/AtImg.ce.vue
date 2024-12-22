@@ -10,8 +10,8 @@ const props = defineProps<{
     height?: any;
 }>();
 
-const realSrc = computedAtUrlProperty(props.src, 'img');
-const realSrcSet = computedAtUrlProperty(props.srcset, 'img');
+const realSrc = computedAtUrlProperty(props.src, 'img', true);
+const realSrcSet = computedAtUrlProperty(props.srcset, 'img', true);
 
 </script>
 
