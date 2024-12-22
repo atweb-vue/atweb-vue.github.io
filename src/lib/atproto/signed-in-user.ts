@@ -101,6 +101,6 @@ export function authenticateOnStartup() {
     if (account.value) { // automatically sign in if possible
         authenticateIfNecessary(account.value.handle, true)
             .then(result =>
-                console.log(`early authentication complete: ${result}}`));
+                console.log(`early authentication complete: ${result}`));
     }
 }
