@@ -14,6 +14,8 @@ import AtAnchor from './custom-elements/AtAnchor.vue';
 import AtWebStylesheet from './custom-elements/AtWebStylesheet.vue';
 import OmitVanillaCss from './custom-elements/OmitVanillaCss.vue';
 import { watchImmediate } from '@vueuse/core';
+import AtStyle from './custom-elements/AtStyle.vue';
+import AtWebTitle from './custom-elements/AtWebTitle.vue';
 
 const module = shallowRef<MDXModule>();
 
@@ -29,6 +31,8 @@ const components: MDXComponents = {
     a: AtAnchor,
     Stylesheet: AtWebStylesheet,
     OmitVanillaCss: OmitVanillaCss,
+    style: AtStyle,
+    title: AtWebTitle,
 };
 
 </script>

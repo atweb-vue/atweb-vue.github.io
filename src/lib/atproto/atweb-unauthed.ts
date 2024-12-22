@@ -4,7 +4,7 @@ import type { At } from "@atcute/client/lexicons";
 import { parseAtUri } from "../utils";
 import { getDidAndPds } from "./pds-helpers";
 
-const unauthedAgent = new KittyAgent({ handler: new CredentialManager({ service: 'https://bsky.social' }) });
+const unauthedAgent = new KittyAgent({ handler: simpleFetchHandler({ service: 'https://bsky.social' }) });
 
 export function formatGetBlobUrl(pds: string, did: At.DID, cid: string, useCdn = false): string {
     if (useCdn) {
