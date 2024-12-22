@@ -1,5 +1,5 @@
 lexicon: 1
-id: io.github.atweb.file
+id: io.github.atweb.site
 defs:
   main:
     type: record
