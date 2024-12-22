@@ -172,7 +172,7 @@ export const language = {
                 ['', 'string.link', '', 'type.identifier', 'string.link', ''],
             ],
             [
-                /(\[)(.+)(]\()(.+)(\))/,
+                /(\[)(.+?)(]\()(.+?)(\))/,
                 ['', 'type.identifier', '', 'string.link', ''],
             ],
             [
