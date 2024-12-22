@@ -3,12 +3,12 @@ import Monaco from '@/components/Monaco';
 
 import { ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
-import { themes } from '@/lib/monaco/monaco-themes';
+import { themes } from '@/lib/monaco/themes';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
 import { user } from '@/lib/atproto/signed-in-user';
 import SignInGate from '@/components/SignInGate.vue';
 import router from '@/router';
-import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/monaco-mdx-lang';
+import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
 import { compile } from '@mdx-js/mdx';
 import { options as mdxOptions } from '@/lib/markdown/mdx-options';
 import { VaButton, VaInput, VaSelect } from 'vuestic-ui';
