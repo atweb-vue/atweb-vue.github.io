@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue';
+import { computed, reactive, ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
 import { themeNames, themes } from '@/lib/monaco/themes';
-import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
 import { user } from '@/lib/atproto/signed-in-user';
 import SignInGate from '@/components/SignInGate.vue';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
-import { compile } from '@mdx-js/mdx';
-import { options as mdxOptions } from '@/lib/markdown/mdx-options';
 import type { IoGithubAtwebFile } from '@atcute/client/lexicons';
 import { downloadFile } from '@/lib/atproto/atweb-unauthed';
 import { filepathToRkey } from '@/lib/atproto/rkey';
@@ -49,7 +46,7 @@ function onBeforeMonacoMount() {
 function onMonacoMount(editor: editor.IStandaloneCodeEditor) {
     editorRef.value = editor;
 
-    editorRef.value.onDidChangeModelContent(event => {
+    editorRef.value.onDidChangeModelContent(() => {
         const value = editorRef.value!.getValue();
         if (value !== editorValue.value) {
             editorValue.value = value;
