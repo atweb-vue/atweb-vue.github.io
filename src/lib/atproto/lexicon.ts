@@ -136,14 +136,6 @@ declare module '@atcute/client/lexicons' {
         }
     }
 
-    namespace BlueZioMetaProfile {
-        /** A profile for @Zio apps. */
-        interface Record {
-            $type: 'blue.zio.meta.profile';
-            nick?: string;
-        }
-    }
-
     interface Records {
         'io.github.atweb.file': IoGithubAtwebFile.Record;
         'io.github.atweb.ring': IoGithubAtwebRing.Record;
@@ -151,7 +143,6 @@ declare module '@atcute/client/lexicons' {
         'io.github.atweb.file': IoGithubAtwebFile.Record;
         'blue.zio.atfile.lock': BlueZioAtfileLock.Record;
         'blue.zio.atfile.upload': BlueZioAtfileUpload.Record;
-        'blue.zio.meta.profile': BlueZioMetaProfile.Record;
     }
 
     interface Queries {}
