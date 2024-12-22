@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useEventListener, useTimeoutFn } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
-import onekoGif from '@/assets/oneko.gif?url';
+import onekoGif from '@/assets/oneko.gif?no-inline';
 
 const { cat, pettable = true, scrolls = true } = defineProps<{
     cat?: string;
