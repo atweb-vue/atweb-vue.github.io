@@ -3,7 +3,7 @@ import Monaco from '@/components/Monaco';
 
 import { ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
-import { themes } from '@/lib/monaco/themes';
+import { themeNames, themes } from '@/lib/monaco/themes';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
 import { user } from '@/lib/atproto/signed-in-user';
 import SignInGate from '@/components/SignInGate.vue';
@@ -11,7 +11,7 @@ import router from '@/router';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
 import { compile } from '@mdx-js/mdx';
 import { options as mdxOptions } from '@/lib/markdown/mdx-options';
-import { VaButton, VaInput, VaSelect } from 'vuestic-ui';
+import { VaButton, VaIcon, VaInput, VaLayout, VaSelect, VaSidebar, VaSidebarItem, VaSidebarItemContent, VaSidebarItemTitle } from 'vuestic-ui';
 
 type MonacoEditor = typeof monacoEditor;
 
@@ -87,7 +87,7 @@ function handleBeforeMount(monaco: MonacoEditor) {
 
 function handleMount(editor: editor.IStandaloneCodeEditor, monaco: MonacoEditor) {
     codeEditorRef.value = editor;
-    selectedTheme.value = 'TomorrowNightBright';
+    selectedTheme.value = 'Tomorrow Night Bright';
 }
 
 // your action
@@ -119,55 +119,69 @@ async function submitPage() {
     }, 1000);
 }
 
-const selectedTheme = ref<(keyof typeof themes) | 'vs' | 'vs-dark'>('vs-dark');
+
+const selectedTheme = ref<(keyof typeof themeNames)>('Visual Studio Dark');
 
 watch(selectedTheme, theme => {
-    monacoRef.value?.editor.setTheme(theme);
+    monacoRef.value?.editor.setTheme(themeNames[theme]);
 });
 </script>
 
 <template>
-    <div class="flex">
-        <div class="errors" v-if="errors.length">
-            Errors:
-            <ul>
-                <li v-for="error, idx in errors" :key="idx">
-                    {{ String(error) }}
-                </li>
-            </ul>
-        </div>
+    <VaLayout>
+        <template #left>
+            <VaSidebar>
+                <VaSidebarItem>
+                    <VaSidebarItemContent>
+                        <VaSidebarItemTitle>file1</VaSidebarItemTitle>
+                    </VaSidebarItemContent>
+                </VaSidebarItem>
+            </VaSidebar>
+        </template>
+        <template #content>
+            <div class="flex">
+                <div class="errors" v-if="errors.length">
+                    Errors:
+                    <ul>
+                        <li v-for="error, idx in errors" :key="idx">
+                            {{ String(error) }}
+                        </li>
+                    </ul>
+                </div>
 
-        <div class="inputs">
-            <VaInput
-                v-model="filename"
-                placeholder="index.mdx"
-                label="File path"
-            />
+                <div class="inputs">
+                    <VaInput
+                        v-model="filename"
+                        placeholder="index.mdx"
+                        label="File path"
+                    />
 
-            <SignInGate sign-in-button-class="edit-form-button">
-                <VaButton class="edit-form-button" @click="submitPage">Submit</VaButton>
-            </SignInGate>
+                    <SignInGate sign-in-button-class="edit-form-button">
+                        <VaButton class="edit-form-button" @click="submitPage">Submit</VaButton>
+                    </SignInGate>
 
-            <VaSelect
-                class="editor-theme-selector"
-                v-model="selectedTheme"
-                :options="Object.keys(themes)"
-                placeholder="Select an option"
-                label="Editor Theme"
-            />
-        </div>
+                    <VaSelect
+                        class="editor-theme-selector"
+                        v-model="selectedTheme"
+                        :options="Object.keys(themeNames)"
+                        placeholder="Select an option"
+                        label="Editor Theme"
+                    />
+                </div>
 
-        <Monaco
-            class="flex-monaco"
-            v-model:value="code"
-            theme="vs-dark"
-            :options="MONACO_EDITOR_OPTIONS"
-            @before-mount="handleBeforeMount"
-            @mount="handleMount"
-            language="mdx"
-            height="calc(100vh - 70px - 75px - 10px)"
-        />
-    </div>
+                <Monaco
+                    class="flex-monaco"
+                    v-model:value="code"
+                    theme="vs-dark"
+                    :options="MONACO_EDITOR_OPTIONS"
+                    @before-mount="handleBeforeMount"
+                    @mount="handleMount"
+                    language="mdx"
+                    height="calc(100vh - 70px - 75px - 10px)"
+                />
+            </div>
+        </template>
+    </VaLayout>
 </template>
 
 <style lang="scss" scoped>
