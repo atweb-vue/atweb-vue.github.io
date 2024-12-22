@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router';
 import { waitForInitialSession } from './lib/atproto/signed-in-user';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useVanillaCss } from './lib/shared-globals';
 import { frameworkStyles } from './lib/framework-styles';
 import UsePico from './components/UsePico.vue';
+import { watchImmediate } from '@vueuse/core';
 
-const isInPage = ref<boolean>();
+const isInPage = computed(() => router.currentRoute.value.path.startsWith('/page/'));
 const router = useRouter();
 
-watch(router.currentRoute, route => {
-    isInPage.value = route.path.startsWith('/page/');
+watchImmediate(router.currentRoute, () => {
     useVanillaCss.value = true;
 });
 
