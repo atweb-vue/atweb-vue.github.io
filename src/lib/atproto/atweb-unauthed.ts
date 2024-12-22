@@ -3,6 +3,8 @@ import { KittyAgent } from "./kitty-agent";
 import type { At } from "@atcute/client/lexicons";
 import { parseAtUri } from "../utils";
 import { getDidAndPds } from "./pds-helpers";
+import type { Awaitable } from "@vueuse/core";
+import { AtUri } from "@atproto/syntax";
 
 const unauthedAgent = new KittyAgent({ handler: simpleFetchHandler({ service: 'https://bsky.social' }) });
 
@@ -16,6 +18,26 @@ export function formatGetBlobUrl(pds: string, did: At.DID, cid: string, useCdn =
 }
 
 export class GetGetBlobError extends Error {}
+
+// mapping of AtUri -> blob CID
+const blobCidCache = new Map<string, string>();
+async function getCachedBlob(
+    {
+        repo,
+        collection,
+        rkey,
+    }: { repo: string; collection: string; rkey: string },
+    ifNotExist: () => Awaitable<At.CID>,
+): Promise<At.CID> {
+    const key = AtUri.make(repo, collection, rkey).toString();
+    if (blobCidCache.has(key)) {
+        return blobCidCache.get(key)!;
+    }
+
+    const result = await ifNotExist();
+    blobCidCache.set(key, result);
+    return result;
+}
 
 export async function getGetBlobUrl(
     locator: { handleOrDid: string, cid: At.CID }, useCdn?: boolean
@@ -33,18 +55,29 @@ export async function getGetBlobUrl(
     } else if (uri?.startsWith('atfile://')) {
         const [did, rkey] = uri.slice('atfile://'.length).trim().split('/');
 
-        const { value: record } = await unauthedAgent.tryGet({
-            collection: 'blue.zio.atfile.upload',
-            repo: did,
-            rkey: rkey,
-        });
+        const cid = await getCachedBlob(
+            {
+                collection: 'blue.zio.atfile.upload',
+                repo: did,
+                rkey: rkey,
+            },
+            async () => {
+                const { value: record } = await unauthedAgent.tryGet({
+                    collection: 'blue.zio.atfile.upload',
+                    repo: did,
+                    rkey: rkey,
+                });
 
-        if (!record || !record.blob) {
-            throw new GetGetBlobError('RecordNotFound');
-        }
+                if (!record || !record.blob) {
+                    throw new GetGetBlobError('RecordNotFound');
+                }
+
+                return record.blob.ref.$link;
+            },
+        );
 
         const { pds } = await getDidAndPds(did);
-        return formatGetBlobUrl(pds, did as At.DID, record.blob.ref.$link, useCdn);
+        return formatGetBlobUrl(pds, did as At.DID, cid, useCdn);
     } else if (uri?.startsWith('blob://')) {
         const [did, cid] = uri.slice('blob://'.length).trim().split('/');
 
@@ -54,35 +87,43 @@ export async function getGetBlobUrl(
         const at = parseAtUri(uri as At.Uri);
 
         const { did, pds } = await getDidAndPds(at.host);
-        let cid: string;
 
-        if (at.collection === 'io.github.atweb.file') {
-            const { value: record } = await unauthedAgent.tryGet({
-                collection: 'io.github.atweb.file',
+        const cid = await getCachedBlob(
+            {
+                collection: at.collection,
                 repo: did,
                 rkey: at.rkey,
-            });
+            },
+            async () => {
+                if (at.collection === 'io.github.atweb.file') {
+                    const { value: record } = await unauthedAgent.tryGet({
+                        collection: 'io.github.atweb.file',
+                        repo: did,
+                        rkey: at.rkey,
+                    });
 
-            if (!record) {
-                throw new GetGetBlobError('RecordNotFound');
+                    if (!record) {
+                        throw new GetGetBlobError('RecordNotFound');
+                    }
+
+                    return record.body.ref.$link;
+                } else if (at.collection === 'blue.zio.atfile.upload') {
+                    const { value: record } = await unauthedAgent.tryGet({
+                        collection: 'blue.zio.atfile.upload',
+                        repo: did,
+                        rkey: at.rkey,
+                    });
+
+                    if (!record || !record.blob) {
+                        throw new GetGetBlobError('RecordNotFound');
+                    }
+
+                    return record.blob.ref.$link;
+                } else {
+                    throw new GetGetBlobError('CollectionUnsupported');
+                }
             }
-
-            cid = record.body.ref.$link;
-        } else if (at.collection === 'blue.zio.atfile.upload') {
-            const { value: record } = await unauthedAgent.tryGet({
-                collection: 'blue.zio.atfile.upload',
-                repo: did,
-                rkey: at.rkey,
-            });
-
-            if (!record || !record.blob) {
-                throw new GetGetBlobError('RecordNotFound');
-            }
-
-            cid = record.blob.ref.$link;
-        } else {
-            throw new GetGetBlobError('CollectionUnsupported');
-        }
+        );
 
         return formatGetBlobUrl(pds, did as At.DID, cid, useCdn);
     }
