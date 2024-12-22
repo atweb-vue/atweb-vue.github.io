@@ -8,11 +8,11 @@ const { markdown } = defineProps<{
 import { renderMarkdown } from '@/lib/markdown/render-markdown';
 import { ref, shallowRef, watch } from 'vue';
 import { compileStringAsync as sassCompileString } from 'sass';
-import AtImgCe from './custom-elements/AtImg.ce.vue';
-import AtLinkCe from './custom-elements/AtLink.ce.vue';
-import AtAnchorCe from './custom-elements/AtAnchor.ce.vue';
-import AtWebStylesheetCe from './custom-elements/AtWebStylesheet.ce.vue';
-import OmitVanillaCssCe from './custom-elements/OmitVanillaCss.ce.vue';
+import AtImg from './custom-elements/AtImg.vue';
+import AtLink from './custom-elements/AtLink.vue';
+import AtAnchor from './custom-elements/AtAnchor.vue';
+import AtWebStylesheet from './custom-elements/AtWebStylesheet.vue';
+import OmitVanillaCss from './custom-elements/OmitVanillaCss.vue';
 import { watchImmediate } from '@vueuse/core';
 
 const module = shallowRef<MDXModule>();
@@ -24,11 +24,11 @@ watchImmediate(() => markdown, async markdown => {
 });
 
 const components: MDXComponents = {
-    img: AtImgCe,
-    link: AtLinkCe,
-    a: AtAnchorCe,
-    Stylesheet: AtWebStylesheetCe,
-    OmitVanillaCss: OmitVanillaCssCe,
+    img: AtImg,
+    link: AtLink,
+    a: AtAnchor,
+    Stylesheet: AtWebStylesheet,
+    OmitVanillaCss: OmitVanillaCss,
 };
 
 </script>
