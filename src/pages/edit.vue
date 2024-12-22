@@ -61,13 +61,8 @@ function formatCode() {
 
 const submitErrors = reactive<unknown[]>([]);
 async function submitPage() {
-    submitErrors.length = 0;
-    try {
-        await compile(editorRef.value!.getValue(), mdxOptions);
-    } catch (err) {
-        submitErrors.push(err);
+    if (submitErrors.length > 0)
         return;
-    }
 
     if (!user.value) {
         submitErrors.push('not signed in');
@@ -183,7 +178,7 @@ const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFi
                         </ul>
                     </div>
 
-                    <MarkdownRenderer :markdown="editorValue"></MarkdownRenderer>
+                    <MarkdownRenderer v-model:errors="submitErrors" :markdown="editorValue"></MarkdownRenderer>
                 </div>
             </div>
         </template>
