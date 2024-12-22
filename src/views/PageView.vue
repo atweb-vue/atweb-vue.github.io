@@ -6,15 +6,15 @@ import { useRoute } from 'vue-router';
 import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
 import { page } from '@/lib/shared-globals';
 import { watchImmediate } from '@vueuse/core';
+import { watchImmediateAsync } from '@/lib/vue-utils';
 
 const route = useRoute();
 
 watchImmediate(
     route,
-    () => {
-        resolveHandleAnonymously(route.params.handle as string)
-            .then(did => downloadFile(did, route.params.rkey as string))
-            .then(newPage => (page.value = newPage));
+    async () => {
+        const did = await resolveHandleAnonymously(route.params.handle as string);
+        page.value = await downloadFile(did, route.params.rkey as string);
     },
 );
 
@@ -36,6 +36,7 @@ watchImmediate(page, async page => {
             typeof page.blob === 'string'
                 ? page.blob
                 : new TextDecoder().decode(page.blob.buffer);
+        console.log('set md');
     } else if (page.bodyOriginal.mimeType.startsWith('image/')) {
         type.value = 'image';
         contents.value = await getGetBlobUrl(page.uri, true);
