@@ -1,4 +1,3 @@
-import 'bluesky-post-embed';
 import 'bluesky-profile-card-embed';
 import 'bluesky-profile-feed-embed';
 
@@ -22,6 +21,9 @@ import LesbiBadge from '@/components/custom-elements/LesbiBadge.ce.vue';
 import EightyEightThirtyOneBadge from '@/components/custom-elements/EightyEightThirtyOneBadge.ce.vue';
 import UserbarBadge from '@/components/custom-elements/UserbarBadge.ce.vue';
 import RingLink from '@/components/custom-elements/RingLink.ce.vue';
+import BlueskyPost from '@/components/custom-elements/BlueskyPost.ce.vue';
+import BlueskyProfileCard from '@/components/custom-elements/BlueskyProfileCard.ce.vue';
+import BlueskyProfileFeed from '@/components/custom-elements/BlueskyProfileFeed.ce.vue';
 
 type Props = Record<string, any>;
 
@@ -38,9 +40,9 @@ export const components: MDXComponents = {
     OmitVanillaCss: OmitVanillaCss,
     style: AtStyle,
     title: AtWebTitle,
-    BlueskyPost: 'bluesky-post',
-    BlueskyProfileCard: 'bluesky-profile-card',
-    BlueskyProfileFeed: 'bluesky-profile-feed',
+    BlueskyPost: BlueskyPost,
+    BlueskyProfileCard: BlueskyProfileCard,
+    BlueskyProfileFeed: BlueskyProfileFeed,
     Webamp: WebampPlayer,
     Spotify: SpotifyPlayer,
     Oneko: OnekoKitty,
