@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import { CredentialManager } from '@atcute/client';
-import { isCidMatching } from '@parent/lib/atproto/cid.js';
-import { KittyAgent } from '@parent/lib/atproto/kitty-agent.js';
-import { filepathToRkey } from '@parent/lib/atproto/rkey.js';
+import { isCidMatching } from '@/lib/atproto/cid.js';
+import { KittyAgent } from '@/lib/atproto/kitty-agent.js';
+import { filepathToRkey } from '@/lib/atproto/rkey.js';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import Readline from 'node:readline/promises';

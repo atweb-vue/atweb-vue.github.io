@@ -1,4 +1,4 @@
-import type { KittyAgent } from '@parent/lib/atproto/kitty-agent.js';
+import type { KittyAgent } from '@/lib/atproto/kitty-agent.js';
 import type { Readable, Writable } from 'stream';
 import { v2 as webdav } from 'webdav-server';
 import { FileSystem, VirtualFileSystem, VirtualSerializer, type FileSystemSerializer, type ISerializableFileSystem } from 'webdav-server/lib/index.v2.js';

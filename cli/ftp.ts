@@ -5,7 +5,7 @@ import {
     type FtpConnection,
     FileSystemError,
 } from 'ftp-srv';
-import type { KittyAgent } from '@parent/lib/atproto/kitty-agent.js';
+import type { KittyAgent } from '@/lib/atproto/kitty-agent.js';
 import {
     constants,
     createReadStream,
@@ -18,7 +18,7 @@ import type { Awaitable } from '@vueuse/core';
 import { v4 as uuidv4 } from 'uuid';
 import type { At, IoGithubAtwebFile, Records } from '@atcute/client/lexicons';
 import posixPath from 'node:path/posix';
-import { filepathToRkey } from '@parent/lib/atproto/rkey.js';
+import { filepathToRkey } from '@/lib/atproto/rkey.js';
 
 const UNIX_SEP_REGEX = /\//g;
 const WIN_SEP_REGEX = /\\/g;
@@ -188,7 +188,7 @@ class AtpFs {
             ...result.value,
             cid: result.cid,
             uri: result.uri,
-        }
+        };
     }
 
     private async getAll() {
