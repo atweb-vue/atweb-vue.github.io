@@ -19,9 +19,9 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    '/edit/[[rkey]]': RouteRecordInfo<'/edit/[[rkey]]', '/edit/:rkey?', { rkey?: ParamValueZeroOrOne<true> }, { rkey?: ParamValueZeroOrOne<false> }>,
+    '/edit/[[path]]+': RouteRecordInfo<'/edit/[[path]]+', '/edit/:path*', { path?: ParamValueZeroOrMore<true> }, { path?: ParamValueZeroOrMore<false> }>,
     '/invited/[inviterDid]/[ringAndInviteRkey]/': RouteRecordInfo<'/invited/[inviterDid]/[ringAndInviteRkey]/', '/invited/:inviterDid/:ringAndInviteRkey', { inviterDid: ParamValue<true>, ringAndInviteRkey: ParamValue<true> }, { inviterDid: ParamValue<false>, ringAndInviteRkey: ParamValue<false> }>,
-    '/page/[handle]/[rkey]/': RouteRecordInfo<'/page/[handle]/[rkey]/', '/page/:handle/:rkey', { handle: ParamValue<true>, rkey: ParamValue<true> }, { handle: ParamValue<false>, rkey: ParamValue<false> }>,
+    '/page/[handle]/[path]+/': RouteRecordInfo<'/page/[handle]/[path]+/', '/page/:handle/:path+', { handle: ParamValue<true>, path: ParamValueOneOrMore<true> }, { handle: ParamValue<false>, path: ParamValueOneOrMore<false> }>,
     '/rings': RouteRecordInfo<'/rings', '/rings', Record<never, never>, Record<never, never>>,
     '/user/[handle]/': RouteRecordInfo<'/user/[handle]/', '/user/:handle', { handle: ParamValue<true> }, { handle: ParamValue<false> }>,
   }

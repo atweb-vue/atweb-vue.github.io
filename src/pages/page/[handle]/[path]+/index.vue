@@ -8,6 +8,7 @@ import { watchImmediateAsync } from '@/lib/vue-utils';
 import UsePico from '@/components/UsePico.vue';
 import { frameworkStyles } from '@/lib/framework-styles';
 import { pageKey, pageMetaKey } from '@/lib/injection-keys';
+import { filepathToRkey } from '@/lib/atproto/rkey';
 
 const pageRef = shallowRef<Page>();
 const pageMetaRef = shallowRef<PageMeta>();
@@ -17,14 +18,15 @@ provide(pageMetaKey, pageMetaRef);
 const type = ref<'markdown' | 'pre' | 'image' | 'generic' | 'none'>('none');
 const contents = ref<string>('');
 
-const route = useRoute('/page/[handle]/[rkey]/');
+const route = useRoute('/page/[handle]/[path]+/');
 await watchImmediateAsync(
     route,
     async () => {
-        const did = await resolveHandleAnonymously(route.params.handle as string);
+        const did = await resolveHandleAnonymously(route.params.handle);
 
         let page: Page;
-        pageRef.value = pageMetaRef.value = page = await downloadFile(did, route.params.rkey as string);
+        // replace : with / as fallback for older rkey-based path parameters
+        pageRef.value = pageMetaRef.value = page = await downloadFile(did, filepathToRkey(route.params.path.join('/').replace(/:/g, '/')));
 
         console.log('watched', page);
 

@@ -1,5 +1,9 @@
+import type { ParamValueOneOrMore } from "vue-router";
+
 export function filepathToRkey(filepath: string) {
     if (filepath === '') throw new Error('File path is empty!');
+
+    if (filepath.includes(':')) throw new Error('`:` character not allowed in file path!');
 
     filepath = filepath.replace(/\\/g, '/');
 
@@ -37,6 +41,26 @@ export function rkeyToFilepath(rkey: string) {
     return rkey
         .replace(/:/g, '/')
         .replace(/_([0-9a-z]{1,4})_/g, $$ => {
-            return String.fromCharCode(parseInt($$.slice(1), 36));
+            return String.fromCharCode(parseInt($$.slice(1, -1), 36));
         });
+}
+
+export function filepathToPathParameter(filepath: string): ParamValueOneOrMore<true> {
+    if (filepath === '') throw new Error('File path is empty!');
+
+    filepath = filepath.replace(/\\/g, '/');
+
+    if (filepath.startsWith('./')) {
+        filepath = filepath.slice(2);
+    }
+
+    if (filepath.startsWith('/')) {
+        filepath = filepath.slice(1);
+    }
+
+    if (filepath.includes('../') || filepath.includes('/..')) {
+        throw new Error('Backwards directory navigation not supported in rkey');
+    }
+
+    return filepath.split('/') as ParamValueOneOrMore<true>;
 }
