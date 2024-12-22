@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { getRelativeOrAbsoluteBlobUrl } from '@/lib/component-helpers';
-import { injectPage } from '@/lib/injection-keys';
-import { page } from '@/lib/shared-globals';
-import { watchImmediateAsync } from '@/lib/vue-utils';
-import { watchImmediate } from '@vueuse/core';
-import { inject, onBeforeUnmount, onMounted, ref, shallowRef, useTemplateRef, watch } from 'vue';
+import { onBeforeUnmount, onMounted, shallowRef, useTemplateRef } from 'vue';
 import type { InjectableDependencies, PrivateOptions, Options as WebampOptions, Track, WindowLayout } from '#webamp-lazy';
+import type Webamp from '#webamp-lazy';
 const { default: WebampLazy } = await import('#webamp-lazy');
 
 const props = defineProps<{
@@ -91,7 +87,7 @@ const props = defineProps<{
 }>();
 
 const webampElement = useTemplateRef('webampElement');
-const webamp = shallowRef<WebampLazy>();
+const webamp = shallowRef<Webamp>();
 
 onMounted(() => {
     webamp.value = new WebampLazy(Object.assign({
@@ -128,7 +124,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     webamp.value?.dispose();
-})
+});
 </script>
 
 <template>
