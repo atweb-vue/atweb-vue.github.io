@@ -19,7 +19,7 @@ import MonacoEditor from '@/components/MonacoEditor.vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import { useRouter } from 'vue-router';
 import UsePico from '@/components/UsePico.vue';
-import { useVanillaCss } from '@/lib/shared-globals';
+import { pageMeta, useVanillaCss } from '@/lib/shared-globals';
 
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
@@ -124,6 +124,12 @@ watch(activeFile, activeFile => {
         editorRef.value!.getModel()!,
         activeFile ? lookupMime(activeFile) ?? 'mdx' : 'plaintext'
     );
+    if (user) {
+        pageMeta.value = {
+            did: user.value!.did,
+            filePath: activeFile,
+        };
+    }
 });
 
 watch(editorValue, () => {
