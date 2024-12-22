@@ -15,6 +15,7 @@ import { type Slot } from 'vue';
 import type { JSX } from 'vue/jsx-runtime';
 import WebampPlayer from '@/components/custom-elements/WebampPlayer.ce.vue';
 import SpotifyPlayer from '@/components/custom-elements/SpotifyPlayer.vue';
+import OnekoKitty from '@/components/custom-elements/OnekoKitty.ce.vue';
 
 type Props = Record<string, any>;
 
@@ -64,5 +65,6 @@ export const components: MDXComponents = {
     BlueskyProfileFeed: 'bluesky-profile-feed',
     Webamp: WebampPlayer,
     Spotify: SpotifyPlayer,
+    Oneko: OnekoKitty,
     ...(extraComponents as unknown as MDXComponents)
 };
