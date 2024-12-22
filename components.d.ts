@@ -28,6 +28,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SignInGate: typeof import('./src/components/SignInGate.vue')['default']
     SpotifyPlayer: typeof import('./src/components/custom-elements/SpotifyPlayer.vue')['default']
+    'Userbar.ce': typeof import('./src/components/custom-elements/Userbar.ce.vue')['default']
+    'UserbarBadge.ce': typeof import('./src/components/custom-elements/UserbarBadge.ce.vue')['default']
     VaButton: typeof import('vuestic-ui')['VaButton']
     'WebampPlayer.ce': typeof import('./src/components/custom-elements/WebampPlayer.ce.vue')['default']
   }

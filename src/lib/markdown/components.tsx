@@ -20,6 +20,7 @@ import OnekoKitty from '@/components/custom-elements/OnekoKitty.ce.vue';
 import NewBlink from '@/components/custom-elements/NewBlink.ce.vue';
 import LesbiBadge from '@/components/custom-elements/LesbiBadge.ce.vue';
 import EightyEightThirtyOneBadge from '@/components/custom-elements/EightyEightThirtyOneBadge.ce.vue';
+import UserbarBadge from '@/components/custom-elements/UserbarBadge.ce.vue';
 
 type Props = Record<string, any>;
 
@@ -73,5 +74,6 @@ export const components: MDXComponents = {
     blink: NewBlink,
     LesbiBadge: LesbiBadge,
     Badge: EightyEightThirtyOneBadge,
+    Userbar: UserbarBadge,
     ...(extraComponents as unknown as MDXComponents)
 };
