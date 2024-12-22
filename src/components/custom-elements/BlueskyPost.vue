@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import 'bluesky-post-embed';
+await import('bluesky-post-embed');
 </script>
 
 <template>

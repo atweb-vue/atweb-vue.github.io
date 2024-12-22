@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import 'bluesky-profile-card-embed';
+await import('bluesky-profile-card-embed');
 </script>
 
 <template>

@@ -1,6 +1,3 @@
-import 'bluesky-profile-card-embed';
-import 'bluesky-profile-feed-embed';
-
 import type { MDXComponents } from './mdx-types';
 
 import type { Slot } from 'vue';

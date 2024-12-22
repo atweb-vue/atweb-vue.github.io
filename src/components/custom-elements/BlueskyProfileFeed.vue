@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import 'bluesky-profile-feed-embed';
+await import('bluesky-profile-feed-embed');
 </script>
 
 <template>
