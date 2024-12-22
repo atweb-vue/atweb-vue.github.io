@@ -227,14 +227,14 @@ export const language = {
         jsx: [
             [/\s+/, ''],
             [
-                /(\w+)(=)("(?:[^"\\]|\\.)*")/,
+                /([\w\-]+)(=)("(?:[^"\\]|\\.)*")/,
                 ['attribute.name', 'operator', 'string'],
             ],
             [
-                /(\w+)(=)('(?:[^'\\]|\\.)*')/,
+                /([\w\-]+)(=)('(?:[^'\\]|\\.)*')/,
                 ['attribute.name', 'operator', 'string'],
             ],
-            [/(\w+(?=\s|>|={|$))/, ['attribute.name']],
+            [/([\w\-]+(?=\s|>|={|$))/, ['attribute.name']],
             [
                 /={/,
                 {
