@@ -19,7 +19,7 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    '/edit': RouteRecordInfo<'/edit', '/edit', Record<never, never>, Record<never, never>>,
+    '/edit/[[rkey]]': RouteRecordInfo<'/edit/[[rkey]]', '/edit/:rkey?', { rkey?: ParamValueZeroOrOne<true> }, { rkey?: ParamValueZeroOrOne<false> }>,
     '/invited/[inviterDid]/[ringAndInviteRkey]/': RouteRecordInfo<'/invited/[inviterDid]/[ringAndInviteRkey]/', '/invited/:inviterDid/:ringAndInviteRkey', { inviterDid: ParamValue<true>, ringAndInviteRkey: ParamValue<true> }, { inviterDid: ParamValue<false>, ringAndInviteRkey: ParamValue<false> }>,
     '/page/[handle]/[rkey]/': RouteRecordInfo<'/page/[handle]/[rkey]/', '/page/:handle/:rkey', { handle: ParamValue<true>, rkey: ParamValue<true> }, { handle: ParamValue<false>, rkey: ParamValue<false> }>,
     '/rings': RouteRecordInfo<'/rings', '/rings', Record<never, never>, Record<never, never>>,
