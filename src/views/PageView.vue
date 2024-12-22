@@ -9,7 +9,6 @@ import { watchImmediate } from '@vueuse/core';
 import { watchImmediateAsync } from '@/lib/vue-utils';
 
 const route = useRoute();
-
 await watchImmediateAsync(
     route,
     async () => {

@@ -4,8 +4,8 @@ import { authenticateOnStartup } from './lib/atproto/signed-in-user';
 import router from './router';
 import { ref, watch } from 'vue';
 import { useVanillaCss } from './lib/shared-globals';
-import { watchImmediate } from '@vueuse/core';
-import { VaButton, VaLayout, VaNavbar } from 'vuestic-ui';
+import { usePreferredDark, watchImmediate } from '@vueuse/core';
+import { useColors, VaButton, VaLayout, VaNavbar } from 'vuestic-ui';
 import { frameworkStyles } from './lib/framework-styles';
 
 const isInPage = ref<boolean>();
@@ -24,6 +24,12 @@ watchImmediate(useVanillaCss, useVanillaCss => {
 
 authenticateOnStartup();
 
+const prefersDark = usePreferredDark();
+const { applyPreset, currentPresetName, colors } = useColors();
+
+watchImmediate(prefersDark, prefersDark => {
+    applyPreset(prefersDark ? 'dark' : 'light');
+});
 </script>
 
 <template>
