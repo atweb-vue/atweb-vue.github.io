@@ -7,7 +7,7 @@ const { markdown } = defineProps<{
 
 import { renderMarkdown } from '@/lib/markdown/render-markdown';
 import { ref, shallowRef, watch } from 'vue';
-import { computedAsync, watchImmediate } from '@vueuse/core';
+import { watchImmediate } from '@vueuse/core';
 import { components } from '@/lib/markdown/components.tsx';
 import { watchImmediateAsync } from '@/lib/vue-utils';
 import type { compileStringAsync } from 'sass';
@@ -17,16 +17,18 @@ async function sassCompileString(...args: Parameters<typeof compileStringAsync>)
     return compileStringAsync(...args);
 }
 
+const module = shallowRef<MDXModule>();
+
 const errors = defineModel<unknown[]>('errors', {
     default: []
 });
 
-const module = computedAsync(async () => {
+await watchImmediateAsync(() => markdown, async markdown => {
     // console.log('setting module.value', module.value);
     errors.value.length = 0;
 
     try {
-        return markdown ? await renderMarkdown(markdown) : undefined;
+        module.value = markdown ? await renderMarkdown(markdown) : undefined;
     } catch (err) {
         errors.value.push(err);
     }

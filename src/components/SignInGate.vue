@@ -35,26 +35,37 @@ async function authenticate() {
 
 </script>
 <template>
-    <VaButton :class="signInButtonClass" v-if="!user" @click="open = true">{{ signInText ?? 'Sign in' }}</VaButton>
+    <button :class="signInButtonClass" v-if="!user" @click="open = true">{{ signInText ?? 'Sign in' }}</button>
     <slot v-else></slot>
 
-    <VaModal
-        v-model="open"
-        ok-text="Sign In"
-        cancel-text="Cancel"
-        @ok="authenticate()"
-    >
-        <VaInput v-model="handle" label="@handle" placeholder="e.g. you.bsky.social" />
-    </VaModal>
-    <VaModal
-        v-model="codePasteOpen"
-        ok-text="Complete Sign In"
-        cancel-text="Cancel"
-        @ok="finishAuthentication()"
-        @cancel="cancelAuthentication()"
-        @click-outside="cancelAuthentication()"
-    >
-        <VaInput v-model="hash" label="Input displayed code" />
-    </VaModal>
+    <dialog :open="open">
+        <article>
+            <input v-model="handle" type="text" placeholder="e.g. you.bsky.social" aria-label="@handle">
+
+            <footer>
+                <button class="secondary" @click="open = false">
+                    Cancel
+                </button>
+                <button @click="authenticate().then(() => open = false)">
+                    Sign In
+                </button>
+            </footer>
+        </article>
+    </dialog>
+
+    <dialog :open="codePasteOpen">
+        <article>
+            <input v-model="hash" type="text" aria-label="Input displayed code">
+
+            <footer>
+                <button class="secondary" @click="cancelAuthentication(); open = false">
+                    Cancel
+                </button>
+                <button @click="finishAuthentication(); open = false">
+                    Complete Sign In
+                </button>
+            </footer>
+        </article>
+    </dialog>
 
 </template>

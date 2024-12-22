@@ -8,7 +8,6 @@ import SignInGate from '@/components/SignInGate.vue';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
 import { compile } from '@mdx-js/mdx';
 import { options as mdxOptions } from '@/lib/markdown/mdx-options';
-import { VaButton, VaIcon, VaInput, VaLayout, VaSelect, VaSidebar, VaSidebarItem, VaSidebarItemContent, VaSidebarItemTitle } from 'vuestic-ui';
 import type { IoGithubAtwebFile } from '@atcute/client/lexicons';
 import { downloadFile } from '@/lib/atproto/atweb-unauthed';
 import { filepathToRkey } from '@/lib/atproto/rkey';
@@ -19,6 +18,8 @@ import { lookupMime } from '@/lib/mime';
 import MonacoEditor from '@/components/MonacoEditor.vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import { useRouter } from 'vue-router';
+import UsePico from '@/components/UsePico.vue';
+import { useVanillaCss } from '@/lib/shared-globals';
 
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
@@ -125,78 +126,70 @@ watch(activeFile, activeFile => {
     );
 });
 
-const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFile.value) ?? 'text/mdx') === 'text/mdx'));
+watch(editorValue, () => {
+    useVanillaCss.value = false; // reset it BEFORE markdown render!
+});
 
+const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFile.value) ?? 'text/mdx') === 'text/mdx'));
 </script>
 
 <template>
-    <VaLayout>
-        <template #left>
-            <VaSidebar>
-                <VaSidebarItem v-for="file in files" :key="file.uri.rkey" :active="activeFile == file.filePath" @click="setActiveFile(file)">
-                    <VaSidebarItemContent class="file-selector-item-content">
-                        <VaSidebarItemTitle>{{ file.filePath }}</VaSidebarItemTitle>
-                    </VaSidebarItemContent>
-                </VaSidebarItem>
-            </VaSidebar>
-        </template>
-        <template #content>
-            <div class="flex">
-                <div class="inputs">
-                    <VaInput
-                        v-model="activeFile"
-                        placeholder="index.mdx"
-                        label="File path"
-                    />
-
-                    <SignInGate sign-in-button-class="edit-form-button" sign-in-text="Sign in to upload">
-                        <VaButton class="edit-form-button" @click="submitPage">Submit</VaButton>
-                        <VaButton v-if="files.find(file => file.filePath === activeFile)" class="edit-form-button" @click="openPage">Open</VaButton>
-                    </SignInGate>
-
-                    <VaSelect
-                        class="editor-theme-selector"
-                        v-model="selectedTheme"
-                        :options="Object.keys(themeNames)"
-                        placeholder="Select an option"
-                        label="Editor Theme"
-                    />
-                </div>
-
-                <MonacoEditor editor-style="height: calc(100vh - 69.6px - 68px)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
-
-                <!-- <Monaco
-                    class="flex-monaco"
-                    v-model:value="code"
-                    theme="vs-dark"
-                    :options="MONACO_EDITOR_OPTIONS"
-                    @before-mount="handleBeforeMount"
-                    @mount="handleMount"
-                    :path="activeFile ?? 'test.mdx'"
-                    :language="getLanguage(activeFile ?? 'test.mdx')"
-                    defaultPath="test.mdx"
-                    defaultLanguage="mdx"
-                    height="calc(100vh - 70px - 75px - 10px)"
-                /> -->
-            </div>
-        </template>
-        <template #right v-if="isMarkdownFile">
-            <div style="min-width: 25vw;">
-                <div style="padding: var(--va-grid-gutter-base); max-height: calc(100vh - 69.6px); overflow: auto;">
-                    <div class="errors" v-if="submitErrors.length">
-                        Errors:
+    <div class="grid">
+        <div class="left">
+            <UsePico>
+                <aside style="overflow: auto; max-height: calc(100vh - 115.5px); padding: 0 1rem;">
+                    <nav>
                         <ul>
-                            <li v-for="error, idx in submitErrors" :key="idx">
-                                {{ String(error) }}
+                            <li v-for="file in files" :key="file.uri.rkey" :active="activeFile == file.filePath">
+                                <a href="javascript: void 0" @click="setActiveFile(file)">{{ file.filePath }}</a>
                             </li>
                         </ul>
-                    </div>
+                    </nav>
+                </aside>
+            </UsePico>
+        </div>
+        <div class="flex middle">
+            <UsePico>
+                <div class="inputs" style="padding: 0 0.5rem; --pico-spacing: 0.5rem;">
+                    <input v-model="activeFile" type="text" placeholder="index.mdx" aria-label="File path" class="active-file-input">
 
-                    <MarkdownRenderer v-model:errors="submitErrors" :markdown="editorValue"></MarkdownRenderer>
+                    <SignInGate sign-in-button-class="edit-form-button" sign-in-text="Sign in to upload">
+                        <button @click="submitPage" class="submit-button">Submit</button>
+                        <button v-if="files.find(file => file.filePath === activeFile)" class="edit-form-button" @click="openPage">Open</button>
+                    </SignInGate>
+
+                    <select v-model="selectedTheme" aria-label="Editor Theme" required class="editor-theme-selector">
+                        <option v-for="themeName in Object.keys(themeNames)" :key="themeName" :value="themeName">
+                            {{ themeName }}
+                        </option>
+                    </select>
                 </div>
+
+                <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px + 0.5rem)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
+            </UsePico>
+        </div>
+        <div class="right" style="min-width: 25vw;" v-if="isMarkdownFile">
+            <div style="padding: 1rem; max-height: calc(100vh - 115.5px + 0.5rem); overflow: auto;">
+                <div class="errors" v-if="submitErrors.length">
+                    Errors:
+                    <ul>
+                        <li v-for="error, idx in submitErrors" :key="idx">
+                            {{ String(error) }}
+                        </li>
+                    </ul>
+                </div>
+
+                <Suspense>
+                    <UsePico v-if="useVanillaCss">
+                        <main>
+                            <MarkdownRenderer v-model:errors="submitErrors" :markdown="editorValue" />
+                        </main>
+                    </UsePico>
+                    <MarkdownRenderer v-else v-model:errors="submitErrors" :markdown="editorValue" />
+                </Suspense>
             </div>
-        </template>
-    </VaLayout>
+        </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -208,27 +201,30 @@ const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFi
     margin-bottom: 0.5rem;
     max-width: 100vw;
 }
-</style>
 
-<style lang="scss">
-.edit-form-button {
-    vertical-align: text-top;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.left { grid-area: 1 / 1 / 2 / 2; }
+.middle { grid-area: 1 / 2 / 2 / 7; }
+.right { grid-area: 1 / 7 / 2 / 10; }
+
+.active-file-input {
+    width: auto !important;
     margin-right: 0.5rem;
 }
 
-// fix for bug in va-modal
-.va-modal-entry {
-    display: none;
-}
-
 .editor-theme-selector {
+    width: auto;
     float: right; // right-align
-    margin-right: 0.5rem; // prevent triggering overflow
 }
 
-.file-selector-item-content {
-    --va-sidebar-item-content-padding: 0.25rem;
-    min-height: 12px;
-    font-size: 85%;
+.submit-button {
+    margin-right: 0.5rem;
 }
 </style>

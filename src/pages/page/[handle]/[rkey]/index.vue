@@ -4,9 +4,10 @@ import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import { downloadFile, getGetBlobUrl, type Page } from '@/lib/atproto/atweb-unauthed';
 import { useRoute } from 'vue-router';
 import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
-import { page } from '@/lib/shared-globals';
+import { page, useVanillaCss } from '@/lib/shared-globals';
 import { watchImmediate } from '@vueuse/core';
 import { watchImmediateAsync } from '@/lib/vue-utils';
+import UsePico from '@/components/UsePico.vue';
 
 const route = useRoute('/page/[handle]/[rkey]/');
 await watchImmediateAsync(
@@ -50,7 +51,12 @@ await watchImmediateAsync(page, async page => {
     <div class="page">
         <div v-if="type == 'markdown'">
             <Suspense>
-                <MarkdownRenderer :markdown="contents" />
+                <UsePico v-if="useVanillaCss">
+                    <main>
+                        <MarkdownRenderer :markdown="contents" />
+                    </main>
+                </UsePico>
+                <MarkdownRenderer v-else :markdown="contents" />
             </Suspense>
         </div>
         <img v-else-if="type == 'image'" :src="contents" />

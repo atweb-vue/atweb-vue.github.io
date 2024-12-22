@@ -27,10 +27,10 @@ export default defineConfig({
         vueDevTools(),
         Components({
             resolvers: [
-              (componentName) => {
-                if (componentName.startsWith('Va'))
-                  return { name: componentName, from: 'vuestic-ui' };
-              },
+                // (componentName) => {
+                //     if (componentName.startsWith('Va'))
+                //         return { name: componentName, from: 'vuestic-ui' };
+                // },
             ],
         }),
         nodePolyfills(),

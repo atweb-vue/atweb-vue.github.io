@@ -33,8 +33,8 @@ async function acceptInvite() {
                     Accept this invite from @{{ inviterHandle }}?
                 </div>
                 <div>
-                    <VaInput v-model="mainPage" label="My Member Page" placeholder="index.mdx" />
-                    <VaButton @click="acceptInvite()" style="vertical-align: text-top; margin-top: -1px">OK</VaButton>
+                    <input type="text" v-model="mainPage" aria-label="My Member Page" placeholder="index.mdx" />
+                    <button @click="acceptInvite()" style="vertical-align: text-top; margin-top: -1px">OK</<button>
                 </div>
             </div>
             <div v-else>
