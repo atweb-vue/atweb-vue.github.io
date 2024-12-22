@@ -163,6 +163,7 @@ body[vanilla-css] {
     }
 
     p.va-paragraph {
+        font-family: var(--va-font-family);
         font-size: 1rem;
         margin-top: 0;
         margin-bottom: 1rem;
