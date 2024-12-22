@@ -13,7 +13,6 @@ declare module 'vue' {
     'AtStyle.ce': typeof import('./src/components/custom-elements/AtStyle.ce.vue')['default']
     'AtWebStylesheet.ce': typeof import('./src/components/custom-elements/AtWebStylesheet.ce.vue')['default']
     'AtWebTitle.ce': typeof import('./src/components/custom-elements/AtWebTitle.ce.vue')['default']
-    copy: typeof import('./src/components/custom-elements/AtAnchor.ce copy.vue')['default']
     MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MModal: typeof import('./src/components/MModal.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
