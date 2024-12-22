@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MDXComponents, MDXModule } from '@/lib/mdx-types';
+import type { MDXComponents, MDXModule } from '@/lib/markdown/mdx-types';
 
 const { markdown } = defineProps<{
     markdown: string;

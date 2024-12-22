@@ -2,7 +2,7 @@ import 'bluesky-post-embed';
 import 'bluesky-profile-card-embed';
 import 'bluesky-profile-feed-embed';
 
-import type { MDXComponents } from '../mdx-types';
+import type { MDXComponents } from './mdx-types';
 
 import AtImg from '@/components/custom-elements/AtImg.ce.vue';
 import AtLink from '@/components/custom-elements/AtLink.ce.vue';
