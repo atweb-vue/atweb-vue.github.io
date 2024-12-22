@@ -64,7 +64,7 @@ adoptedStyleSheet.replace(frameworkStyles);
             <Suspense>
                 <UsePico>
                     <main>
-                        <MarkdownRenderer :markdown="contents" :disable-components="true" />
+                        <MarkdownRenderer :markdown="contents" />
                     </main>
                 </UsePico>
             </Suspense>
