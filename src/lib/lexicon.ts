@@ -59,6 +59,23 @@ declare module '@atcute/client/lexicons' {
         }
     }
 
+    namespace IoGithubAtwebFile {
+        /** An atweb website's metadata. */
+        interface Record {
+            $type: 'io.github.atweb.file';
+            /** This record's creation date. */
+            createdAt: string;
+            /** Website description, if any. */
+            description?: string;
+            /** Link to a remote icon image for the website, if any. */
+            icon?: string;
+            /** Link to the entry point (index page) for this website. Defaults to index.mdx. */
+            index?: At.Uri;
+            /** A descriptive title for the website, if any. */
+            title?: string;
+        }
+    }
+
     namespace BlueZioAtfileFinger {
         /** A fingerprint of a browser upload. */
         interface Browser {
@@ -131,6 +148,7 @@ declare module '@atcute/client/lexicons' {
         'io.github.atweb.file': IoGithubAtwebFile.Record;
         'io.github.atweb.ring': IoGithubAtwebRing.Record;
         'io.github.atweb.ringMembership': IoGithubAtwebRingMembership.Record;
+        'io.github.atweb.file': IoGithubAtwebFile.Record;
         'blue.zio.atfile.lock': BlueZioAtfileLock.Record;
         'blue.zio.atfile.upload': BlueZioAtfileUpload.Record;
         'blue.zio.meta.profile': BlueZioMetaProfile.Record;
