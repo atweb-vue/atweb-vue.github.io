@@ -21,7 +21,6 @@
     "@guolao/vue-monaco-editor": "^1.5.4",
     "@mdx-js/mdx": "^3.1.0",
     "@noble/hashes": "^1.6.1",
-    "@quasar/extras": "^1.16.15",
     "@vueuse/core": "^12.0.0",
     "bluesky-post-embed": "^1.0.5",
     "bluesky-profile-card-embed": "^1.0.0",
@@ -61,5 +60,6 @@
     "vite": "^6.0.1",
     "vite-plugin-vue-devtools": "^7.6.5",
     "vue-tsc": "^2.1.10"
-  }
+  },
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
 }
