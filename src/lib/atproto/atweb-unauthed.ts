@@ -135,7 +135,9 @@ export interface Page {
     $type: 'io.github.atweb.file';
     filePath: string;
 
-    blob: Uint8Array<ArrayBufferLike>;
+    blob: Uint8Array | string;
+    blobBuffer: Uint8Array;
+    blobString: string;
     bodyOriginal: At.Blob<string>;
 
     uri: At.Uri;
@@ -173,5 +175,13 @@ export async function downloadFile(did: At.DID, rkey: string): Promise<Page> {
         bodyOriginal: record.body,
         uri,
         did,
+
+        get blobBuffer() {
+            return typeof blob === 'string' ? new TextEncoder().encode(blob) : blob;
+        },
+
+        get blobString() {
+            return typeof blob === 'string' ? blob : new TextDecoder().decode(blob);
+        }
     };
 }

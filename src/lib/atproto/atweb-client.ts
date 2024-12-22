@@ -1,11 +1,12 @@
 import { KittyAgent } from './kitty-agent';
 import { parseAtUri } from '../utils';
-import type { At } from '@atcute/client/lexicons';
+import type { At, IoGithubAtwebFile } from '@atcute/client/lexicons';
 import { parse as parseMime } from 'file-type-mime';
 import { toString as ui8ToString, fromString as ui8FromString } from 'uint8arrays';
 import { user, type Account, type User } from './signed-in-user';
 import { getDidAndPds } from './pds-helpers';
 import mime from 'mime';
+import { AtUri } from '@atproto/syntax';
 import { filepathToRkey } from './rkey';
 
 export class AtwebClient {
@@ -16,6 +17,18 @@ export class AtwebClient {
     get user() {
         if (!user.value) throw new Error('Not signed in');
         return user.value;
+    }
+
+    async listFiles(): Promise<(IoGithubAtwebFile.Record & { uri: AtUri })[]> {
+        const files = await this.agent.list({
+            collection: 'io.github.atweb.file',
+            repo: this.user.did,
+        });
+
+        return files.records.map(e => ({
+            ...e.value,
+            uri: new AtUri(e.uri),
+        }));
     }
 
     async uploadPage(

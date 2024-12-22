@@ -32,20 +32,14 @@ await watchImmediateAsync(page, async page => {
     if (page.bodyOriginal.mimeType === 'text/mdx') {
         console.log('setting md');
         type.value = 'markdown';
-        contents.value =
-            typeof page.blob === 'string'
-                ? page.blob
-                : new TextDecoder().decode(page.blob.buffer);
+        contents.value = page.blobString;
         console.log('set md');
     } else if (page.bodyOriginal.mimeType.startsWith('image/')) {
         type.value = 'image';
         contents.value = await getGetBlobUrl(page.uri, true);
     } else if (page.bodyOriginal.mimeType.startsWith('text/')) {
         type.value = 'pre';
-        contents.value =
-            typeof page.blob === 'string'
-                ? page.blob
-                : new TextDecoder().decode(page.blob.buffer);
+        contents.value = page.blobString;
     } else {
         type.value = 'generic';
         contents.value = await getGetBlobUrl(page.uri);
