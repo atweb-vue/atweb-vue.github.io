@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, shallowRef, watch } from 'vue';
+import { onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
 import { themeNames, themes } from '@/lib/monaco/themes';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
@@ -15,34 +15,9 @@ import { downloadFile } from '@/lib/atproto/atweb-unauthed';
 import { filepathToRkey } from '@/lib/atproto/rkey';
 import * as monaco from 'monaco-editor';
 import type { AtUri } from '@atproto/syntax';
-import { watchImmediate } from '@vueuse/core';
+import { useLocalStorage, watchImmediate } from '@vueuse/core';
 import { lookupMime } from '@/lib/mime';
-
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
-import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
-import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-
-self.MonacoEnvironment = {
-  getWorker(_, label) {
-    if (label === 'json') {
-      return new jsonWorker();
-    }
-    if (label === 'css' || label === 'scss' || label === 'less') {
-      return new cssWorker();
-    }
-    if (label === 'html' || label === 'handlebars' || label === 'razor') {
-      return new htmlWorker();
-    }
-    if (label === 'typescript' || label === 'javascript') {
-      return new tsWorker();
-    }
-    return new editorWorker();
-  }
-};
-
-type MonacoEditor = typeof monacoEditor;
+import MonacoEditor from '@/components/MonacoEditor.vue';
 
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
@@ -55,7 +30,7 @@ const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
 const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
 const submitted = ref(false);
 
-onMounted(() => {
+function onBeforeMonacoMount() {
     for (const [themeName, theme] of Object.entries(themes)) {
         // console.log(themeName, theme);
         monaco.editor.defineTheme(themeName, theme as editor.IStandaloneThemeData);
@@ -63,10 +38,11 @@ onMounted(() => {
     monaco.languages.register({ id: 'mdx', mimetypes: ['text/mdx'] });
     monaco.languages.setLanguageConfiguration('mdx', mdxLangConf);
     monaco.languages.setMonarchTokensProvider('mdx', mdxLang);
+}
 
-    editorRef.value = monaco.editor.create(document.getElementById('monaco-editor')!, MONACO_EDITOR_OPTIONS);
-    selectedTheme.value = 'Tomorrow Night Bright';
-});
+function onMonacoMount(editor: editor.IStandaloneCodeEditor) {
+    editorRef.value = editor;
+}
 
 // your action
 function formatCode() {
@@ -102,14 +78,14 @@ async function submitPage() {
     }, 1000);
 }
 
-const selectedTheme = ref<(keyof typeof themeNames)>('Visual Studio Dark');
-watch(selectedTheme, theme => {
+const selectedTheme = useLocalStorage<(keyof typeof themeNames)>('monaco-theme', 'Tomorrow Night Bright');
+watchImmediate(selectedTheme, theme => {
     monaco.editor.setTheme(themeNames[theme]);
 });
 
 const files = ref<(IoGithubAtwebFile.Record & { uri: AtUri })[]>([]);
 const activeFile = ref<string>('');
-watch(user, async user => {
+watchImmediate(user, async user => {
     if (!user) return;
 
     files.value = await user.client.listFiles();
@@ -129,105 +105,6 @@ async function setActiveFile(file: IoGithubAtwebFile.Record & { uri: AtUri }) {
     );
 }
 
-function getLanguage(activeFile: string) {
-    const languages = {
-        '.txt': 'plaintext',
-        '.abap': 'abap',
-        '.apex': 'apex',
-        '.azcli': 'azcli',
-        '.bat': 'bat',
-        '.bicep': 'bicep',
-        '.cameligo': 'cameligo',
-        '.clj': 'clojure',
-        '.coffee': 'coffeescript',
-        '.c': 'c',
-        '.cpp': 'cpp',
-        '.csharp': 'csharp',
-        '.csp': 'csp',
-        '.css': 'css',
-        '.cypher': 'cypher',
-        '.dart': 'dart',
-        '.dockerfile': 'dockerfile',
-        '.ecl': 'ecl',
-        '.elixir': 'elixir',
-        '.flow9': 'flow9',
-        '.fsharp': 'fsharp',
-        '.freemarker2': 'freemarker2',
-        '.go': 'go',
-        '.graphql': 'graphql',
-        '.handlebars': 'handlebars',
-        '.hcl': 'hcl',
-        '.html': 'html',
-        '.ini': 'ini',
-        '.java': 'java',
-        '.js': 'javascript',
-        '.jsx': 'javascript',
-        '.julia': 'julia',
-        '.kotlin': 'kotlin',
-        '.less': 'less',
-        '.lexon': 'lexon',
-        '.lua': 'lua',
-        '.liquid': 'liquid',
-        '.m3': 'm3',
-        '.md': 'markdown',
-        '.mdx': 'mdx',
-        '.mips': 'mips',
-        '.msdax': 'msdax',
-        '.mysql': 'mysql',
-        '.m': 'objective-c',
-        '.pascal': 'pascal',
-        '.pascaligo': 'pascaligo',
-        '.perl': 'perl',
-        '.pgsql': 'pgsql',
-        '.php': 'php',
-        '.pla': 'pla',
-        '.postiats': 'postiats',
-        '.powerquery': 'powerquery',
-        '.ps1': 'powershell',
-        '.proto': 'proto',
-        '.pug': 'pug',
-        '.py': 'python',
-        '.qs': 'qsharp',
-        '.r': 'r',
-        '.razor': 'razor',
-        '.redis': 'redis',
-        '.redshift': 'redshift',
-        '.restructuredtext': 'restructuredtext',
-        '.ruby': 'ruby',
-        '.rust': 'rust',
-        '.sb': 'sb',
-        '.scala': 'scala',
-        '.scheme': 'scheme',
-        '.scss': 'scss',
-        '.shell': 'shell',
-        '.sol': 'sol',
-        '.aes': 'aes',
-        '.sparql': 'sparql',
-        '.sql': 'sql',
-        '.st': 'st',
-        '.swift': 'swift',
-        '.systemverilog': 'systemverilog',
-        '.verilog': 'verilog',
-        '.tcl': 'tcl',
-        '.twig': 'twig',
-        '.ts': 'typescript',
-        '.tsx': 'typescript',
-        '.typespec': 'typespec',
-        '.vb': 'vb',
-        '.wgsl': 'wgsl',
-        '.xml': 'xml',
-        '.yaml': 'yaml',
-        '.json': 'json',
-    };
-
-    for (const [ext, lang] of Object.entries(languages)) {
-        if (activeFile.endsWith(ext)) {
-            return lang;
-        }
-    }
-
-    return 'mdx';
-}
 </script>
 
 <template>
@@ -272,7 +149,7 @@ function getLanguage(activeFile: string) {
                     />
                 </div>
 
-                <div id="monaco-editor" style="height: calc(100vh - 69.6px - 68px)"></div>
+                <MonacoEditor editor-style="height: calc(100vh - 69.6px - 68px)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
 
                 <!-- <Monaco
                     class="flex-monaco"

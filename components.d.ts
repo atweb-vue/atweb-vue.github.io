@@ -15,6 +15,7 @@ declare module 'vue' {
     'AtWebTitle.ce': typeof import('./src/components/custom-elements/AtWebTitle.ce.vue')['default']
     MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MModal: typeof import('./src/components/MModal.vue')['default']
+    MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
     'OmitVanillaCss.ce': typeof import('./src/components/custom-elements/OmitVanillaCss.ce.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
