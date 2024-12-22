@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { getRelativeOrAbsoluteBlobUrl } from '@/lib/component-helpers';
-import { injectPage } from '@/lib/injection-keys';
-import { page } from '@/lib/shared-globals';
+import { pageMeta } from '@/lib/shared-globals';
 import { watchImmediateAsync } from '@/lib/vue-utils';
-import { watchImmediate } from '@vueuse/core';
-import { inject, ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps<{
     src?: string;
@@ -18,16 +16,16 @@ const props = defineProps<{
 const realSrc = ref<string>();
 const realSrcSet = ref<string>();
 
-await watchImmediateAsync(page, async page => {
-    if (!page) {
-        console.warn(`no page for img ${props.src}`);
+await watchImmediateAsync(pageMeta, async pageMeta => {
+    if (!pageMeta) {
+        console.warn(`no pageMeta for img ${props.src}`);
         return;
     }
 
     await Promise.all([
         getRelativeOrAbsoluteBlobUrl(
             props.src,
-            { path: page.filePath, repo: page.did },
+            { path: pageMeta.filePath, repo: pageMeta.did },
             true
         )
             .then(uri => realSrc.value = uri)
@@ -35,7 +33,7 @@ await watchImmediateAsync(page, async page => {
 
         getRelativeOrAbsoluteBlobUrl(
             props.srcset,
-            { path: page.filePath, repo: page.did },
+            { path: pageMeta.filePath, repo: pageMeta.did },
             true
         )
             .then(uri => realSrcSet.value = uri)

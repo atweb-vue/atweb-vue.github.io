@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { getRelativeOrAbsoluteBlobUrl } from '@/lib/component-helpers';
-import { injectPage } from '@/lib/injection-keys';
-import { page } from '@/lib/shared-globals';
+import { pageMeta } from '@/lib/shared-globals';
 import { watchImmediateAsync } from '@/lib/vue-utils';
-import { watchImmediate } from '@vueuse/core';
-import { inject, ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps<{
     rel?: string;
@@ -14,15 +12,15 @@ const props = defineProps<{
 
 const realHref = ref<string>();
 
-await watchImmediateAsync(page, async page => {
-    if (!page) {
-        console.warn(`no page for link ${props.href}`);
+await watchImmediateAsync(pageMeta, async pageMeta => {
+    if (!pageMeta) {
+        console.warn(`no pageMeta for link ${props.href}`);
         return;
     }
 
     await getRelativeOrAbsoluteBlobUrl(
         props.href,
-        { path: page.filePath, repo: page.did }
+        { path: pageMeta.filePath, repo: pageMeta.did }
     )
         .then(uri => realHref.value = uri)
         .catch(err => console.warn(err));

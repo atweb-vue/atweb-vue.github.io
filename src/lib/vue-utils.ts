@@ -114,8 +114,8 @@ export async function watchImmediateAsync(
     return watcher;
 }
 
-const router = useRouter();
 export function resolveRoute(route: RouteLocationAsString | RouteLocationAsRelative | RouteLocationAsPath) {
+    const router = useRouter();
     // https://stackoverflow.com/a/70989279
     const resolved = router.resolve(route);
     const absoluteURL = new URL(resolved.href, window.location.origin).href;

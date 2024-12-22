@@ -132,9 +132,13 @@ export async function getGetBlobUrl(
     throw new GetGetBlobError('ProtocolUnsupported');
 }
 
-export interface Page {
-    $type: 'io.github.atweb.file';
+export interface PageMeta {
     filePath: string;
+    did: At.DID;
+}
+
+export interface Page extends PageMeta {
+    $type: 'io.github.atweb.file';
 
     blob: Uint8Array | string;
     blobBuffer: Uint8Array;
@@ -142,7 +146,6 @@ export interface Page {
     bodyOriginal: At.Blob<string>;
 
     uri: At.Uri;
-    did: At.DID;
 
     createdAt: string;
     modifiedAt: string;

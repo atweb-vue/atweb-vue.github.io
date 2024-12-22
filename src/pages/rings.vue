@@ -214,8 +214,14 @@ async function setMainPage(ring: (Ring & { mainPage: AtUri }), mainPageLink: str
                     @click-ok="createRing().then(() => createRingModalOpen = false)"
                     @click-cancel="createRingModalOpen = false"
                 >
-                    <input type="text" v-model="createRingName" aria-label="@ring Name" />
-                    <input type="text" v-model="createRingMainPage" aria-label="My Member Page" placeholder="index.mdx" />
+                    <label>
+                        @ring Name
+                        <input type="text" v-model="createRingName" />
+                    </label>
+                    <label>
+                        My Member Page
+                        <input type="text" v-model="createRingMainPage" placeholder="index.mdx" />
+                    </label>
                 </PModal>
 
                 <PModal
@@ -245,7 +251,10 @@ async function setMainPage(ring: (Ring & { mainPage: AtUri }), mainPageLink: str
                     @click-ok="addMember(addMemberModal!.ring, addMemberModal!.handle!).then(() => addMemberModalOpen = false)"
                     @click-cancel="addMemberModalOpen = false"
                 >
-                    <VaInput v-model="addMemberModal!.handle" label="@handle to invite" placeholder="someone.bsky.social" />
+                    <label>
+                        @handle to invite
+                        <input type="text" v-model="addMemberModal!.handle" placeholder="someone.bsky.social" />
+                    </label>
                 </PModal>
 
                 <PModal
@@ -261,69 +270,73 @@ async function setMainPage(ring: (Ring & { mainPage: AtUri }), mainPageLink: str
                         Account is already invited.
                     </div>
                 </PModal>
-                <form>
-                    <fieldset>
+                <fieldset>
+                    <div>
+                        <button @click="createRingModalOpen = true" class="form-element-width-auto">Create new @ring</button>
+
+                        <select v-model="selectedRing" aria-label="Select an @ring to edit it" class="form-element-width-auto">
+                            <option disabled :value="undefined">
+                                Select an @ring to edit it
+                            </option>
+                            <option v-for="option in rings" :key="(option! as Record<string, any>).uri.rkey" :value="option">
+                                {{ option.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div v-if="selectedRing">
+                        <h2 class="va-h2">{{ selectedRing.name }}</h2>
+                        <p><code>{{ selectedRing.uri }}</code></p>
+                        <p><b>{{ selectedRing.members?.length ?? 0 }}</b> member(s)</p>
+                        <p>Managed by <a class="va-link" :href="`https://bsky.app/profile/${selectedRing.uri.host}`">@{{ getMemberName(selectedRing.uri) }}</a></p>
+
+                        <fieldset>
+                            <button @click="copyRingMdx(selectedRing)" class="form-element-width-auto">Copy ring MDX code</button>
+                        </fieldset>
+
                         <div>
-                            <button @click="createRingModalOpen = true" class="form-element-width-auto">Create new @ring</button>
-
-                            <select v-model="selectedRing" placeholder="Select an @ring to edit it" class="form-element-width-auto">
-                                <option v-for="option in rings" :key="(option! as Record<string, any>).uri.rkey" :value="option">
-                                    {{ option.name }}
-                                </option>
-                            </select>
+                            <label>
+                                My main page<br/>
+                                <input type="text" v-model="mainPageLink" class="form-element-width-auto">
+                                <button @click="setMainPage(selectedRing, mainPageLink)" class="form-element-width-auto">Set</button>
+                            </label>
                         </div>
 
-                        <div v-if="selectedRing">
-                            <h2 class="va-h2">{{ selectedRing.name }}</h2>
-                            <p>( <code>{{ selectedRing.uri }}</code> )</p>
-                            <p><b>{{ selectedRing.members?.length ?? 0 }}</b> member(s)</p>
-                            <p>Managed by <a class="va-link" :href="`https://bsky.app/profile/${selectedRing.uri.host}`">@{{ getMemberName(selectedRing.uri) }}</a></p>
-
+                        <div v-for="member in selectedRing.members" :key="member.membership.toString()" class="ring-member-card va-gutter-2">
                             <fieldset>
-                                <button @click="copyRingMdx(selectedRing)" class="form-element-width-auto">Copy ring MDX code</button>
+                                <bluesky-profile-card :actor="getMemberName(member.membership)" allow-unauthenticated="true">
+                                </bluesky-profile-card>
+                                <div v-if="!member.isMember">Waiting for invite response</div>
+
+                                <button v-if="user && selectedRing.uri.host === user.did" @click="
+                                    kickMemberModal = {
+                                        did: member.membership.host,
+                                        displayName: getMemberName(member.membership),
+                                        ring: selectedRing,
+                                    };
+                                " class="kick-member-button">
+                                    Kick @{{ getMemberName(member.membership) }}
+                                </button>
                             </fieldset>
-
-                            <div>
-                                <input type="text" v-model="mainPageLink" aria-label="My main page" class="form-element-width-auto">
-                                <button @click="setMainPage(selectedRing, mainPageLink)" class="form-element-width-auto">Set my main page</button>
-                            </div>
-
-                            <div v-for="member in selectedRing.members" :key="member.membership.toString()" class="ring-member-card va-gutter-2">
-                                <fieldset>
-                                    <bluesky-profile-card :actor="getMemberName(member.membership)" allow-unauthenticated="true">
-                                    </bluesky-profile-card>
-                                    <div v-if="!member.isMember">Waiting for invite response</div>
-
-                                    <button v-if="user && selectedRing.uri.host === user.did" @click="
-                                        kickMemberModal = {
-                                            did: member.membership.host,
-                                            displayName: getMemberName(member.membership),
-                                            ring: selectedRing,
-                                        };
-                                    " class="kick-member-button">
-                                        Kick @{{ getMemberName(member.membership) }}
-                                    </button>
-                                </fieldset>
-                            </div>
-
-                            <hr class="va-hr" />
-                            <button class="form-element-width-auto" v-if="user && selectedRing.uri.host === user.did" @click="
-                                addMemberModal = {
-                                    ring: selectedRing,
-                                }
-                            ">
-                                Invite new member
-                            </button>
-                            <button class="form-element-width-auto" v-if="user && selectedRing.uri.host === user.did" @click="
-                                deleteRingModal = {
-                                    ring: selectedRing,
-                                };
-                            ">
-                                Delete {{ selectedRing.name }}
-                            </button>
                         </div>
-                    </fieldset>
-                </form>
+
+                        <hr class="va-hr" />
+                        <button class="form-element-width-auto" v-if="user && selectedRing.uri.host === user.did" @click="
+                            addMemberModal = {
+                                ring: selectedRing,
+                            }
+                        ">
+                            Invite new member
+                        </button>
+                        <button class="form-element-width-auto" v-if="user && selectedRing.uri.host === user.did" @click="
+                            deleteRingModal = {
+                                ring: selectedRing,
+                            };
+                        ">
+                            Delete {{ selectedRing.name }}
+                        </button>
+                    </div>
+                </fieldset>
             </SignInGate>
         </main>
     </UsePico>

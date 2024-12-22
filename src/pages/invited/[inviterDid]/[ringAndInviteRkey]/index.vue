@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SignInGate from '@/components/SignInGate.vue';
+import UsePico from '@/components/UsePico.vue';
 import { getRing } from '@/lib/atproto/atweb-unauthed';
 import { getDidAndPds } from '@/lib/atproto/pds-helpers';
 import { user } from '@/lib/atproto/signed-in-user';
@@ -26,22 +27,27 @@ async function acceptInvite() {
 </script>
 
 <template>
-    <div class="main">
-        <SignInGate :sign-in-text="`Sign in to view invite from @${inviterHandle}`">
-            <div v-if="!inviteAccepted">
-                <div>
-                    Accept this invite from @{{ inviterHandle }}?
+    <UsePico>
+        <main>
+            <SignInGate :sign-in-text="`Sign in to view invite from @${inviterHandle}`">
+                <div v-if="!inviteAccepted">
+                    <p>
+                        Accept this invite from @{{ inviterHandle }}?
+                    </p>
+                    <div>
+                        <label>
+                            My Member Page
+                            <input type="text" v-model="mainPage" placeholder="index.mdx" />
+                        </label>
+                        <button @click="acceptInvite()" style="vertical-align: text-top; margin-top: -1px">OK</button>
+                    </div>
                 </div>
-                <div>
-                    <input type="text" v-model="mainPage" aria-label="My Member Page" placeholder="index.mdx" />
-                    <button @click="acceptInvite()" style="vertical-align: text-top; margin-top: -1px">OK</<button>
+                <div v-else>
+                    Welcome to {{ inviteAccepted }}!
                 </div>
-            </div>
-            <div v-else>
-                Welcome to {{ inviteAccepted }}!
-            </div>
-        </SignInGate>
-    </div>
+            </SignInGate>
+        </main>
+    </UsePico>
 </template>
 
 <style lang="scss" scoped>

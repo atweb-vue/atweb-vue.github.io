@@ -2,9 +2,9 @@
 import { onBeforeUnmount, provide, ref, shallowRef, watch } from 'vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import { downloadFile, getGetBlobUrl, type Page } from '@/lib/atproto/atweb-unauthed';
-import { useRoute } from 'vue-router';
+import { onBeforeRouteLeave, useRoute } from 'vue-router';
 import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
-import { page, useVanillaCss } from '@/lib/shared-globals';
+import { page, pageMeta, useVanillaCss } from '@/lib/shared-globals';
 import { watchImmediate } from '@vueuse/core';
 import { watchImmediateAsync } from '@/lib/vue-utils';
 import UsePico from '@/components/UsePico.vue';
@@ -15,8 +15,14 @@ await watchImmediateAsync(
     async () => {
         const did = await resolveHandleAnonymously(route.params.handle as string);
         page.value = await downloadFile(did, route.params.rkey as string);
+        pageMeta.value = page.value;
     },
 );
+
+onBeforeRouteLeave(() => {
+    page.value = undefined;
+    pageMeta.value = page.value;
+});
 
 const type = ref<'markdown' | 'pre' | 'image' | 'generic' | 'none'>('none');
 const contents = ref<string>('');
