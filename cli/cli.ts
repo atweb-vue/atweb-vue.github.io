@@ -9,7 +9,7 @@ import Readline from 'node:readline/promises';
 import { parseArgs } from "node:util";
 import nodePath from 'path-browserify';
 import { parse as parseMime } from 'file-type-mime';
-import mime from 'mime';
+import { lookupMime } from '@/lib/mime';
 import { create as createCid, format as formatCid } from '@atcute/cid';
 
 let {
@@ -90,7 +90,7 @@ if (command === 'upload') {
                 // TODO find existing CID and don't upload if unchanged
                 const blob = await agent.uploadBlob(
                     new Blob([file], {
-                        type: mime.getType(realPath) ?? parseMime(file.buffer as ArrayBuffer)?.mime
+                        type: lookupMime(realPath) ?? parseMime(file.buffer as ArrayBuffer)?.mime
                     })
                 );
 
