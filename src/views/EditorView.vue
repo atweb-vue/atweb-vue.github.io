@@ -158,16 +158,6 @@ async function submitPage() {
 }
 
 .input {
-    padding: 0.1rem 0.5rem;
     margin-right: 0.5rem;
-    font-size: 0.8rem;
-}
-
-.button {
-    appearance: none;
-    border: 1px solid var(--text-color);
-    display: inline-block;
-    margin: 0.5rem 0;
-    padding: 0.1rem 0.5rem;
 }
 </style>

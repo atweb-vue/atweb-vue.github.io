@@ -27,5 +27,5 @@ watch(page!, page => {
 </script>
 
 <template>
-    <link v-bind="$attrs" :rel :realHref :type />
+    <link v-bind="$attrs" :rel :href="realHref" :type />
 </template>

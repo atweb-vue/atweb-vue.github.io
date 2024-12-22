@@ -25,5 +25,7 @@ watch(page!, page => {
 </script>
 
 <template>
-    <link v-bind="$attrs" :realHref />
+    <a v-bind="$attrs" :href="realHref">
+        <slot></slot>
+    </a>
 </template>

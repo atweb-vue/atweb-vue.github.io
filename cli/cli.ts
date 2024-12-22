@@ -110,6 +110,6 @@ if (command === 'upload') {
             }
         }
     }
+} else {
+    throw new Error('No command specified!');
 }
-
-process.exit(1);
