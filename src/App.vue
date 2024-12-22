@@ -11,6 +11,7 @@ const router = useRouter();
 
 watch(router.currentRoute, route => {
     isInPage.value = route.path.startsWith('/page/');
+    useVanillaCss.value = true;
 });
 
 authenticateOnStartup();

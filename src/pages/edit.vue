@@ -21,6 +21,7 @@ import { useRouter } from 'vue-router';
 import UsePico from '@/components/UsePico.vue';
 import { pageMeta, useVanillaCss } from '@/lib/shared-globals';
 import { frameworkStyles } from '@/lib/framework-styles';
+import { ShadowRoot } from 'vue-shadow-dom';
 
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
@@ -191,12 +192,13 @@ adoptedStyleSheet.replace(frameworkStyles);
                 </div>
 
                 <Suspense>
-                    <UsePico v-if="useVanillaCss">
-                        <main>
-                            <MarkdownRenderer v-model:errors="submitErrors" :markdown="editorValue" />
-                        </main>
-                    </UsePico>
-                    <MarkdownRenderer v-else v-model:errors="submitErrors" :markdown="editorValue" />
+                    <ShadowRoot :adopted-style-sheets="useVanillaCss ? [adoptedStyleSheet] : []">
+                        <UsePico>
+                            <main>
+                                <MarkdownRenderer v-model:errors="submitErrors" :markdown="editorValue" />
+                            </main>
+                        </UsePico>
+                    </ShadowRoot>
                 </Suspense>
             </div>
         </div>

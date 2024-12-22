@@ -8,6 +8,7 @@ import { page, pageMeta, useVanillaCss } from '@/lib/shared-globals';
 import { watchImmediate } from '@vueuse/core';
 import { watchImmediateAsync } from '@/lib/vue-utils';
 import UsePico from '@/components/UsePico.vue';
+import { frameworkStyles } from '@/lib/framework-styles';
 
 const route = useRoute('/page/[handle]/[rkey]/');
 await watchImmediateAsync(
@@ -51,18 +52,21 @@ await watchImmediateAsync(page, async page => {
         contents.value = await getGetBlobUrl(page.uri);
     }
 });
+
+const adoptedStyleSheet = new CSSStyleSheet();
+adoptedStyleSheet.replace(frameworkStyles);
+
 </script>
 
 <template>
     <div class="page">
         <div v-if="type == 'markdown'">
             <Suspense>
-                <UsePico v-if="useVanillaCss">
+                <UsePico>
                     <main>
-                        <MarkdownRenderer :markdown="contents" />
+                        <MarkdownRenderer :markdown="contents" :disable-components="true" />
                     </main>
                 </UsePico>
-                <MarkdownRenderer v-else :markdown="contents" />
             </Suspense>
         </div>
         <img v-else-if="type == 'image'" :src="contents" />
