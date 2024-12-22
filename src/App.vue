@@ -42,6 +42,7 @@ watchImmediate(prefersDark, prefersDark => {
                     <VaButton preset="secondary" to="/">Home</VaButton>
                     <VaButton preset="secondary" to="/edit">Create Page</VaButton>
                     <VaButton preset="secondary" to="/page/did:plc:nmc77zslrwafxn75j66mep6o/test.mdx">Test Page</VaButton>
+                    <VaButton preset="secondary" to="/rings">My @rings</VaButton>
                 </template>
             </VaNavbar>
         </template>

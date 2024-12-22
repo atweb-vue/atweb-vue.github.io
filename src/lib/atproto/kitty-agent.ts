@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
 import { XRPC, XRPCError, type XRPCOptions, type XRPCRequestOptions, type XRPCResponse } from "@atcute/client";
-import type { At, ComAtprotoRepoApplyWrites, ComAtprotoRepoCreateRecord, ComAtprotoRepoGetRecord, ComAtprotoRepoListRecords, ComAtprotoRepoPutRecord, ComAtprotoSyncGetBlob, ComAtprotoSyncListBlobs, Procedures, Queries, Records } from "@atcute/client/lexicons";
+import type { At, ComAtprotoRepoApplyWrites, ComAtprotoRepoCreateRecord, ComAtprotoRepoDeleteRecord, ComAtprotoRepoGetRecord, ComAtprotoRepoListRecords, ComAtprotoRepoPutRecord, ComAtprotoSyncGetBlob, ComAtprotoSyncListBlobs, Procedures, Queries, Records } from "@atcute/client/lexicons";
 
 interface GetRecordParams<K extends keyof Records> extends ComAtprotoRepoGetRecord.Params { collection: K; }
 interface GetRecordOutput<K extends keyof Records> extends ComAtprotoRepoGetRecord.Output { value: Records[K]; }
@@ -150,6 +150,12 @@ export class KittyAgent<X extends XRPC = XRPC> {
         const data = await this.call('com.atproto.repo.createRecord', params);
 
         return data as CreateRecordOutput<K>;
+    }
+
+    async delete(params: ComAtprotoRepoDeleteRecord.Input) {
+        const data = await this.call('com.atproto.repo.deleteRecord', params);
+
+        return data;
     }
 
     async paginatedList<K extends keyof Records>(params: {

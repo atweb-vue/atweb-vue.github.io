@@ -26,6 +26,10 @@ declare module 'vue' {
     SpotifyPlayer: typeof import('./src/components/custom-elements/SpotifyPlayer.vue')['default']
     'UserbarBadge.ce': typeof import('./src/components/custom-elements/UserbarBadge.ce.vue')['default']
     VaButton: typeof import('vuestic-ui')['VaButton']
+    VaForm: typeof import('vuestic-ui')['VaForm']
+    VaInput: typeof import('vuestic-ui')['VaInput']
+    VaModal: typeof import('vuestic-ui')['VaModal']
+    VaSelect: typeof import('vuestic-ui')['VaSelect']
     'WebampPlayer.ce': typeof import('./src/components/custom-elements/WebampPlayer.ce.vue')['default']
   }
 }

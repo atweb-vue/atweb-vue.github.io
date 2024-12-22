@@ -35,6 +35,9 @@
         "member": {
             "type": "object",
             "description": "Represents a webring invitation.",
+            "required": [
+                "membership"
+            ],
             "properties": {
                 "membership": {
                     "type": "string",

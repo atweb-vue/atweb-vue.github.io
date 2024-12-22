@@ -43,7 +43,7 @@ declare module '@atcute/client/lexicons' {
         interface Member {
             [Brand.Type]?: 'io.github.atweb.ring#member';
             /** Link to the membership record for this member. */
-            membership?: At.Uri;
+            membership: At.Uri;
         }
     }
 

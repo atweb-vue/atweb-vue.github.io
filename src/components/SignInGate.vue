@@ -28,7 +28,7 @@ watchImmediate(user, user => {
         cancel-text="Cancel"
         @ok="authenticateIfNecessary(handle).finally(() => open = false)"
     >
-        <VaInput v-model="handle" placeholder="Handle" />
+        <VaInput v-model="handle" label="@handle" placeholder="e.g. you.bsky.social" />
     </VaModal>
 
 </template>

@@ -133,8 +133,3 @@ export async function getDidDocument(did: At.DID): Promise<DidDocument> {
 
     return doc;
 }
-
-export async function getPdsFromDid(did: At.DID) {
-    const didDocument = await getDidDocument(did);
-    return getPdsEndpoint(didDocument);
-}

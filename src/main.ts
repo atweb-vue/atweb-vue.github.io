@@ -1,5 +1,7 @@
 import './assets/main.scss';
 
+import 'bluesky-profile-card-embed';
+
 // import './custom-elements.ts';
 
 import { createApp } from 'vue';

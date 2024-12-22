@@ -1,6 +1,6 @@
 import { CredentialManager, simpleFetchHandler } from "@atcute/client";
 import { KittyAgent } from "./kitty-agent";
-import type { At } from "@atcute/client/lexicons";
+import type { At, IoGithubAtwebRing } from "@atcute/client/lexicons";
 import { parseAtUri } from "../utils";
 import { getDidAndPds } from "./pds-helpers";
 import type { Awaitable } from "@vueuse/core";
@@ -196,4 +196,57 @@ export async function getManagedRings(didOrHandle: string) {
         ...record.value,
         uri: new AtUri(record.uri),
     }));
+}
+
+export async function getRingsUserIsAMemberOf(didOrHandle: string) {
+    const { records } = await unauthedAgent.list({
+        collection: 'io.github.atweb.ringMembership',
+        repo: didOrHandle,
+    });
+
+    const rings: Array<IoGithubAtwebRing.Record & { uri: AtUri }> = [];
+    for (const record of records) {
+        const uri = new AtUri(record.value.ring);
+        if (uri.host === didOrHandle) continue;
+
+        const entry = await unauthedAgent.tryGet({
+            collection: 'io.github.atweb.ring',
+            repo: uri.host,
+            rkey: uri.rkey,
+        });
+
+        if (entry.value) {
+            rings.push({
+                ...entry.value,
+                uri: new AtUri(entry.uri),
+            });
+        }
+    }
+
+    return rings;
+}
+
+export async function getMemberRings(didOrHandle: string) {
+    const { records } = await unauthedAgent.list({
+        collection: 'io.github.atweb.ring',
+        repo: didOrHandle,
+    });
+
+    return records.map(record => ({
+        ...record.value,
+        uri: new AtUri(record.uri),
+    }));
+}
+
+export async function getRing(repo: string, rkey: string) {
+    const result = await unauthedAgent.get({
+        collection: 'io.github.atweb.ring',
+        repo,
+        rkey,
+    });
+    return {
+        ...result.value,
+        cid: result.cid,
+        uri: new AtUri(result.uri),
+    };
 }

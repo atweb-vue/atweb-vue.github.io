@@ -29,12 +29,6 @@ const router = createRouter({
             name: 'invited',
             component: () => import('@/views/ReceiveInviteView.vue'),
         },
-        // manage a webring you own
-        {
-            path: '/ring/:rkey',
-            name: 'ring',
-            component: () => import('@/views/RingView.vue'),
-        },
         // manage your rings and the rings you are in
         {
             path: '/rings',

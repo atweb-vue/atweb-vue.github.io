@@ -1,6 +1,6 @@
 import { KittyAgent } from './kitty-agent';
 import { parseAtUri } from '../utils';
-import type { At, IoGithubAtwebFile } from '@atcute/client/lexicons';
+import type { At, IoGithubAtwebFile, IoGithubAtwebRing } from '@atcute/client/lexicons';
 import { parse as parseMime } from 'file-type-mime';
 import { toString as ui8ToString, fromString as ui8FromString } from 'uint8arrays';
 import { user, type Account, type User } from './signed-in-user';
@@ -8,6 +8,7 @@ import { getDidAndPds } from './pds-helpers';
 import { AtUri } from '@atproto/syntax';
 import { filepathToRkey } from './rkey';
 import { lookupMime } from '../mime';
+import { now as tidNow } from '@atcute/tid';
 
 export class AtwebClient {
     get agent(): KittyAgent {
@@ -63,5 +64,64 @@ export class AtwebClient {
         });
 
         return { ...result, rkey };
+    }
+
+    async createRing(
+        name: string,
+        creatorMainPage: string,
+    ): Promise<{ cid: At.CID; uri: AtUri; }> {
+        const tid = tidNow();
+
+        const membership = await this.agent.create({
+            collection: 'io.github.atweb.ringMembership',
+            repo: this.user.did,
+            rkey: tid,
+            record: {
+                $type: 'io.github.atweb.ringMembership',
+                ring: AtUri.make(this.user.did, 'io.github.atweb.ring', tid).toString(),
+                mainPage: AtUri.make(this.user.did, 'io.github.atweb.page', filepathToRkey(creatorMainPage)).toString(),
+                createdAt: new Date().toISOString(),
+            }
+        });
+
+        const result = await this.agent.create({
+            collection: 'io.github.atweb.ring',
+            repo: this.user.did,
+            rkey: tid,
+            record: {
+                $type: 'io.github.atweb.ring',
+                name: name,
+                members: [{
+                    membership: membership.uri,
+                }],
+                createdAt: new Date().toISOString(),
+            }
+        });
+
+        return { ...result, uri: new AtUri(result.uri) };
+    }
+
+    async updateRing(
+        rkey: string,
+        ring: IoGithubAtwebRing.Record,
+        swapRecord?: string,
+    ) {
+        await this.agent.put({
+            collection: 'io.github.atweb.ring',
+            repo: this.user.did,
+            rkey,
+            record: ring,
+            swapRecord
+        });
+    }
+
+    async deleteRing(
+        rkey: string
+    ) {
+        await this.agent.delete({
+            collection: 'io.github.atweb.ring',
+            repo: this.user.did,
+            rkey,
+        });
     }
 }
