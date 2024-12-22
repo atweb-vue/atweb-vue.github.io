@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink, RouterView, useRouter } from 'vue-router';
 import { authenticateOnStartup } from './lib/atproto/signed-in-user';
-import router from './router';
 import { ref, watch } from 'vue';
 import { useVanillaCss } from './lib/shared-globals';
 import { usePreferredDark, watchImmediate } from '@vueuse/core';
@@ -9,6 +8,7 @@ import { useColors, VaButton, VaLayout, VaNavbar } from 'vuestic-ui';
 import { frameworkStyles } from './lib/framework-styles';
 
 const isInPage = ref<boolean>();
+const router = useRouter();
 
 watch(router.currentRoute, route => {
     isInPage.value = route.path.startsWith('/page/');

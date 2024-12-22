@@ -14,8 +14,7 @@ import {
     type Reactive,
 } from 'vue';
 import type { ReactiveMarker } from '@vue/reactivity/dist/reactivity.d.ts';
-import router from '@/router';
-import type { RouteLocationAsPath, RouteLocationAsRelative, RouteLocationAsString } from 'vue-router';
+import { useRouter, type RouteLocationAsPath, type RouteLocationAsRelative, type RouteLocationAsString } from 'vue-router';
 
 export function getSlotChildrenText(
     children: Slot | VNode[] | VNodeArrayChildren | undefined,
@@ -115,6 +114,7 @@ export async function watchImmediateAsync(
     return watcher;
 }
 
+const router = useRouter();
 export function resolveRoute(route: RouteLocationAsString | RouteLocationAsRelative | RouteLocationAsPath) {
     // https://stackoverflow.com/a/70989279
     const resolved = router.resolve(route);
