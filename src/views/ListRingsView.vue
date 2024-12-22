@@ -21,7 +21,7 @@ await watchImmediateAsync(
 </script>
 
 <template>
-    <main>
+    <div class="main">
         <SignInGate>
             <div v-for="ring in rings" :key="ring.uri.rkey">
                 {{ ring.name }}
@@ -29,5 +29,11 @@ await watchImmediateAsync(
 
             <VaButton>Create new ring</VaButton>
         </SignInGate>
-    </main>
+    </div>
 </template>
+
+<style lang="scss" scoped>
+.main {
+    padding: 0 1rem;
+}
+</style>
