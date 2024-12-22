@@ -1,8 +1,5 @@
 import './assets/main.scss';
 
-import 'bluesky-profile-card-embed';
-// import './custom-elements.ts';
-
 import shadow from 'vue-shadow-dom';
 
 import { createApp } from 'vue';

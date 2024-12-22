@@ -13,6 +13,8 @@ import { computedAsync, useBrowserLocation, useClipboard, type ElementOf } from 
 import { computed, ref, shallowRef, watch, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+import 'bluesky-profile-card-embed';
+
 type Ring = Awaited<ReturnType<typeof getRing>>;
 
 const rings = ref<(Ring & { mainPage: AtUri })[]>();
