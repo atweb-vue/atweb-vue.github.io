@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { type EmbedController, useSpotifyIFrameAPI } from '@/lib/spotify';
-import { useEventListener, useScriptTag, useTimeout, useTimeoutFn, watchImmediate } from '@vueuse/core';
-import { onBeforeUnmount, onMounted, onUnmounted, ref, shallowRef, useTemplateRef } from 'vue';
+import { useEventListener, useTimeoutFn } from '@vueuse/core';
+import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
 import onekoGif from '@/assets/oneko.gif?url';
 
-const props = defineProps<{
+const { cat, pettable = true, scrolls = true } = defineProps<{
     cat?: string;
     pettable?: boolean;
-    draggable?: boolean;
+    scrolls?: boolean;
 }>();
 
 // oneko.js: https://github.com/adryd325/oneko.js
@@ -113,11 +112,7 @@ onMounted(() => {
         nekoEl.style.top = `${nekoPosY - 16}px`;
         nekoEl.style.zIndex = '2147483647';
 
-        let nekoFile = onekoGif;
-        const curScript = document.currentScript;
-        if (curScript && curScript.dataset.cat) {
-            nekoFile = curScript.dataset.cat;
-        }
+        const nekoFile = cat ?? onekoGif;
         nekoEl.style.backgroundImage = `url(${nekoFile})`;
 
         useEventListener(document, 'mousemove', event => {
@@ -125,7 +120,7 @@ onMounted(() => {
             mousePosY = event.clientY;
         });
 
-        if (props.draggable ?? true) {
+        if (scrolls) {
             // https://github.com/adryd325/oneko.js/compare/main...rozbrajaczpoziomow:fork-oneko.js:main
             useEventListener(document, "wheel", event => {
                 nekoPosY += event.deltaY / 10;
@@ -187,10 +182,9 @@ onMounted(() => {
             if (nekoPosY > window.innerHeight - 32) {
                 availableIdleAnimations.push("scratchWallS");
             }
-            idleAnimation =
-                availableIdleAnimations[
+            idleAnimation = availableIdleAnimations[
                 Math.floor(Math.random() * availableIdleAnimations.length)
-                ];
+            ];
         }
 
         switch (idleAnimation) {
@@ -247,7 +241,7 @@ onMounted(() => {
         }
     }
 
-    if (props.pettable ?? true) {
+    if (pettable) {
         useEventListener(nekoEl, 'click', explodeHearts);
     }
 
