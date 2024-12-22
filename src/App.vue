@@ -42,12 +42,16 @@ authenticateOnStartup();
 
         <template #content>
             <main>
-                <RouterView />
+                <Suspense>
+                    <RouterView />
+                </Suspense>
             </main>
         </template>
     </VaLayout>
 
-    <RouterView v-else />
+    <Suspense v-else>
+        <RouterView />
+    </Suspense>
 </template>
 
 <style scoped>

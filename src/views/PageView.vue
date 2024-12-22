@@ -10,7 +10,7 @@ import { watchImmediateAsync } from '@/lib/vue-utils';
 
 const route = useRoute();
 
-watchImmediate(
+await watchImmediateAsync(
     route,
     async () => {
         const did = await resolveHandleAnonymously(route.params.handle as string);
@@ -21,7 +21,7 @@ watchImmediate(
 const type = ref<'markdown' | 'pre' | 'image' | 'generic' | 'none'>('none');
 const contents = ref<string>('');
 
-watchImmediate(page, async page => {
+await watchImmediateAsync(page, async page => {
     console.log('watched', page);
 
     if (page === undefined) return;
