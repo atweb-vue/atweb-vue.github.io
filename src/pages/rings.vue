@@ -6,15 +6,10 @@ import { getDidAndPds } from '@/lib/atproto/pds-helpers';
 import { rkeyToFilepath } from '@/lib/atproto/rkey';
 import { user, type User } from '@/lib/atproto/signed-in-user';
 import { resolveRoute, watchImmediateAsync } from '@/lib/vue-utils';
-import router from '@/router';
-import type { IoGithubAtwebRing } from '@atcute/client/lexicons';
-import { now as tidNow } from '@atcute/tid';
 import { AtUri } from '@atproto/syntax';
 import { computedAsync, useBrowserLocation, useClipboard, type ElementOf } from '@vueuse/core';
 import { computed, ref, shallowRef, watch, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { RouteLocationAsPath, RouteLocationAsRelative, RouteLocationAsString, RouteLocationNormalizedLoadedGeneric } from 'vue-router';
-import { useModal } from 'vuestic-ui';
 
 type Ring = Awaited<ReturnType<typeof getRing>>;
 
