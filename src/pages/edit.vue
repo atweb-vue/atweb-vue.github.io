@@ -20,6 +20,14 @@ import { pageMeta, useVanillaCss } from '@/lib/shared-globals';
 import { frameworkStyles } from '@/lib/framework-styles';
 import { ShadowRoot } from 'vue-shadow-dom';
 
+for (const [themeName, theme] of Object.entries(themes)) {
+    // console.log(themeName, theme);
+    monaco.editor.defineTheme(themeName, theme as editor.IStandaloneThemeData);
+}
+monaco.languages.register({ id: 'mdx', mimetypes: ['text/mdx'] });
+monaco.languages.setLanguageConfiguration('mdx', mdxLangConf);
+monaco.languages.setMonarchTokensProvider('mdx', mdxLang);
+
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
     formatOnType: true,
@@ -31,17 +39,6 @@ const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
 const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
 const editorValue = ref('');
 const submitted = ref(false);
-
-function onBeforeMonacoMount() {
-    for (const [themeName, theme] of Object.entries(themes)) {
-        // console.log(themeName, theme);
-        monaco.editor.defineTheme(themeName, theme as editor.IStandaloneThemeData);
-    }
-    monaco.editor.setTheme(themeNames[selectedTheme.value]);
-    monaco.languages.register({ id: 'mdx', mimetypes: ['text/mdx'] });
-    monaco.languages.setLanguageConfiguration('mdx', mdxLangConf);
-    monaco.languages.setMonarchTokensProvider('mdx', mdxLang);
-}
 
 function onMonacoMount(editor: editor.IStandaloneCodeEditor) {
     editorRef.value = editor;
@@ -97,7 +94,7 @@ async function openPage() {
 }
 
 const selectedTheme = useLocalStorage<(keyof typeof themeNames)>('monaco-theme', 'Tomorrow Night Bright');
-watch(selectedTheme, selectedTheme => {
+watchImmediate(selectedTheme, selectedTheme => {
     monaco.editor.setTheme(themeNames[selectedTheme]);
 });
 
@@ -174,7 +171,7 @@ await adoptedStyleSheet.replace(frameworkStyles);
                 </div>
             </UsePico>
 
-            <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
+            <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px)" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
         </div>
         <div class="right" style="min-width: 25vw;" v-if="isMarkdownFile">
             <div style="padding: 1rem; max-height: calc(100vh - 115.5px); overflow: auto;">
