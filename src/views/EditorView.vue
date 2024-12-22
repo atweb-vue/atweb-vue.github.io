@@ -35,6 +35,7 @@ function onBeforeMonacoMount() {
         // console.log(themeName, theme);
         monaco.editor.defineTheme(themeName, theme as editor.IStandaloneThemeData);
     }
+    monaco.editor.setTheme(themeNames[selectedTheme.value]);
     monaco.languages.register({ id: 'mdx', mimetypes: ['text/mdx'] });
     monaco.languages.setLanguageConfiguration('mdx', mdxLangConf);
     monaco.languages.setMonarchTokensProvider('mdx', mdxLang);
@@ -79,8 +80,8 @@ async function submitPage() {
 }
 
 const selectedTheme = useLocalStorage<(keyof typeof themeNames)>('monaco-theme', 'Tomorrow Night Bright');
-watchImmediate(selectedTheme, theme => {
-    monaco.editor.setTheme(themeNames[theme]);
+watch(selectedTheme, selectedTheme => {
+    monaco.editor.setTheme(themeNames[selectedTheme]);
 });
 
 const files = ref<(IoGithubAtwebFile.Record & { uri: AtUri })[]>([]);
