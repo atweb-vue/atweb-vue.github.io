@@ -11,7 +11,7 @@ import AtWebStylesheet from '@/components/custom-elements/AtWebStylesheet.ce.vue
 import OmitVanillaCss from '@/components/custom-elements/OmitVanillaCss.ce.vue';
 import AtStyle from '@/components/custom-elements/AtStyle.ce.vue';
 import AtWebTitle from '@/components/custom-elements/AtWebTitle.ce.vue';
-import { h, type Slot } from 'vue';
+import { type Slot } from 'vue';
 import type { JSX } from 'vue/jsx-runtime';
 import WebampPlayer from '@/components/custom-elements/WebampPlayer.ce.vue';
 
@@ -26,6 +26,7 @@ const extraComponents: Record<
     string,
     (props: Props, context: Context) => JSX.Element
 > = {
+    hr: () => <hr class="va-separator" />,
     h1: (_, { slots }) => <h1 class="va-h1">{slots.default()}</h1>,
     h2: (_, { slots }) => <h2 class="va-h2">{slots.default()}</h2>,
     h3: (_, { slots }) => <h3 class="va-h3">{slots.default()}</h3>,
@@ -39,6 +40,13 @@ const extraComponents: Record<
     lowercase: (_, { slots }) => <span class="va-text-lowercase">{slots.default()}</span>,
     capitalize: (_, { slots }) => <span class="va-text-capitalize">{slots.default()}</span>,
     highlighted: (_, { slots }) => <span class="va-text-highlighted">{slots.default()}</span>,
+    left: (_, { slots }) => <span class="va-text-left">{slots.default()}</span>,
+    right: (_, { slots }) => <span class="va-text-right">{slots.default()}</span>,
+    center: (_, { slots }) => <span class="va-text-center">{slots.default()}</span>,
+    justify: (_, { slots }) => <span class="va-text-justify">{slots.default()}</span>,
+    truncate: (_, { slots }) => <span class="va-text-truncate">{slots.default()}</span>,
+    'no-wrap': (_, { slots }) => <span class="va-text-no-wrap">{slots.default()}</span>,
+
     p: (_, { slots }) => <p class="va-paragraph">{slots.default()}</p>,
 };
 
