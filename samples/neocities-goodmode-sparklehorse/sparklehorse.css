@@ -1,0 +1,119 @@
+/* SPARKLEHORSE by GOODMODE */
+/* http://goodmode.neocities.org/ */
+
+
+/* NAVIGATION MENU */
+/* This is the menu box with the pagetitle and links in it,
+	as well as a picture of Princess Celestia from MLP:FiM.
+	You can remove/replace her in the HTML file! */
+	
+	body {
+        background-color: #dcd8dc;
+        font-family: Georgia;
+    }
+    
+    div.nav {
+        float: right;
+        width: 300px;
+        margin: 10px 20px 10px 10px;
+        background-color: #ffffff;
+        border-radius: 50px;
+        border: 5px solid #d4a2e3;
+        text-align: center;
+    }
+    
+    div.nav img {
+        width: 200px;
+        height: auto;
+        border-radius: 20px;
+        border: 10px solid #e5c87b;
+    }
+    
+    /* MAIN CONTENT */
+    /* This is where all your site text and content goes.
+        This is a very simple layout intended for small sites,
+        so there's not much flashy about this - just a styled
+        paragraph, header, and links. */
+    
+    div.content {
+        padding: 5px 10px 10px 10px;
+        background-color: #fff;
+        margin: 10px 10px 10px 10px;
+    }
+    
+    h1 {
+        font-family: Bookman Old Style;
+        color: #e5c87b;
+        font-size: 25px;
+        letter-spacing: 3px;
+        -webkit-margin-after: 0px;
+        -webkit-margin-end: 0px;
+        background: -webkit-linear-gradient(#725d27, #e5c87b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    div.content p {
+        text-indent: 1em;
+        color: #342538;
+    }
+    
+    /* GENERAL LINKS */
+    /* This bit styles the links on your site so that they show up nicely in a body of text. */
+    
+    a:link, a:active, a:visited {
+        color: #9f58b3;
+        text-decoration: none;
+    }
+    
+    a:hover {
+        color: #853d99;
+        background-image: url('sparkle.gif')
+    }
+    
+    /* NAVIGATION MENU LINKS */
+    /* This bit styles the links on your menu so they look different to regular text links. */
+    
+    div.nav ul {
+        list-style-type: none;
+        text-shadow:
+            1px 1px 0 #c7a03a,
+            1px 1px 0 #c7a03a,
+            1px 1px 0 #c7a03a,
+            1px 1px 0 #c7a03a;
+        width: auto;
+        text-align: center;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+    
+    div.nav li {
+        height: 20px;
+        background-color: #e5c87b;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    
+    /* FOOTER */
+    /* This is a bar that shows up at the bottom. I use mine for credits and contact info, but
+        you could probably use it for affiliates or something else.
+        Feel free to move the linkback to GOODMODE, but please do link back
+        SOMEWHERE that people can find... I learned to code from freebies like this,
+        and I want to pay it forward! */
+        
+    div.footer {
+        background-color: fff;
+        background-color: rgba(255,	255,	255, 0.6);
+        padding: 10px 10px 10px 10px;
+        margin: 10px 10px 10px 10px;
+        font-size: 0.8em;
+        text-align: center;
+    }
+    
+    /* some colour codes in case you want to continue the princess horse theme */
+    /* crown: #e5c87b   gems: #9f58b3     hairgreen: #69c7a2   hairblue: #4ab3ce   hairpurple: #6295e2   hairpink: #d4a2e3  */
+    /* sunorange: #d4a2e3    sunyellow: #e1d38b */
+    
+    

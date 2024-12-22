@@ -1,5 +1,5 @@
 import './assets/main.scss';
-import './custom-elements.ts';
+// import './custom-elements.ts';
 
 import { createApp } from 'vue';
 import { loader } from '@guolao/vue-monaco-editor';
@@ -15,12 +15,16 @@ import App from './App.vue';
 import router from './router.ts';
 
 loader.config({
-    paths: {
-        vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs',
-    },
+    monaco: await import('monaco-editor/esm/vs/editor/editor.api'),
 });
 
 const app = createApp(App);
+
+app.config.warnHandler = (msg, instance, trace) => {
+    if (msg.includes('Non-function value encountered for default slot.')) return;
+
+    console.warn(msg, trace);
+};
 
 app.use(router);
 

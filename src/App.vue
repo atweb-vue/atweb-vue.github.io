@@ -1,18 +1,41 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
+import { authenticateOnStartup } from './lib/atproto/signed-in-user';
+import router from './router';
+import { ref, watch } from 'vue';
+import { useVanillaCss } from './lib/shared-globals';
+
+const isInPage = ref(false);
+watch(router.currentRoute, route => {
+    isInPage.value = route.path.startsWith('/page/');
+}, { immediate: true });
+
+watch(useVanillaCss, useVanillaCss => {
+    if (useVanillaCss) {
+        document.body.setAttribute('vanilla-css', 'true');
+    } else {
+        document.body.removeAttribute('vanilla-css');
+    }
+}, { immediate: true });
+
+authenticateOnStartup();
 </script>
 
 <template>
-    <header>
+    <header v-if="!isInPage">
         <div class="wrapper">
             <nav>
-                <router-link to="/">Home</router-link>
-                <router-link to="/page/spearcat.bsky.social/test_page.md">About</router-link>
+                <RouterLink to="/">Home</RouterLink>
+                <RouterLink to="/edit">Create Page</RouterLink>
+                <RouterLink
+                    to="/page/did:plc:nmc77zslrwafxn75j66mep6o/test.mdx">
+                    About
+                </RouterLink>
             </nav>
         </div>
     </header>
 
-    <router-view />
+    <RouterView />
 </template>
 
 <style scoped>
@@ -28,9 +51,13 @@ header {
 
 nav {
     width: 100%;
-    font-size: 12px;
+    font-size: 16px;
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 0;
+    height: var(--nav-height);
+    line-height: var(--nav-height);
+
+    --nav-height: 3rem;
 }
 
 nav a.router-link-exact-active {
@@ -46,13 +73,15 @@ nav a {
     display: inline-block;
     padding: 0 1rem;
     border-left: 1px solid var(--color-border);
+    height: var(--nav-height);
+    line-height: var(--nav-height);
 }
 
 nav a:first-of-type {
     border: 0;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 700px) {
     header {
         display: flex;
         place-items: center;
@@ -70,12 +99,9 @@ nav a:first-of-type {
     }
 
     nav {
-        text-align: left;
-        margin-left: -1rem;
         font-size: 1rem;
-
-        padding: 1rem 0;
-        margin-top: 1rem;
+        height: 3rem;
+        line-height: 3rem;
     }
 }
 </style>

@@ -4,12 +4,13 @@ import pluginVue from 'eslint-plugin-vue';
 import vueTsEslintConfig from '@vue/eslint-config-typescript';
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting';
 
-/** @type {import('eslint').Linter.LegacyConfig | import('eslint').Linter.Config | import('eslint').Linter.Config[]} */
+/** @type {import('eslint').Linter.Config | import('eslint').Linter.Config[]} */
 const rules = [
     {
         rules: {
             '@typescript-eslint/no-unused-vars': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
+            'semi': ['warn', 'always']
         },
     },
 ];

@@ -1,64 +1,81 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeUnmount, provide, ref, shallowRef, watch } from 'vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
+import { downloadFile, getGetBlobUrl, type Page } from '@/lib/atproto/atweb-unauthed';
+import { useRoute } from 'vue-router';
+import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
+import { page } from '@/lib/shared-globals';
 
-const markdown = `
-# hi
+const route = useRoute();
 
-<h1>Heading!</h1>
+watch(
+    route,
+    () => {
+        resolveHandleAnonymously(route.params.handle as string)
+            .then(did => downloadFile(did, route.params.rkey as string))
+            .then(newPage => (page.value = newPage));
+    },
+    { immediate: true },
+);
 
-<abbr title="HyperText Markup Language">HTML</abbr> is a lovely language.
+const type = ref<'markdown' | 'pre' | 'image' | 'generic' | 'none'>('none');
+const contents = ref<string>('');
 
-<section>
-    And here is *markdown* in **JSX**!
-</section>
+watch(page, async page => {
+    console.log('watched', page);
 
-<h2>Hello, Venus!</h2>
-<h2>Hello, Mars!</h2>
+    if (page === undefined) return;
 
-<main>
-    <article>
-    # Hello!
-    </article>
-</main>
+    type.value = 'none';
+    contents.value = '';
 
-# Heading (rank 1)
-## Heading 2
-### 3
-#### 4
-##### 5
-###### 6
-
-> Block quote
-
-* Unordered
-* List
-
-1. Ordered
-2. List
-
-A paragraph, introducing a thematic break:
-
----
-
-\`\`\`js
-some.code()
-\`\`\`
-
-a [link](https://example.com), an ![image](./image.png), some *emphasis*,
-something **strong**, and finally a little \`code()\`.
-`;
-const count = 'peepance';
+    if (page.bodyOriginal.mimeType === 'text/mdx') {
+        console.log('setting md');
+        type.value = 'markdown';
+        contents.value =
+            typeof page.blob === 'string'
+                ? page.blob
+                : new TextDecoder().decode(page.blob.buffer);
+    } else if (page.bodyOriginal.mimeType.startsWith('image/')) {
+        type.value = 'image';
+        contents.value = await getGetBlobUrl(page.uri, true);
+    } else if (page.bodyOriginal.mimeType.startsWith('text/')) {
+        type.value = 'pre';
+        contents.value =
+            typeof page.blob === 'string'
+                ? page.blob
+                : new TextDecoder().decode(page.blob.buffer);
+    } else {
+        type.value = 'generic';
+        contents.value = await getGetBlobUrl(page.uri);
+    }
+});
 </script>
 
 <template>
-    <div class="about">
-        <h1>This is an about page</h1>
-        {{ count }}
-        <Suspense>
-            <MarkdownRenderer :markdown />
-        </Suspense>
+    <div class="page">
+        <div v-if="type == 'markdown'">
+            <Suspense>
+                <MarkdownRenderer :markdown="contents" />
+            </Suspense>
+        </div>
+        <img v-else-if="type == 'image'" :src="contents" />
+        <pre v-else-if="type == 'pre'">{{ contents }}</pre>
+        <a v-else-if="type == 'generic'" :href="contents">
+            Unknown file type <code>{{ page?.bodyOriginal.mimeType }}</code>.
+            Click to download blob.
+        </a>
     </div>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+.page {
+    padding: 1rem;
+}
+</style>
+
+<style lang="scss">
+h1, h2, h3, h4, h5, h6, p, blockquote, dl, img, figure {
+    margin: 1.5rem 0;
+}
+</style>

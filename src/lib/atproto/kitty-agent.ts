@@ -90,8 +90,15 @@ export class KittyAgent<X extends XRPC = XRPC> {
         return data as GetRecordOutput<K>;
     }
 
-    async getBlob(params: ComAtprotoSyncGetBlob.Params): Promise<Uint8Array> {
-        const data = await this.query('com.atproto.sync.getBlob', params);
+    async getBlob(params: ComAtprotoSyncGetBlob.Params | { did: At.DID, cid: At.Blob }): Promise<Uint8Array> {
+        if (typeof params.cid !== 'string') {
+            params = {
+                cid: params.cid.ref.$link as At.CID,
+                did: params.did,
+            } satisfies ComAtprotoSyncGetBlob.Params;
+        }
+
+        const data = await this.query('com.atproto.sync.getBlob', params as ComAtprotoSyncGetBlob.Params);
 
         return data;
     }
@@ -198,7 +205,7 @@ export class KittyAgent<X extends XRPC = XRPC> {
         did: At.DID,
         limit?: number;
     }) {
-        const PER_PAGE = 100;
+        const PER_PAGE = 1000;
 
         const cids: string[] = [];
 

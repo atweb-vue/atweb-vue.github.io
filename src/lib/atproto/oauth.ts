@@ -9,24 +9,11 @@ configureOAuth({
     },
 });
 
-export class ObsidianAtpOauthClientXPlat {
+export class AtpOauthClient {
     constructor() {}
 
-    async authenticate(handle: string): Promise<FetchHandlerObject & { sub: At.DID; }> {
+    async authenticate(handle: string, refreshOnly: boolean) {
         const { identity, metadata } = await resolveFromIdentity(handle);
-
-        try {
-            const existingSession = await getSession(identity.id, { allowStale: true });
-
-            // now you can start making requests!
-            const agent = new OAuthUserAgent(existingSession);
-
-            console.log('Refreshed session:', await agent.getSession())
-
-            return agent;
-        } catch (err) {
-            console.error('Could not refresh session:', err);
-        }
 
         // passing `identity` is optional,
         // it allows for the login form to be autofilled with the user's handle or DID
@@ -44,9 +31,9 @@ export class ObsidianAtpOauthClientXPlat {
         // redirect the user to sign in and authorize the app
         window.open(authUrl, '_blank', 'noopener,noreferrer');
 
-        const hash = await new Promise<string>((resolve, reject) => {
-            new OAuthFinalizationModal(this.app, resolve, reject).open();
-        });
+        // TODO setup a redirect instead
+        const hash = prompt('Input the code that was displayed on the page');
+        if (!hash) throw new Error('User cancelled authentication');
 
         // `createAuthorizationUrl` asks for the server to redirect here with the
         // parameters assigned in the hash, not the search string.
@@ -55,9 +42,6 @@ export class ObsidianAtpOauthClientXPlat {
         // you'd be given a session object that you can then pass to OAuthUserAgent!
         const session = await finalizeAuthorization(params);
 
-        // now you can start making requests!
-        const agent = new OAuthUserAgent(session);
-
-        return agent;
+        return session;
     }
 }
