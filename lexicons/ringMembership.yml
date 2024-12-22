@@ -1,0 +1,30 @@
+lexicon: 1
+id: io.github.atweb.ringMembership
+defs:
+  main:
+    type: record
+    key: tid
+    description: >-
+      Represents an account requesting to be part of a webring.
+    record:
+      type: object
+      required:
+        - mainPage
+        - ring
+        - createdAt
+      properties:
+        mainPage:
+          type: string
+          format: at-uri
+          description: >-
+            The page that will be linked to when navigating to this user's site
+            in the webring.
+        ring:
+          type: string
+          format: at-uri
+          description: >-
+            Link to the webring record that this user belongs to.
+        createdAt:
+          type: string
+          format: datetime
+          description: This record's creation date.

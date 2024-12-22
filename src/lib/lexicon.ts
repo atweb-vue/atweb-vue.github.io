@@ -29,6 +29,36 @@ declare module '@atcute/client/lexicons' {
         }
     }
 
+    namespace IoGithubAtwebRing {
+        /** Represents a webring. */
+        interface Record {
+            $type: 'io.github.atweb.ring';
+            /** This record's creation date. */
+            createdAt: string;
+            /** The invited members of this webring. */
+            members?: IoGithubAtwebRing.Member[];
+        }
+        /** Represents a webring invitation. */
+        interface Member {
+            [Brand.Type]?: 'io.github.atweb.ring#member';
+            /** Link to the membership record for this member. */
+            membership?: At.Uri;
+        }
+    }
+
+    namespace IoGithubAtwebRingMembership {
+        /** Represents an account requesting to be part of a webring. */
+        interface Record {
+            $type: 'io.github.atweb.ringMembership';
+            /** This record's creation date. */
+            createdAt: string;
+            /** The page that will be linked to when navigating to this user's site in the webring. */
+            mainPage: At.Uri;
+            /** Link to the webring record that this user belongs to. */
+            ring: At.Uri;
+        }
+    }
+
     namespace BlueZioAtfileFinger {
         /** A fingerprint of a browser upload. */
         interface Browser {
@@ -70,7 +100,9 @@ declare module '@atcute/client/lexicons' {
             checksum?: BlueZioAtfileUpload.Checksum;
             createdAt?: string;
             file?: BlueZioAtfileUpload.File;
-            finger?: Brand.Union<BlueZioAtfileFinger.Browser | BlueZioAtfileFinger.Machine>;
+            finger?: Brand.Union<
+                BlueZioAtfileFinger.Browser | BlueZioAtfileFinger.Machine
+            >;
             meta?: Brand.Union<BlueZioAtfileMeta.Unknown>;
         }
         interface Checksum {
@@ -97,6 +129,8 @@ declare module '@atcute/client/lexicons' {
 
     interface Records {
         'io.github.atweb.file': IoGithubAtwebFile.Record;
+        'io.github.atweb.ring': IoGithubAtwebRing.Record;
+        'io.github.atweb.ringMembership': IoGithubAtwebRingMembership.Record;
         'blue.zio.atfile.lock': BlueZioAtfileLock.Record;
         'blue.zio.atfile.upload': BlueZioAtfileUpload.Record;
         'blue.zio.meta.profile': BlueZioMetaProfile.Record;
