@@ -4,3 +4,6 @@
 [submodule "oauth"]
 	path = oauth
 	url = https://github.com/atweb-vue/oauth
+[submodule "src/external/userbar-generator"]
+	path = src/external/userbar-generator
+	url = https://github.com/atweb-vue/userbar-generator
