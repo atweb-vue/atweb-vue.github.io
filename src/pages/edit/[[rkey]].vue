@@ -2,19 +2,19 @@
 import { computed, reactive, ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
 import { themeNames, themes } from '@/lib/monaco/themes';
-import { user } from '@/lib/atproto/signed-in-user';
+import { user, waitForInitialSession } from '@/lib/atproto/signed-in-user';
 import SignInGate from '@/components/SignInGate.vue';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
 import type { IoGithubAtwebFile } from '@atcute/client/lexicons';
 import { downloadFile } from '@/lib/atproto/atweb-unauthed';
-import { filepathToRkey } from '@/lib/atproto/rkey';
+import { filepathToRkey, rkeyToFilepath } from '@/lib/atproto/rkey';
 import * as monaco from 'monaco-editor';
 import type { AtUri } from '@atproto/syntax';
 import { useLocalStorage, watchImmediate } from '@vueuse/core';
 import { lookupMime } from '@/lib/mime';
 import MonacoEditor from '@/components/MonacoEditor.vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import UsePico from '@/components/UsePico.vue';
 import { pageMeta, useVanillaCss } from '@/lib/shared-globals';
 import { frameworkStyles } from '@/lib/framework-styles';
@@ -77,7 +77,7 @@ async function submitPage() {
     const { rkey } = await client.uploadPage(activeFile.value, editorRef.value!.getValue());
     submitted.value = true;
     setTimeout(() => {
-        router.push(`/page/${handle}/${rkey}`);
+        router.push({ name: '/page/[handle]/[rkey]/', params: { handle, rkey } });
     }, 1000);
 }
 
@@ -90,7 +90,7 @@ async function openPage() {
     const { handle } = user.value;
     const rkey = filepathToRkey(activeFile.value);
 
-    router.push(`/page/${handle}/${rkey}`);
+    router.push({ name: '/page/[handle]/[rkey]/', params: { handle, rkey } });
 }
 
 const selectedTheme = useLocalStorage<(keyof typeof themeNames)>('monaco-theme', 'Tomorrow Night Bright');
@@ -112,8 +112,27 @@ async function setActiveFile(file: IoGithubAtwebFile.Record & { uri: AtUri }) {
     if (!user.value) return;
 
     const page = await downloadFile(user.value.did, file.uri.rkey);
+    pageMeta.value = page;
     editorRef.value!.setValue(page.blobString);
+    router.push({ params: { rkey: file.uri.rkey }});
 }
+
+watchImmediate(useRoute('/edit/[[rkey]]'), async route => {
+    if (route.params.rkey) {
+        const filePath = rkeyToFilepath(route.params.rkey);
+        if (activeFile.value != route.params.rkey) {
+            activeFile.value = filePath;
+
+            await waitForInitialSession();
+
+            if (user.value) {
+                const page = await downloadFile(user.value.did, route.params.rkey);
+                pageMeta.value = page;
+                editorRef.value!.setValue(page.blobString);
+            }
+        }
+    }
+});
 
 watch(activeFile, activeFile => {
     monaco.editor.setModelLanguage(
