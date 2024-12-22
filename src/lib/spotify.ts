@@ -28,9 +28,13 @@ const IFrameAPI = shallowRef<IFrameAPI>();
 window.onSpotifyIframeApiReady = api => {
     IFrameAPI.value = api;
 };
-const { load: loadSpotify } = useScriptTag('https://open.spotify.com/embed/iframe-api/v1', () => {}, { manual: true });
-loadSpotify();
+let spotifyLoaded = false;
 
 export function useSpotifyIFrameAPI() {
+    if (!spotifyLoaded) {
+        spotifyLoaded = true;
+        const { load: loadSpotify } = useScriptTag('https://open.spotify.com/embed/iframe-api/v1', () => {}, { manual: true });
+        loadSpotify(false);
+    }
     return IFrameAPI;
 }
