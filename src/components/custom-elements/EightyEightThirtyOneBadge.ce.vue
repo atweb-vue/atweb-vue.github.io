@@ -10,5 +10,5 @@ const { badgeUrls } = await import('@/lib/badges');
 </script>
 
 <template>
-    <img v-bind="$attrs" :src="badgeUrls['/src/assets/badges/' + props.name]?.default">
+    <img v-bind="$attrs" :src="badgeUrls['/src/assets/badges/' + props.name]">
 </template>
