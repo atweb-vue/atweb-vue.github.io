@@ -2,6 +2,7 @@
 import { getRelativeOrAbsoluteBlobUrl } from '@/lib/component-helpers';
 import { injectPage } from '@/lib/injection-keys';
 import { page } from '@/lib/shared-globals';
+import { watchImmediate } from '@vueuse/core';
 import { inject, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -10,18 +11,19 @@ const props = defineProps<{
 
 const realHref = ref<string>();
 
-watch(page!, page => {
+watchImmediate(page, async page => {
     if (!page) {
         console.warn(`no page for link ${props.href}`);
         return;
     }
 
-    getRelativeOrAbsoluteBlobUrl(
+    await getRelativeOrAbsoluteBlobUrl(
         props.href,
         { path: page.filePath, repo: page.did }
     )
-        .then(uri => realHref.value = uri);
-}, { immediate: true });
+        .then(uri => realHref.value = uri)
+        .catch(err => console.warn(err));
+});
 </script>
 
 <template>

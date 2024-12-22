@@ -5,23 +5,23 @@ import { downloadFile, getGetBlobUrl, type Page } from '@/lib/atproto/atweb-unau
 import { useRoute } from 'vue-router';
 import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
 import { page } from '@/lib/shared-globals';
+import { watchImmediate } from '@vueuse/core';
 
 const route = useRoute();
 
-watch(
+watchImmediate(
     route,
     () => {
         resolveHandleAnonymously(route.params.handle as string)
             .then(did => downloadFile(did, route.params.rkey as string))
             .then(newPage => (page.value = newPage));
     },
-    { immediate: true },
 );
 
 const type = ref<'markdown' | 'pre' | 'image' | 'generic' | 'none'>('none');
 const contents = ref<string>('');
 
-watch(page, async page => {
+watchImmediate(page, async page => {
     console.log('watched', page);
 
     if (page === undefined) return;

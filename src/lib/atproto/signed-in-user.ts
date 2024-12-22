@@ -4,7 +4,7 @@ import {
     type Session,
 } from '@atcute/oauth-browser-client';
 import { reactive, ref, shallowRef, watch } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
+import { useLocalStorage, watchImmediate } from '@vueuse/core';
 import type { At } from '@atcute/client/lexicons';
 
 import { AtpOauthClient } from './oauth';
@@ -48,9 +48,9 @@ export type User = { [K in keyof LoginState]: LoginState[K] };
 
 export const user = ref<LoginState>();
 
-watch([account, agents], ([account, agents]) => {
+watchImmediate([account, agents], ([account, agents]) => {
     user.value = account !== undefined && agents !== undefined ? new LoginState() : undefined;
-})
+});
 
 const oauthClient = new AtpOauthClient();
 export async function authenticateIfNecessary(

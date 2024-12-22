@@ -4,19 +4,20 @@ import { authenticateOnStartup } from './lib/atproto/signed-in-user';
 import router from './router';
 import { ref, watch } from 'vue';
 import { useVanillaCss } from './lib/shared-globals';
+import { watchImmediate } from '@vueuse/core';
 
 const isInPage = ref(false);
-watch(router.currentRoute, route => {
+watchImmediate(router.currentRoute, route => {
     isInPage.value = route.path.startsWith('/page/');
-}, { immediate: true });
+});
 
-watch(useVanillaCss, useVanillaCss => {
+watchImmediate(useVanillaCss, useVanillaCss => {
     if (useVanillaCss) {
         document.body.setAttribute('vanilla-css', 'true');
     } else {
         document.body.removeAttribute('vanilla-css');
     }
-}, { immediate: true });
+});
 
 authenticateOnStartup();
 </script>

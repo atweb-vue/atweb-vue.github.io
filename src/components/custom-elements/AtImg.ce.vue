@@ -2,6 +2,7 @@
 import { getRelativeOrAbsoluteBlobUrl } from '@/lib/component-helpers';
 import { injectPage } from '@/lib/injection-keys';
 import { page } from '@/lib/shared-globals';
+import { watchImmediate } from '@vueuse/core';
 import { inject, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -16,26 +17,30 @@ const props = defineProps<{
 const realSrc = ref<string>();
 const realSrcSet = ref<string>();
 
-watch(page!, page => {
+watchImmediate(page, async page => {
     if (!page) {
         console.warn(`no page for img ${props.src}`);
         return;
     }
 
-    getRelativeOrAbsoluteBlobUrl(
-        props.src,
-        { path: page.filePath, repo: page.did },
-        true
-    )
-        .then(uri => realSrc.value = uri);
+    await Promise.all([
+        getRelativeOrAbsoluteBlobUrl(
+            props.src,
+            { path: page.filePath, repo: page.did },
+            true
+        )
+            .then(uri => realSrc.value = uri)
+            .catch(err => console.warn(err)),
 
-    getRelativeOrAbsoluteBlobUrl(
-        props.srcset,
-        { path: page.filePath, repo: page.did },
-        true
-    )
-        .then(uri => realSrcSet.value = uri);
-}, { immediate: true });
+        getRelativeOrAbsoluteBlobUrl(
+            props.srcset,
+            { path: page.filePath, repo: page.did },
+            true
+        )
+            .then(uri => realSrcSet.value = uri)
+            .catch(err => console.warn(err)),
+    ]);
+});
 
 </script>
 

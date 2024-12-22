@@ -3,11 +3,12 @@ import { ref, watch } from 'vue';
 
 import MModal from './MModal.vue';
 import { authenticateIfNecessary, user } from '@/lib/atproto/signed-in-user';
+import { watchImmediate } from '@vueuse/core';
 
 const handle = ref('');
 const open = ref(false);
 
-watch(user, user => {
+watchImmediate(user, user => {
     handle.value = user?.handle ?? '';
 });
 
