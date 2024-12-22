@@ -1,10 +1,10 @@
-import AtImg from '@/components/custom-elements/AtImg.vue';
-import AtLink from '@/components/custom-elements/AtLink.vue';
-import AtAnchor from '@/components/custom-elements/AtAnchor.vue';
-import AtWebStylesheet from '@/components/custom-elements/AtWebStylesheet.vue';
-import OmitVanillaCss from '@/components/custom-elements/OmitVanillaCss.vue';
-import AtStyle from '@/components/custom-elements/AtStyle.vue';
-import AtWebTitle from '@/components/custom-elements/AtWebTitle.vue';
+import AtImg from '@/components/custom-elements/AtImg.ce.vue';
+import AtLink from '@/components/custom-elements/AtLink.ce.vue';
+import AtAnchor from '@/components/custom-elements/AtAnchor.ce.vue';
+import AtWebStylesheet from '@/components/custom-elements/AtWebStylesheet.ce.vue';
+import OmitVanillaCss from '@/components/custom-elements/OmitVanillaCss.ce.vue';
+import AtStyle from '@/components/custom-elements/AtStyle.ce.vue';
+import AtWebTitle from '@/components/custom-elements/AtWebTitle.ce.vue';
 import type { MDXComponents } from '../mdx-types';
 
 export const components: MDXComponents = {
