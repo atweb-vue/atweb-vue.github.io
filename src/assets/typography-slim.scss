@@ -1,0 +1,234 @@
+@import './_vuestic-variables.scss';
+
+$va-display-font-sizes: (
+    1: 3rem,
+    2: 2.5rem,
+    3: 2rem,
+    4: 1.75rem,
+    5: 1.5rem,
+    6: 1.25rem,
+) !default;
+
+$va-display-line-height: (
+    1: 3.5rem,
+    2: 3rem,
+    3: 2.5rem,
+    4: 2rem,
+    5: 1.75rem,
+    6: 1.5rem,
+) !default;
+
+$va-display-margins: (
+    1: 0.5rem 0 0.5rem 0,
+    2: 0.5rem 0 0.5rem 0,
+    3: 0.5rem 0 0.5rem 0,
+    4: 0.5rem 0 0.5rem 0,
+    5: 0.5rem 0 0.5rem 0,
+    6: 0.5rem 0 0.5rem 0,
+) !default;
+
+/** This is va-heading actually... */
+@mixin va-display($element) {
+    font-size: map-get($va-display-font-sizes, $element);
+    margin: map-get($va-display-margins, $element);
+    line-height: map-get($va-display-line-height, $element);
+    font-family: var(--va-font-family);
+    // TODO: currentColor?
+    color: currentColor;
+    // TODO:(1.5.0) rename to textPrimary
+    // color: var(--va-dark);
+    font-weight: 700;
+}
+
+/** Inner mixin use only inside @va-ordered and @va-unordered  */
+@mixin va-list {
+    list-style: none;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-family: var(--va-font-family);
+
+    & > li {
+        list-style: none;
+        padding: 0 1rem;
+        position: relative;
+    }
+}
+
+@mixin va-ordered {
+    @include va-list;
+
+    counter-reset: olCounter;
+
+    & > li::before {
+        $size: 0.75rem;
+
+        counter-increment: olCounter;
+        content: counter(olCounter) '. ';
+        display: inline-block;
+        min-width: $size;
+        height: $size;
+        position: relative;
+        right: 1rem;
+        margin-right: -$size;
+    }
+}
+
+@mixin va-unordered {
+    @include va-list;
+
+    & > li::before {
+        $size: 0.5rem;
+
+        content: '';
+        width: $size;
+        height: $size;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin-top: $size;
+        background-color: var(--va-li-background);
+    }
+}
+
+.va-text {
+    &-bold {
+        font-weight: bold;
+    }
+
+    &-highlighted {
+        background-color: var(--va-text-highlighted);
+    }
+
+    &-left {
+        text-align: left !important;
+    }
+
+    &-right {
+        text-align: right !important;
+    }
+
+    &-center {
+        text-align: center !important;
+    }
+
+    &-justify {
+        text-align: justify !important;
+    }
+
+    &-uppercase {
+        text-transform: uppercase !important;
+    }
+
+    &-lowercase {
+        text-transform: lowercase !important;
+    }
+
+    &-capitalize {
+        text-transform: capitalize !important;
+    }
+
+    &-no-wrap {
+        white-space: nowrap !important;
+    }
+
+    &-truncate {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    @each $color in primary, secondary, warning, success, danger, info,
+        text-primary, text-inverted
+    {
+        &-#{$color} {
+            color: var(--va-#{$color});
+        }
+    }
+}
+
+@each $element, $size in $display-font-sizes {
+    .va-h#{$element} {
+        @include va-display($element);
+    }
+}
+
+hr.va-separator {
+    height: 2px;
+    // TODO:(1.5.0) Rename color
+    background-color: var(--va-divider);
+    border: none;
+}
+
+p.va-paragraph {
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+ul.va-unordered {
+    @include va-unordered;
+
+    ul.va-unordered,
+    ol.va-ordered {
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+}
+
+ol.va-ordered {
+    @include va-ordered;
+
+    ul.va-unordered,
+    ol.va-ordered {
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+}
+
+@mixin focus-outline($radius: 2px, $width: 2px, $offset: null, $style: solid) {
+    outline: $width $style var(--va-focus) !important; // important in purpose to overwrite reset class
+    border-radius: $radius;
+    outline-offset: $offset;
+}
+
+@mixin keyboard-focus-outline(
+    $radius: 'inherit',
+    $width: 2px,
+    $offset: null,
+    $style: solid
+) {
+    &:focus-visible {
+        @include focus-outline($radius, $width, $offset, $style);
+    }
+}
+
+@mixin link($offset: null) {
+    & {
+        color: var(--va-link-color);
+        cursor: pointer;
+        font-family: var(--va-font-family);
+
+        &:active {
+            color: var(--va-link-color);
+            filter: brightness(150%);
+        }
+
+        &:visited {
+            color: var(--va-link-color);
+            filter: brightness(90%);
+        }
+
+        &:hover {
+            color: var(--va-link-color);
+            filter: brightness(125%);
+        }
+
+        @include keyboard-focus-outline($radius: 2px, $offset: $offset);
+    }
+}
+
+.va-link {
+    @include link();
+}

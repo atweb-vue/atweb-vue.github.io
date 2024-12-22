@@ -28,7 +28,7 @@ await watchImmediateAsync(page, async page => {
 </script>
 
 <template>
-    <a v-bind="$attrs" :href="realHref">
+    <a class="va-link" v-bind="$attrs" :href="realHref">
         <slot></slot>
     </a>
 </template>

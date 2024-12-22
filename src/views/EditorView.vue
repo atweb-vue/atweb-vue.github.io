@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Monaco from '@/components/Monaco';
 
-import { ref, shallowRef } from 'vue';
+import { ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
 import { themes } from '@/lib/monaco-themes';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
@@ -11,6 +11,7 @@ import router from '@/router';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco-mdx-lang';
 import { compile } from '@mdx-js/mdx';
 import { options as mdxOptions } from '@/lib/markdown/mdx-options';
+import { VaButton, VaInput, VaSelect } from 'vuestic-ui';
 
 type MonacoEditor = typeof monacoEditor;
 
@@ -68,10 +69,13 @@ some.code()
 a [link](https://example.com), an ![image](./image.png), some *emphasis*,
 something **strong**, and finally a little \`code()\`.
 `);
-const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
+const monacoRef = shallowRef<MonacoEditor>();
+const codeEditorRef = shallowRef<editor.IStandaloneCodeEditor>();
 const submitted = ref(false);
 
 function handleBeforeMount(monaco: MonacoEditor) {
+    monacoRef.value = monaco;
+
     for (const [themeName, theme] of Object.entries(themes)) {
         // console.log(themeName, theme);
         monaco.editor.defineTheme(themeName, theme as editor.IStandaloneThemeData);
@@ -82,12 +86,13 @@ function handleBeforeMount(monaco: MonacoEditor) {
 }
 
 function handleMount(editor: editor.IStandaloneCodeEditor, monaco: MonacoEditor) {
-    editorRef.value = editor;
+    codeEditorRef.value = editor;
+    selectedTheme.value = 'TomorrowNightBright';
 }
 
 // your action
 function formatCode() {
-    editorRef.value?.getAction('editor.action.formatDocument')!.run();
+    codeEditorRef.value?.getAction('editor.action.formatDocument')!.run();
 }
 
 const errors = ref<unknown[]>([]);
@@ -113,6 +118,12 @@ async function submitPage() {
         router.push(`/page/${did}/${rkey}`);
     }, 1000);
 }
+
+const selectedTheme = ref<(keyof typeof themes) | 'vs' | 'vs-dark'>('vs-dark');
+
+watch(selectedTheme, theme => {
+    monacoRef.value?.editor.setTheme(theme);
+});
 </script>
 
 <template>
@@ -127,11 +138,23 @@ async function submitPage() {
         </div>
 
         <div class="inputs">
-            <input class="input" v-model="filename" placeholder="File path" />
+            <VaInput
+                v-model="filename"
+                placeholder="index.mdx"
+                label="File path"
+            />
 
-            <SignInGate>
-                <button class="button" type="button" @click="submitPage">Submit</button>
+            <SignInGate sign-in-button-class="edit-form-button">
+                <VaButton class="edit-form-button" @click="submitPage">Submit</VaButton>
             </SignInGate>
+
+            <VaSelect
+                class="editor-theme-selector"
+                v-model="selectedTheme"
+                :options="Object.keys(themes)"
+                placeholder="Select an option"
+                label="Editor Theme"
+            />
         </div>
 
         <Monaco
@@ -142,7 +165,7 @@ async function submitPage() {
             @before-mount="handleBeforeMount"
             @mount="handleMount"
             language="mdx"
-            height="calc(100vh - 50px - 3.5rem)"
+            height="calc(100vh - 70px - 75px - 10px)"
         />
     </div>
 </template>
@@ -156,8 +179,20 @@ async function submitPage() {
     margin-bottom: 0.5rem;
     max-width: 100vw;
 }
+</style>
 
-.input {
-    margin-right: 0.5rem;
+<style lang="scss">
+.edit-form-button {
+    vertical-align: text-top;
+}
+
+// fix for bug in va-modal
+.va-modal-entry {
+    display: none;
+}
+
+.editor-theme-selector {
+    float: right; // right-align
+    margin-right: 0.5rem; // prevent triggering overflow
 }
 </style>

@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import MModal from './MModal.vue';
 import { authenticateIfNecessary, user } from '@/lib/atproto/signed-in-user';
 import { watchImmediate } from '@vueuse/core';
+import { VaButton, VaInput, VaModal } from 'vuestic-ui';
+
+defineProps<{
+    signInButtonClass?: string;
+}>();
 
 const handle = ref('');
 const open = ref(false);
@@ -14,14 +18,16 @@ watchImmediate(user, user => {
 
 </script>
 <template>
-    <button v-if="!user" @click="open = true">Sign In</button>
-    <slot v-if="user"></slot>
+    <VaButton :class="signInButtonClass" v-if="!user" @click="open = true">Sign in to upload</VaButton>
+    <slot v-else></slot>
 
-    <MModal v-model="open">
-        <input v-model="handle" placeholder="Handle" />
-
-        <button @click="authenticateIfNecessary(handle).finally(() => open = false)">Sign In</button>
-        <button @click="open = false">Cancel</button>
-    </MModal>
+    <VaModal
+        v-model="open"
+        ok-text="Sign In"
+        cancel-text="Cancel"
+        @ok="authenticateIfNecessary(handle).finally(() => open = false)"
+    >
+        <VaInput v-model="handle" placeholder="Handle" />
+    </VaModal>
 
 </template>

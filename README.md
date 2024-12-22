@@ -1,39 +1,33 @@
 # atweb-vue
 
-This template should help get you started developing with Vue 3 in Vite.
+### Reversible File Path Record Key Specification
 
-## Recommended IDE Setup
+Converting file path to Record Key:
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Strip leading `.\`, `./`, `\`, `/`.
 
-## Type Support for `.vue` Imports in TS
+Replace all backslash and forward characters with `:`.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Replace all other characters not in the regex `/[^A-Za-z0-9.\-]/`
+with `'_' || base36 utf-16 char code || '_'`.
 
-## Customize configuration
+To convert in reverse, do the operation in reverse. Slash type is not
+preserved (akin to Windows file paths, normalize it to a forward
+slash) and all paths are assumed to be absolute.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+The tilde character is not used as the PDS rejects it despite being
+valid according to the spec.
 
-## Project Setup
+Example:
 
-```sh
-pnpm install
+```
+/neocities-goodmode-sparklehorse/index.mdx
+./neocities-goodmode-sparklehorse/index.mdx
+neocities-goodmode-sparklehorse\index.mdx
 ```
 
-### Compile and Hot-Reload for Development
+becomes:
 
-```sh
-pnpm dev
 ```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
+neocities-goodmode-sparklehorse:index.mdx
 ```

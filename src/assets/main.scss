@@ -1,5 +1,5 @@
-@import 'vanilla.scss';
 @import 'mary-bsky-components.scss';
+@import 'typography-slim.scss';
 
 /* Reset */
 html,
@@ -19,4 +19,8 @@ body {
         Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Microsoft YaHei Light', sans-serif;
     --font-monospace: 'Source Code Pro', monospace;
+}
+
+body[vanilla-css], .va-font {
+    font-family: var(--va-font-family);
 }

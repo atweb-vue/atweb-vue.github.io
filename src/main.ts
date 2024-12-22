@@ -1,16 +1,11 @@
 import './assets/main.scss';
+
 // import './custom-elements.ts';
 
 import { createApp } from 'vue';
 import { loader } from '@guolao/vue-monaco-editor';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-// import { Quasar, type QuasarPluginOptions } from 'quasar';
-
-// Import icon libraries
-// import '@quasar/extras/material-icons/material-icons.css'
-
-// Import Quasar css
-// import 'quasar/src/css/index.sass'
+import { createVuesticEssential, VaDropdownPlugin, VaModalPlugin, VaToastPlugin } from "vuestic-ui";
 
 import App from './App.vue';
 import router from './router.ts';
@@ -28,6 +23,18 @@ app.config.warnHandler = (msg, instance, trace) => {
 };
 
 app.use(router);
+
+app.use(
+  createVuesticEssential({
+    plugins: { VaDropdownPlugin, VaModalPlugin, VaToastPlugin },
+    config: {
+        /* ... */
+        colors: {
+            currentPresetName: 'dark'
+        }
+    },
+  })
+);
 
 // app.use(Quasar, {
 //     plugins: {}, // import Quasar plugins and add here

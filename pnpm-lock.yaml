@@ -77,6 +77,9 @@ importers:
       vue-router:
         specifier: ^4.4.5
         version: 4.5.0(vue@3.5.13(typescript@5.6.3))
+      vuestic-ui:
+        specifier: ^1.10.3
+        version: 1.10.3(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@tsconfig/node22':
         specifier: ^22.0.0
@@ -111,6 +114,9 @@ importers:
       eslint-plugin-vue:
         specifier: ^9.30.0
         version: 9.32.0(eslint@9.16.0(jiti@2.4.1))
+      material-design-icons-iconfont:
+        specifier: ^6.7.0
+        version: 6.7.0
       monaco-editor:
         specifier: ^0.52.2
         version: 0.52.2
@@ -638,6 +644,18 @@ packages:
     resolution: {integrity: sha512-zSkKow6H5Kdm0ZUQUB2kV5JIXqoG0+uH5YADhaEHswm664N9Db8dXSi0nMJpacpMf+MyyglF1vnZohpEg5yUtg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@floating-ui/core@1.6.8':
+    resolution: {integrity: sha512-7XJ9cPU+yI2QeLS+FCSlqNFZJq8arvswefkZrYI1yQBbftw6FyrZOxYSh+9S7z7TpeWlRt9zJ5IhM1WIL334jA==}
+
+  '@floating-ui/dom@1.6.12':
+    resolution: {integrity: sha512-NP83c0HjokcGVEMeoStg317VD9W7eDlGK7457dMBANbKA6GJZdc7rjujdgqzTaz93jkGgc5P/jeWbaCHnMNc+w==}
+
+  '@floating-ui/utils@0.2.8':
+    resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+
+  '@floating-ui/vue@1.1.5':
+    resolution: {integrity: sha512-ynL1p5Z+woPVSwgMGqeDrx6HrJfGIDzFyESFkyqJKilGW1+h/8yVY29Khn0LaU6wHBRwZ13ntG6reiHWK6jyzw==}
+
   '@guolao/vue-monaco-editor@1.5.4':
     resolution: {integrity: sha512-eyBAqxJeDpV4mZYZSpNvh3xUgKCld5eEe0dBtjJhsy2+L0MB6PYFZ/FbPHNwskgp2RoIpfn1DLrIhXXE3lVbwQ==}
     peerDependencies:
@@ -933,6 +951,9 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+
+  '@types/lodash@4.17.13':
+    resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -1241,6 +1262,9 @@ packages:
   chokidar@4.0.1:
     resolution: {integrity: sha512-n8enUVCED/KVRQlab1hr3MVpcVMvxtZjmEa956u+4YijlmQED223XMSYj2tLuKvr4jcCTzNNMpQDUer72MMmzA==}
     engines: {node: '>= 14.16.0'}
+
+  cleave.js@1.6.0:
+    resolution: {integrity: sha512-ivqesy3j5hQVG3gywPfwKPbi/7ZSftY/UNp5uphnqjr25yI2CP8FS2ODQPzuLXXnNLi29e2+PgPkkiKUXLs/Nw==}
 
   collapse-white-space@2.1.0:
     resolution: {integrity: sha512-loKTxY1zCOuG4j9f6EPnuyyYkf58RnhhWTvRoZEokgB+WbdXehfjFviyOVYkqzEWz1Q5kRiZdBYS5SwxbQYwzw==}
@@ -1754,6 +1778,9 @@ packages:
   markdown-extensions@2.0.0:
     resolution: {integrity: sha512-o5vL7aDWatOTX8LzaS1WMoaoxIiLRQJuIKKe2wAw6IeULDHaqbiqiggmx+pKvZDb1Sj+pE46Sn1T7lCqfFtg1Q==}
     engines: {node: '>=16'}
+
+  material-design-icons-iconfont@6.7.0:
+    resolution: {integrity: sha512-lSj71DgVv20kO0kGbs42icDzbRot61gEDBLQACzkUuznRQBUYmbxzEkGU6dNBb5fRWHMaScYlAXX96HQ4/cJWA==}
 
   mdast-util-from-markdown@2.0.2:
     resolution: {integrity: sha512-uZhTV/8NBuw0WHkPTrCqDOl0zVe1BIng5ZtHoDk49ME1qqcjYmmLmOf0gELgcRMxN4w2iuIeVso5/6QymSrgmA==}
@@ -2552,6 +2579,11 @@ packages:
       typescript:
         optional: true
 
+  vuestic-ui@1.10.3:
+    resolution: {integrity: sha512-E8Y6E7dg08+yrN+0UfIb7pffH6dX9hBrLhjTR74w9T8iXlkw8t5ULPwnzIXxrTxPbk/HvDDs1s++bMw/S0OFmA==}
+    peerDependencies:
+      vue: ^3.0.4
+
   web-namespaces@2.0.1:
     resolution: {integrity: sha512-bKr1DkiNa2krS7qxNtdrtHAmzuYGFQLiQ13TsorsdT6ULTkPLKuu5+GsFpDlg6JFjUTwX2DyhMPG2be8uPrqsQ==}
 
@@ -3001,6 +3033,26 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
+  '@floating-ui/core@1.6.8':
+    dependencies:
+      '@floating-ui/utils': 0.2.8
+
+  '@floating-ui/dom@1.6.12':
+    dependencies:
+      '@floating-ui/core': 1.6.8
+      '@floating-ui/utils': 0.2.8
+
+  '@floating-ui/utils@0.2.8': {}
+
+  '@floating-ui/vue@1.1.5(vue@3.5.13(typescript@5.6.3))':
+    dependencies:
+      '@floating-ui/dom': 1.6.12
+      '@floating-ui/utils': 0.2.8
+      vue-demi: 0.14.10(vue@3.5.13(typescript@5.6.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
   '@guolao/vue-monaco-editor@1.5.4(monaco-editor@0.52.2)(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       '@monaco-editor/loader': 1.4.0(monaco-editor@0.52.2)
@@ -3244,6 +3296,8 @@ snapshots:
       '@types/unist': 3.0.3
 
   '@types/json-schema@7.0.15': {}
+
+  '@types/lodash@4.17.13': {}
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -3645,6 +3699,8 @@ snapshots:
   chokidar@4.0.1:
     dependencies:
       readdirp: 4.0.2
+
+  cleave.js@1.6.0: {}
 
   collapse-white-space@2.1.0: {}
 
@@ -4248,6 +4304,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   markdown-extensions@2.0.0: {}
+
+  material-design-icons-iconfont@6.7.0: {}
 
   mdast-util-from-markdown@2.0.2:
     dependencies:
@@ -5244,6 +5302,16 @@ snapshots:
       '@vue/shared': 3.5.13
     optionalDependencies:
       typescript: 5.6.3
+
+  vuestic-ui@1.10.3(vue@3.5.13(typescript@5.6.3)):
+    dependencies:
+      '@floating-ui/vue': 1.1.5(vue@3.5.13(typescript@5.6.3))
+      '@types/lodash': 4.17.13
+      cleave.js: 1.6.0
+      lodash: 4.17.21
+      vue: 3.5.13(typescript@5.6.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
 
   web-namespaces@2.0.1: {}
 
