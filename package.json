@@ -19,6 +19,7 @@
     "@atcute/oauth-browser-client": "^1.0.7",
     "@atproto/syntax": "^0.3.1",
     "@guolao/vue-monaco-editor": "^1.5.4",
+    "@mdx-js/mdx": "^3.1.0",
     "@noble/hashes": "^1.6.1",
     "@quasar/extras": "^1.16.15",
     "@vueuse/core": "^12.0.0",
