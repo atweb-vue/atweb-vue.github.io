@@ -7,10 +7,15 @@ const { markdown } = defineProps<{
 
 import { renderMarkdown } from '@/lib/markdown/render-markdown';
 import { ref, shallowRef, watch } from 'vue';
-import { compileStringAsync as sassCompileString } from 'sass';
 import { watchImmediate } from '@vueuse/core';
 import { components } from '@/lib/markdown/components.tsx';
 import { watchImmediateAsync } from '@/lib/vue-utils';
+import type { compileStringAsync } from 'sass';
+
+async function sassCompileString(...args: Parameters<typeof compileStringAsync>) {
+    const { compileStringAsync } = await import('sass');
+    return compileStringAsync(...args);
+}
 
 const module = shallowRef<MDXModule>();
 

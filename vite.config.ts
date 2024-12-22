@@ -40,6 +40,16 @@ export default defineConfig({
         //     ),
         // }),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vuestic: ['vuestic-ui'],
+                    monaco: ['monaco-editor'],
+                }
+            }
+        }
+    },
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
