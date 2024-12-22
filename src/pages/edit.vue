@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
 import { themeNames, themes } from '@/lib/monaco/themes';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
@@ -18,6 +18,7 @@ import type { AtUri } from '@atproto/syntax';
 import { useLocalStorage, watchImmediate } from '@vueuse/core';
 import { lookupMime } from '@/lib/mime';
 import MonacoEditor from '@/components/MonacoEditor.vue';
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
@@ -28,6 +29,7 @@ const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
 };
 
 const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
+const editorValue = ref('');
 const submitted = ref(false);
 
 function onBeforeMonacoMount() {
@@ -43,6 +45,13 @@ function onBeforeMonacoMount() {
 
 function onMonacoMount(editor: editor.IStandaloneCodeEditor) {
     editorRef.value = editor;
+
+    editorRef.value.onDidChangeModelContent(event => {
+        const value = editorRef.value!.getValue();
+        if (value !== editorValue.value) {
+            editorValue.value = value;
+        }
+    });
 }
 
 // your action
@@ -108,6 +117,8 @@ watch(activeFile, activeFile => {
     );
 });
 
+const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFile.value) ?? 'text/mdx') === 'text/mdx'));
+
 </script>
 
 <template>
@@ -123,15 +134,6 @@ watch(activeFile, activeFile => {
         </template>
         <template #content>
             <div class="flex">
-                <div class="errors" v-if="submitErrors.length">
-                    Errors:
-                    <ul>
-                        <li v-for="error, idx in submitErrors" :key="idx">
-                            {{ String(error) }}
-                        </li>
-                    </ul>
-                </div>
-
                 <div class="inputs">
                     <VaInput
                         v-model="activeFile"
@@ -167,6 +169,22 @@ watch(activeFile, activeFile => {
                     defaultLanguage="mdx"
                     height="calc(100vh - 70px - 75px - 10px)"
                 /> -->
+            </div>
+        </template>
+        <template #right v-if="isMarkdownFile">
+            <div style="min-width: 25vw;">
+                <div style="padding: var(--va-grid-gutter-base); max-height: calc(100vh - 69.6px); overflow: auto;">
+                    <div class="errors" v-if="submitErrors.length">
+                        Errors:
+                        <ul>
+                            <li v-for="error, idx in submitErrors" :key="idx">
+                                {{ String(error) }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    <MarkdownRenderer :markdown="editorValue"></MarkdownRenderer>
+                </div>
             </div>
         </template>
     </VaLayout>
