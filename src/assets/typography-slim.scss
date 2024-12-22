@@ -1,33 +1,33 @@
 @import './_vuestic-variables.scss';
 
+$va-display-font-sizes: (
+    1: 3rem,
+    2: 2.5rem,
+    3: 2rem,
+    4: 1.75rem,
+    5: 1.5rem,
+    6: 1.25rem,
+) !default;
+
+$va-display-line-height: (
+    1: 3.5rem,
+    2: 3rem,
+    3: 2.5rem,
+    4: 2rem,
+    5: 1.75rem,
+    6: 1.5rem,
+) !default;
+
+$va-display-margins: (
+    1: 0.5rem 0 0.5rem 0,
+    2: 0.5rem 0 0.5rem 0,
+    3: 0.5rem 0 0.5rem 0,
+    4: 0.5rem 0 0.5rem 0,
+    5: 0.5rem 0 0.5rem 0,
+    6: 0.5rem 0 0.5rem 0,
+) !default;
+
 body[vanilla-css] {
-    $va-display-font-sizes: (
-        1: 3rem,
-        2: 2.5rem,
-        3: 2rem,
-        4: 1.75rem,
-        5: 1.5rem,
-        6: 1.25rem,
-    ) !default;
-
-    $va-display-line-height: (
-        1: 3.5rem,
-        2: 3rem,
-        3: 2.5rem,
-        4: 2rem,
-        5: 1.75rem,
-        6: 1.5rem,
-    ) !default;
-
-    $va-display-margins: (
-        1: 0.5rem 0 0.5rem 0,
-        2: 0.5rem 0 0.5rem 0,
-        3: 0.5rem 0 0.5rem 0,
-        4: 0.5rem 0 0.5rem 0,
-        5: 0.5rem 0 0.5rem 0,
-        6: 0.5rem 0 0.5rem 0,
-    ) !default;
-
     /** This is va-heading actually... */
     @mixin va-display($element) {
         font-size: map-get($va-display-font-sizes, $element);
