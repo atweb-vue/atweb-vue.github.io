@@ -35,6 +35,15 @@ importers:
       '@vueuse/core':
         specifier: ^12.0.0
         version: 12.0.0(typescript@5.6.3)
+      bluesky-post-embed:
+        specifier: ^1.0.5
+        version: 1.0.5
+      bluesky-profile-card-embed:
+        specifier: ^1.0.0
+        version: 1.0.0
+      bluesky-profile-feed-embed:
+        specifier: ^1.0.3
+        version: 1.0.3
       file-type-mime:
         specifier: ^0.4.5
         version: 0.4.5
@@ -138,6 +147,20 @@ packages:
 
   '@atcute/base32@1.0.1':
     resolution: {integrity: sha512-oHnrPXDlkLd4283rz5C4KLnL46/D9mjpFgK17iTPU7OooyNSz+elr8kXN9ReZgzgnjWZHIr8Dp2splEm9hjNhg==}
+
+  '@atcute/bluesky-richtext-parser@1.0.7':
+    resolution: {integrity: sha512-nOvU699OXiGMbyswao7JJnY0C9WkwE7PVC/m5WWt0UN9fsXSOor9IZWw+v9SATp+94BTJoG38XyUomUaJnoQRA==}
+
+  '@atcute/bluesky-richtext-segmenter@1.0.5':
+    resolution: {integrity: sha512-D0FfmJVwppky9naL1OGKcQjtgO0lDLhkG4iCQHpShuHhEZ9FUdf3eUb/eQpVRNJGaJ4ShjEOHA6FlAizcjMkGQ==}
+    peerDependencies:
+      '@atcute/bluesky': ^1.0.0
+      '@atcute/client': ^1.0.0 || ^2.0.0
+
+  '@atcute/bluesky@1.0.10':
+    resolution: {integrity: sha512-atpZZZ3bdfZt6F9iMD/4+UAixBjPSanKHqZGADiW5FFXoTk0HejzpsuyDnJqw5Ool5DXAmLceA+k181q+Lkt4Q==}
+    peerDependencies:
+      '@atcute/client': ^1.0.0 || ^2.0.0
 
   '@atcute/cid@1.0.2':
     resolution: {integrity: sha512-aRtt4/5pHCpKVvqtuvxWC8Koet9A7mT8t3fWspOJSj6lcP2QyKKpSUx3z0jSZ+M1Kf2UZ25eo6btcM5zmmhK3g==}
@@ -1154,6 +1177,15 @@ packages:
 
   birpc@0.2.19:
     resolution: {integrity: sha512-5WeXXAvTmitV1RqJFppT5QtUiz2p1mRSYU000Jkft5ZUCLJIk4uQriYNO50HknxKwM6jd8utNc66K1qGIwwWBQ==}
+
+  bluesky-post-embed@1.0.5:
+    resolution: {integrity: sha512-xnzbnGIYuLosTN2pXlUh2WcfYn6SBgQk8qfM6L/IxIrIwtJTjNMoPj1iv3dxgl7hK8ItJcBLWTEQuBA/8IpqwQ==}
+
+  bluesky-profile-card-embed@1.0.0:
+    resolution: {integrity: sha512-7HQXAK80pzGYSNH8FsBI96bUxrlLnvBohbl9wxDbblD53uC5rJbk73BcfbZcHTyEx+O2Z0wMaYZ7a30Ybj717w==}
+
+  bluesky-profile-feed-embed@1.0.3:
+    resolution: {integrity: sha512-CIrVJelk2orfQ9FZQt7N+hiqwpiTXx4im/GLrRE75AT99f4zCgucMIWxWSN66oJgfaWFouUPqFA44rBtTVipGA==}
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -2566,6 +2598,17 @@ snapshots:
 
   '@atcute/base32@1.0.1': {}
 
+  '@atcute/bluesky-richtext-parser@1.0.7': {}
+
+  '@atcute/bluesky-richtext-segmenter@1.0.5(@atcute/bluesky@1.0.10(@atcute/client@2.0.6))(@atcute/client@2.0.6)':
+    dependencies:
+      '@atcute/bluesky': 1.0.10(@atcute/client@2.0.6)
+      '@atcute/client': 2.0.6
+
+  '@atcute/bluesky@1.0.10(@atcute/client@2.0.6)':
+    dependencies:
+      '@atcute/client': 2.0.6
+
   '@atcute/cid@1.0.2':
     dependencies:
       '@atcute/base32': 1.0.1
@@ -3533,6 +3576,24 @@ snapshots:
   balanced-match@1.0.2: {}
 
   birpc@0.2.19: {}
+
+  bluesky-post-embed@1.0.5:
+    dependencies:
+      '@atcute/bluesky': 1.0.10(@atcute/client@2.0.6)
+      '@atcute/bluesky-richtext-segmenter': 1.0.5(@atcute/bluesky@1.0.10(@atcute/client@2.0.6))(@atcute/client@2.0.6)
+      '@atcute/client': 2.0.6
+
+  bluesky-profile-card-embed@1.0.0:
+    dependencies:
+      '@atcute/bluesky': 1.0.10(@atcute/client@2.0.6)
+      '@atcute/bluesky-richtext-parser': 1.0.7
+      '@atcute/client': 2.0.6
+
+  bluesky-profile-feed-embed@1.0.3:
+    dependencies:
+      '@atcute/bluesky': 1.0.10(@atcute/client@2.0.6)
+      '@atcute/bluesky-richtext-segmenter': 1.0.5(@atcute/bluesky@1.0.10(@atcute/client@2.0.6))(@atcute/client@2.0.6)
+      '@atcute/client': 2.0.6
 
   boolbase@1.0.0: {}
 

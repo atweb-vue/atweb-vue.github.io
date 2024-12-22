@@ -11,7 +11,9 @@ export default defineConfig({
         vue({
             template: {
                 compilerOptions: {
-                    isCustomElement: (tag) => tag.startsWith('x-'),
+                    isCustomElement: (tag) =>
+                        tag.startsWith('x-') ||
+                        tag.startsWith('bluesky-'),
                 },
             },
         }),
