@@ -99,12 +99,14 @@ async function setActiveFile(file: IoGithubAtwebFile.Record & { uri: AtUri }) {
 
     const page = await downloadFile(user.value.did, file.uri.rkey);
     editorRef.value!.setValue(page.blobString);
+}
 
+watch(activeFile, activeFile => {
     monaco.editor.setModelLanguage(
         editorRef.value!.getModel()!,
-        activeFile.value ? lookupMime(activeFile.value) ?? 'mdx' : 'plaintext'
+        activeFile ? lookupMime(activeFile) ?? 'mdx' : 'plaintext'
     );
-}
+});
 
 </script>
 

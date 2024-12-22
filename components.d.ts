@@ -17,6 +17,7 @@ declare module 'vue' {
     MModal: typeof import('./src/components/MModal.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
     'OmitVanillaCss.ce': typeof import('./src/components/custom-elements/OmitVanillaCss.ce.vue')['default']
+    'OnekoKitty.ce': typeof import('./src/components/custom-elements/OnekoKitty.ce.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SignInGate: typeof import('./src/components/SignInGate.vue')['default']
