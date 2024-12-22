@@ -20,6 +20,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import { useRouter } from 'vue-router';
 import UsePico from '@/components/UsePico.vue';
 import { pageMeta, useVanillaCss } from '@/lib/shared-globals';
+import { frameworkStyles } from '@/lib/framework-styles';
 
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
@@ -133,10 +134,14 @@ watch(activeFile, activeFile => {
 });
 
 watch(editorValue, () => {
-    useVanillaCss.value = false; // reset it BEFORE markdown render!
+    useVanillaCss.value = true; // reset it BEFORE markdown render!
 });
 
 const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFile.value) ?? 'text/mdx') === 'text/mdx'));
+
+const adoptedStyleSheet = new CSSStyleSheet();
+adoptedStyleSheet.replace(frameworkStyles);
+
 </script>
 
 <template>
@@ -171,11 +176,11 @@ const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFi
                     </select>
                 </div>
 
-                <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px + 0.5rem)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
+                <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
             </UsePico>
         </div>
         <div class="right" style="min-width: 25vw;" v-if="isMarkdownFile">
-            <div style="padding: 1rem; max-height: calc(100vh - 115.5px + 0.5rem); overflow: auto;">
+            <div style="padding: 1rem; max-height: calc(100vh - 115.5px); overflow: auto;">
                 <div class="errors" v-if="submitErrors.length">
                     Errors:
                     <ul>
