@@ -5,7 +5,6 @@ import { themeNames, themes } from '@/lib/monaco/themes';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
 import { user } from '@/lib/atproto/signed-in-user';
 import SignInGate from '@/components/SignInGate.vue';
-import router from '@/router';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
 import { compile } from '@mdx-js/mdx';
 import { options as mdxOptions } from '@/lib/markdown/mdx-options';
@@ -19,6 +18,7 @@ import { useLocalStorage, watchImmediate } from '@vueuse/core';
 import { lookupMime } from '@/lib/mime';
 import MonacoEditor from '@/components/MonacoEditor.vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
+import { useRouter } from 'vue-router';
 
 const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     automaticLayout: true,
@@ -60,6 +60,7 @@ function formatCode() {
 }
 
 const submitErrors = reactive<unknown[]>([]);
+const router = useRouter();
 async function submitPage() {
     if (submitErrors.length > 0)
         return;
@@ -74,13 +75,25 @@ async function submitPage() {
         throw new Error('file path is empty');
     }
 
-    const { client, did } = user.value;
+    const { client, handle } = user.value;
 
     const { rkey } = await client.uploadPage(activeFile.value, editorRef.value!.getValue());
     submitted.value = true;
     setTimeout(() => {
-        router.push(`/page/${did}/${rkey}`);
+        router.push(`/page/${handle}/${rkey}`);
     }, 1000);
+}
+
+async function openPage() {
+    if (!user.value) {
+        submitErrors.push('not signed in');
+        throw new Error('Not signed in');
+    }
+
+    const { handle } = user.value;
+    const rkey = filepathToRkey(activeFile.value);
+
+    router.push(`/page/${handle}/${rkey}`);
 }
 
 const selectedTheme = useLocalStorage<(keyof typeof themeNames)>('monaco-theme', 'Tomorrow Night Bright');
@@ -138,6 +151,7 @@ const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFi
 
                     <SignInGate sign-in-button-class="edit-form-button" sign-in-text="Sign in to upload">
                         <VaButton class="edit-form-button" @click="submitPage">Submit</VaButton>
+                        <VaButton v-if="files.find(file => file.filePath === activeFile)" class="edit-form-button" @click="openPage">Open</VaButton>
                     </SignInGate>
 
                     <VaSelect
@@ -199,6 +213,7 @@ const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFi
 <style lang="scss">
 .edit-form-button {
     vertical-align: text-top;
+    margin-right: 0.5rem;
 }
 
 // fix for bug in va-modal
