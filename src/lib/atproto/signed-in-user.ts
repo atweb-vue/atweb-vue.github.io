@@ -72,7 +72,7 @@ export async function authenticateIfNecessary(
 
         if (refreshOnly && !session) return false;
 
-        session ??= await oauthClient.authenticate(handle, refreshOnly);
+        session ??= await oauthClient.authenticate(handle);
 
         const oauthAgent = new OAuthUserAgent(session);
 

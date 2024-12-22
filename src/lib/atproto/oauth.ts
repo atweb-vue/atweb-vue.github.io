@@ -1,18 +1,19 @@
 import { configureOAuth, createAuthorizationUrl, finalizeAuthorization, getSession, OAuthUserAgent, resolveFromIdentity } from '@atcute/oauth-browser-client';
 import type { FetchHandlerObject } from '@atcute/client';
 import type { At } from '@atcute/client/lexicons';
+import { useEventListener } from '@vueuse/core';
 
 configureOAuth({
     metadata: {
-        client_id: 'https://obsidat.github.io/oauth/client-metadata.json',
-        redirect_uri: 'https://obsidat.github.io/oauth/redirect.html',
+        client_id: 'https://atweb-vue.github.io/oauth/client-metadata.json',
+        redirect_uri: 'https://atweb-vue.github.io/oauth/redirect.html',
     },
 });
 
 export class AtpOauthClient {
     constructor() {}
 
-    async authenticate(handle: string, refreshOnly: boolean) {
+    async authenticate(handle: string) {
         const { identity, metadata } = await resolveFromIdentity(handle);
 
         // passing `identity` is optional,
@@ -28,12 +29,20 @@ export class AtpOauthClient {
         // recommended to wait for the browser to persist local storage before proceeding
         await new Promise(resolve => setTimeout(resolve, 200));
 
+        const hashPromise = Promise.race([
+            new Promise(resolve => useEventListener(window, 'message', event => {
+                const hash = event.data as string;
+                resolve(hash);
+            })),
+            new Promise(resolve => setTimeout(resolve, 180000)) // 3 minutes
+        ]);
+
         // redirect the user to sign in and authorize the app
-        window.open(authUrl, '_blank', 'noopener,noreferrer');
+        window.open(authUrl, '_blank');
 
         // TODO setup a redirect instead
-        const hash = prompt('Input the code that was displayed on the page');
-        if (!hash) throw new Error('User cancelled authentication');
+        const hash = (await hashPromise) as string | undefined;
+        if (!hash) throw new Error('Authentication timed out');
 
         // `createAuthorizationUrl` asks for the server to redirect here with the
         // parameters assigned in the hash, not the search string.
