@@ -18,6 +18,29 @@ const router = createRouter({
             name: 'page',
             component: () => import('@/views/PageView.vue'),
         },
+        {
+            path: '/user/:handle',
+            name: 'user',
+            component: () => import('@/views/UserView.vue'),
+        },
+        // someone sends you this link to accept an invite to a webring
+        {
+            path: '/invited/:inviterHandle/:rkey',
+            name: 'invited',
+            component: () => import('@/views/ReceiveInviteView.vue'),
+        },
+        // manage a webring you own
+        {
+            path: '/ring/:rkey',
+            name: 'ring',
+            component: () => import('@/views/RingView.vue'),
+        },
+        // manage your rings and the rings you are in
+        {
+            path: '/rings',
+            name: 'rings',
+            component: () => import('@/views/ListRingsView.vue'),
+        },
     ],
 });
 
