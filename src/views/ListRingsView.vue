@@ -1,23 +1,33 @@
 <script setup lang="ts">
 import SignInGate from '@/components/SignInGate.vue';
-import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
+import { getManagedRings } from '@/lib/atproto/atweb-unauthed';
+import { user, type User } from '@/lib/atproto/signed-in-user';
 import { watchImmediateAsync } from '@/lib/vue-utils';
+import { ref, watch, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
+import type { RouteLocationNormalizedLoadedGeneric } from 'vue-router';
+
+const rings = ref<Awaited<ReturnType<typeof getManagedRings>>>();
 
 const route = useRoute();
 await watchImmediateAsync(
-    route,
-    async () => {
-        const did = await resolveHandleAnonymously(route.params.handle as string);
+    [route, user],
+    async ([route, user]) => {
+        if (!user) return;
 
+        rings.value = await getManagedRings(user!.did);
     },
 );
 </script>
 
 <template>
     <main>
-        <SignInGate sign-in-button-class="edit-form-button">
-            <VaButton class="edit-form-button" @click="submitPage">Submit</VaButton>
+        <SignInGate>
+            <div v-for="ring in rings" :key="ring.uri.rkey">
+                {{ ring.name }}
+            </div>
+
+            <VaButton>Create new ring</VaButton>
         </SignInGate>
     </main>
 </template>

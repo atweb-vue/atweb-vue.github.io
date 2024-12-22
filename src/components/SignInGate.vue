@@ -7,6 +7,7 @@ import { VaButton, VaInput, VaModal } from 'vuestic-ui';
 
 defineProps<{
     signInButtonClass?: string;
+    signInText?: string;
 }>();
 
 const handle = ref('');
@@ -18,7 +19,7 @@ watchImmediate(user, user => {
 
 </script>
 <template>
-    <VaButton :class="signInButtonClass" v-if="!user" @click="open = true">Sign in to upload</VaButton>
+    <VaButton :class="signInButtonClass" v-if="!user" @click="open = true">{{ signInText ?? 'Sign in' }}</VaButton>
     <slot v-else></slot>
 
     <VaModal

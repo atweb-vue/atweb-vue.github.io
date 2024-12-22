@@ -46,7 +46,7 @@ class LoginState {
 
 export type User = { [K in keyof LoginState]: LoginState[K] };
 
-export const user = ref<LoginState>();
+export const user = ref<User>();
 
 watchImmediate([account, agents], ([account, agents]) => {
     user.value = account !== undefined && agents !== undefined ? new LoginState() : undefined;

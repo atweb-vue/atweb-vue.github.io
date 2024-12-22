@@ -185,3 +185,15 @@ export async function downloadFile(did: At.DID, rkey: string): Promise<Page> {
         }
     };
 }
+
+export async function getManagedRings(didOrHandle: string) {
+    const { records } = await unauthedAgent.list({
+        collection: 'io.github.atweb.ring',
+        repo: didOrHandle,
+    });
+
+    return records.map(record => ({
+        ...record.value,
+        uri: new AtUri(record.uri),
+    }));
+}

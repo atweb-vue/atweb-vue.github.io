@@ -35,6 +35,7 @@ declare module '@atcute/client/lexicons' {
             $type: 'io.github.atweb.ring';
             /** This record's creation date. */
             createdAt: string;
+            name: string;
             /** The invited members of this webring. */
             members?: IoGithubAtwebRing.Member[];
         }

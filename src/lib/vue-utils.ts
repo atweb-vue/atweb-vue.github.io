@@ -1,4 +1,4 @@
-import { watchOnce, type MapOldSources, type MapSources } from '@vueuse/core';
+import { watchOnce, type MapOldSources } from '@vueuse/core';
 import {
     type Slot,
     type VNode,
@@ -9,7 +9,11 @@ import {
     type WatchOptions,
     type WatchStopHandle,
     watch,
+    type MultiWatchSources,
+    type WatchHandle,
+    type Reactive,
 } from 'vue';
+import type { ReactiveMarker } from '@vue/reactivity/dist/reactivity.d.ts';
 
 export function getSlotChildrenText(
     children: Slot | VNode[] | VNodeArrayChildren | undefined,
@@ -34,21 +38,41 @@ export function getSlotChildrenText(
         .join('');
 }
 
-export function watchImmediateAsync<T extends Readonly<WatchSource<unknown>[]>>(
-    source: [...T],
-    cb: WatchCallback<MapSources<T>, MapOldSources<T, true>>,
-    options?: Omit<WatchOptions<true>, 'immediate'>,
-): Promise<WatchStopHandle>;
-export function watchImmediateAsync<T>(
+type MaybeUndefined<T, I> = I extends true ? T | undefined : T;
+type MapSources<T, Immediate> = {
+    [K in keyof T]: T[K] extends WatchSource<infer V> ? MaybeUndefined<V, Immediate> : T[K] extends object ? MaybeUndefined<T[K], Immediate> : never;
+};
+
+export function watchImmediateAsync<
+    T
+>(
     source: WatchSource<T>,
     cb: WatchCallback<T, T | undefined>,
-    options?: Omit<WatchOptions<true>, 'immediate'>,
-): Promise<WatchStopHandle>;
-export function watchImmediateAsync<T extends object>(
+    options?: Omit<WatchOptions, 'immediate'>,
+): Promise<WatchHandle>;
+export function watchImmediateAsync<
+    T extends Readonly<MultiWatchSources>,
+>(
+    sources: readonly [...T] | T,
+    cb: [T] extends [ReactiveMarker]
+        ? WatchCallback<T, T | undefined>
+        : WatchCallback<MapSources<T, false>, MapSources<T, true>>,
+    options?: Omit<WatchOptions, 'immediate'>,
+): Promise<WatchHandle>;
+export function watchImmediateAsync<
+    T extends MultiWatchSources
+>(
+    sources: [...T],
+    cb: WatchCallback<MapSources<T, false>, MapSources<T, true>>,
+    options?: Omit<WatchOptions, 'immediate'>,
+): Promise<WatchHandle>;
+export function watchImmediateAsync<
+    T extends object
+>(
     source: T,
     cb: WatchCallback<T, T | undefined>,
-    options?: Omit<WatchOptions<true>, 'immediate'>,
-): Promise<WatchStopHandle>;
+    options?: Omit<WatchOptions, 'immediate'>,
+): Promise<WatchHandle>;
 
 /**
  * Shorthand for watching value with {immediate: true} that returns a
@@ -56,8 +80,8 @@ export function watchImmediateAsync<T extends object>(
  *
  * @see https://vueuse.org/watchImmediate
  */
-export async function watchImmediateAsync<T = any>(
-    source: T,
+export async function watchImmediateAsync(
+    source: any,
     cb: any,
     options?: Omit<WatchOptions, 'immediate'>,
 ) {

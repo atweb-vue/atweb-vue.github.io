@@ -9,8 +9,11 @@ defs:
     record:
       type: object
       required:
+        - name
         - createdAt
       properties:
+        name:
+          type: string
         members:
           type: array
           items:

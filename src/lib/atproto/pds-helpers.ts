@@ -1,4 +1,4 @@
-import { getPdsFromDid } from './did-document';
+import { getPdsFromDid } from './handles/did-document';
 import type { At } from "@atcute/client/lexicons";
 import { resolveHandleAnonymously } from "./handles/resolve";
 

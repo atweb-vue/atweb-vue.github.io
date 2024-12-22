@@ -136,7 +136,7 @@ async function setActiveFile(file: IoGithubAtwebFile.Record & { uri: AtUri }) {
                         label="File path"
                     />
 
-                    <SignInGate sign-in-button-class="edit-form-button">
+                    <SignInGate sign-in-button-class="edit-form-button" sign-in-text="Sign in to upload">
                         <VaButton class="edit-form-button" @click="submitPage">Submit</VaButton>
                     </SignInGate>
 
