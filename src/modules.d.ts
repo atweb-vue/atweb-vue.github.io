@@ -7,3 +7,6 @@ declare module '#webamp-lazy' {
 }
 
 declare module 'https://open.spotify.com/embed/iframe-api/v1';
+
+declare module '@vanillawc/wc-marquee';
+declare module '@vanillawc/wc-social-link';

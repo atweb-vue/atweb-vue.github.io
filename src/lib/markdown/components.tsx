@@ -3,24 +3,27 @@ import type { MDXComponents } from './mdx-types';
 import type { Slot } from 'vue';
 import type { JSX } from 'vue/jsx-runtime';
 
-import AtImg from '@/components/custom-elements/AtImg.vue';
-import AtLink from '@/components/custom-elements/AtLink.vue';
-import AtAnchor from '@/components/custom-elements/AtAnchor.vue';
-import AtWebStylesheet from '@/components/custom-elements/AtWebStylesheet.vue';
-import OmitVanillaCss from '@/components/custom-elements/OmitVanillaCss.vue';
-import AtStyle from '@/components/custom-elements/AtStyle.vue';
-import AtWebTitle from '@/components/custom-elements/AtWebTitle.vue';
-import WebampPlayer from '@/components/custom-elements/WebampPlayer.vue';
-import SpotifyPlayer from '@/components/custom-elements/SpotifyPlayer.vue';
-import OnekoKitty from '@/components/custom-elements/OnekoKitty.vue';
-import NewBlink from '@/components/custom-elements/NewBlink.vue';
-import LesbiBadge from '@/components/custom-elements/LesbiBadge.vue';
-import EightyEightThirtyOneBadge from '@/components/custom-elements/EightyEightThirtyOneBadge.vue';
-import UserbarBadge from '@/components/custom-elements/UserbarBadge.vue';
-import RingLink from '@/components/custom-elements/RingLink.vue';
-import BlueskyPost from '@/components/custom-elements/BlueskyPost.vue';
-import BlueskyProfileCard from '@/components/custom-elements/BlueskyProfileCard.vue';
-import BlueskyProfileFeed from '@/components/custom-elements/BlueskyProfileFeed.vue';
+import AtImg from '@/components/markdown-elements/AtImg.vue';
+import AtLink from '@/components/markdown-elements/AtLink.vue';
+import AtAnchor from '@/components/markdown-elements/AtAnchor.vue';
+import AtWebStylesheet from '@/components/markdown-elements/AtWebStylesheet.vue';
+import OmitVanillaCss from '@/components/markdown-elements/OmitVanillaCss.vue';
+import AtStyle from '@/components/markdown-elements/AtStyle.vue';
+import AtWebTitle from '@/components/markdown-elements/AtWebTitle.vue';
+import WebampPlayer from '@/components/markdown-elements/WebampPlayer.vue';
+import SpotifyPlayer from '@/components/markdown-elements/SpotifyPlayer.vue';
+import OnekoKitty from '@/components/markdown-elements/OnekoKitty.vue';
+import NewBlink from '@/components/markdown-elements/NewBlink.vue';
+import LesbiBadge from '@/components/markdown-elements/LesbiBadge.vue';
+import EightyEightThirtyOneBadge from '@/components/markdown-elements/EightyEightThirtyOneBadge.vue';
+import UserbarBadge from '@/components/markdown-elements/UserbarBadge.vue';
+import RingLink from '@/components/markdown-elements/RingLink.vue';
+import BlueskyPost from '@/components/markdown-elements/BlueskyPost.vue';
+import BlueskyProfileCard from '@/components/markdown-elements/BlueskyProfileCard.vue';
+import BlueskyProfileFeed from '@/components/markdown-elements/BlueskyProfileFeed.vue';
+import RenderJson from '@/components/markdown-elements/RenderJson.vue';
+import NewMarquee from '@/components/markdown-elements/NewMarquee.vue';
+import SocialLink from '@/components/markdown-elements/SocialLink.vue';
 
 type Props = Record<string, any>;
 
@@ -47,5 +50,8 @@ export const components: MDXComponents = {
     LesbiBadge: LesbiBadge,
     Badge: EightyEightThirtyOneBadge,
     Userbar: UserbarBadge,
-    RingLink: RingLink
+    RingLink: RingLink,
+    Json: RenderJson,
+    marquee: NewMarquee,
+    SocialLink: SocialLink,
 };

@@ -9,6 +9,8 @@ Welcome to @web!
 
 ### Custom Markup Elements
 * `<blink>[text]</blink>`: Blinking text.
+* `<marquee>[text]</marquee>`: Text that scrolls across the screen.
+    - Use `<marquee party>` for party mode.
 
 ### at:// Compatible Elements
 * `<img src="[link]" />`: Images with suport for relative and at:// URIs.
@@ -137,6 +139,23 @@ Welcome to @web!
     The at:// URI to the @ring.  
     - `self: string` **Required**  
     Your DID.  
+* `<Json />`
+    - `value: any` **Optional**  
+    Value to present. Can be JSON but also `Number`, `String`, `Array`, `Function`, `Symbol`, `Boolean`, `Date`
+    - `open: 'closed' | 'full' | 'top-only'` **Required**  
+        Possible values:  
+        - "closed": Object is closed
+        - "full": Object is fully open
+        - "top-only" Only top level open
+    
+        Default: "closed"
+* `<SocialLink />`
+    - `network: 'email' | 'github' | 'gitlab' | 'linkedin' | 'rss' | 'stackoverflow' | 'twitch' | 'twitter'` **Required**  
+    The network to link to.
+    - `handle: string` **Required**   
+    _Note: For Stackoverflow, your `USERID` is your handle_
+    - `href: string` **Optional**  
+    Alternatively, instead of providing a handle and relying on the built-in link you can just provide your own.
 
 ### Reversible File Path Record Key Specification
 _(for nerds)_

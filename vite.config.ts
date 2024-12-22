@@ -19,7 +19,9 @@ export default defineConfig({
                 compilerOptions: {
                     isCustomElement: (tag) =>
                         tag.startsWith('x-') ||
-                        tag.startsWith('bluesky-'),
+                        tag.startsWith('bluesky-') ||
+                        tag === 'json-element' ||
+                        tag.startsWith('wc-'),
                 },
             },
         }),

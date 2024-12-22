@@ -35,6 +35,12 @@ importers:
       '@picocss/pico':
         specifier: ^2.0.6
         version: 2.0.6
+      '@vanillawc/wc-marquee':
+        specifier: ^1.0.31
+        version: 1.0.31
+      '@vanillawc/wc-social-link':
+        specifier: ^1.5.0
+        version: 1.5.0
       '@volar/language-service':
         specifier: ^2.4.11
         version: 2.4.11
@@ -1102,6 +1108,12 @@ packages:
 
   '@ungap/structured-clone@1.2.1':
     resolution: {integrity: sha512-fEzPV3hSkSMltkw152tJKNARhOupqbH96MZWyRjNaYZOMIzbrTeQDG+MTc6Mr2pgzFQzFxAfmhGDNP5QK++2ZA==}
+
+  '@vanillawc/wc-marquee@1.0.31':
+    resolution: {integrity: sha512-lbUIAUNN3S8/EHeCpJA90ZuHL0mufXZRqOFzert+uKfRiOmriZW4ZCd5Ghc7shg+pjXd2ic/3DDIIw6bl95iIw==}
+
+  '@vanillawc/wc-social-link@1.5.0':
+    resolution: {integrity: sha512-Dfm/BIeGLMMZQjR7jLy9DjpgEuwsNbYnybMmmTdvTV/WtdV4fo7qTGCdFIpMXdH+jlZ6OwjL9tIJTEXOk8LEaA==}
 
   '@vitejs/plugin-vue-jsx@4.1.1':
     resolution: {integrity: sha512-uMJqv/7u1zz/9NbWAD3XdjaY20tKTf17XVfQ9zq4wY1BjsB/PjpJPMe2xiG39QpP4ZdhYNhm4Hvo66uJrykNLA==}
@@ -4137,6 +4149,10 @@ snapshots:
       eslint-visitor-keys: 4.2.0
 
   '@ungap/structured-clone@1.2.1': {}
+
+  '@vanillawc/wc-marquee@1.0.31': {}
+
+  '@vanillawc/wc-social-link@1.5.0': {}
 
   '@vitejs/plugin-vue-jsx@4.1.1(vite@6.0.3(@types/node@22.10.2)(jiti@2.4.1)(sass-embedded@1.83.0)(sass@1.83.0)(tsx@4.19.2)(yaml@2.6.1))(vue@3.5.13(typescript@5.7.2))':
     dependencies:
