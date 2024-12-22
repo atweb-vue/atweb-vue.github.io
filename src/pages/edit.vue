@@ -138,8 +138,7 @@ watch(editorValue, () => {
 const isMarkdownFile = computed(() => !activeFile.value || ((lookupMime(activeFile.value) ?? 'text/mdx') === 'text/mdx'));
 
 const adoptedStyleSheet = new CSSStyleSheet();
-adoptedStyleSheet.replace(frameworkStyles);
-
+await adoptedStyleSheet.replace(frameworkStyles);
 </script>
 
 <template>
@@ -173,9 +172,9 @@ adoptedStyleSheet.replace(frameworkStyles);
                         </option>
                     </select>
                 </div>
-
-                <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
             </UsePico>
+
+            <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px)" v-on:before-mount="onBeforeMonacoMount" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
         </div>
         <div class="right" style="min-width: 25vw;" v-if="isMarkdownFile">
             <div style="padding: 1rem; max-height: calc(100vh - 115.5px); overflow: auto;">
