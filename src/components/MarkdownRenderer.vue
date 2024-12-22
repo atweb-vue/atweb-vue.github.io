@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MDXComponents, MDXModule } from '@/lib/markdown/mdx-types';
 
-const { markdown, disableComponents } = defineProps<{
+const { markdown, disableComponents = false } = defineProps<{
     markdown: string;
     disableComponents?: boolean;
 }>();
@@ -12,6 +12,7 @@ import { watchImmediate } from '@vueuse/core';
 import { components } from '@/lib/markdown/components.tsx';
 import { watchImmediateAsync } from '@/lib/vue-utils';
 import type { compileStringAsync } from 'sass';
+import { computed } from 'vue';
 
 async function sassCompileString(...args: Parameters<typeof compileStringAsync>) {
     const { compileStringAsync } = await import('sass');
@@ -41,7 +42,7 @@ await watchImmediateAsync(() => markdown, async markdown => {
 <template>
     <div class="mdx-root">
         <Suspense>
-            <module.default v-if="module" :components="disableComponents ? components : {}" />
+            <module.default v-if="module" :components="disableComponents ? {} : components" />
         </Suspense>
     </div>
 </template>
