@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import Monaco from '@/components/Monaco';
-
-import { ref, shallowRef, watch } from 'vue';
+import { onMounted, reactive, ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
 import { themeNames, themes } from '@/lib/monaco/themes';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
@@ -13,9 +11,36 @@ import { compile } from '@mdx-js/mdx';
 import { options as mdxOptions } from '@/lib/markdown/mdx-options';
 import { VaButton, VaIcon, VaInput, VaLayout, VaSelect, VaSidebar, VaSidebarItem, VaSidebarItemContent, VaSidebarItemTitle } from 'vuestic-ui';
 import type { IoGithubAtwebFile } from '@atcute/client/lexicons';
-import type { AtUri } from '@atproto/syntax';
 import { downloadFile } from '@/lib/atproto/atweb-unauthed';
 import { filepathToRkey } from '@/lib/atproto/rkey';
+import * as monaco from 'monaco-editor';
+import type { AtUri } from '@atproto/syntax';
+import { watchImmediate } from '@vueuse/core';
+import { lookupMime } from '@/lib/mime';
+
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+
+self.MonacoEnvironment = {
+  getWorker(_, label) {
+    if (label === 'json') {
+      return new jsonWorker();
+    }
+    if (label === 'css' || label === 'scss' || label === 'less') {
+      return new cssWorker();
+    }
+    if (label === 'html' || label === 'handlebars' || label === 'razor') {
+      return new htmlWorker();
+    }
+    if (label === 'typescript' || label === 'javascript') {
+      return new tsWorker();
+    }
+    return new editorWorker();
+  }
+};
 
 type MonacoEditor = typeof monacoEditor;
 
@@ -25,105 +50,52 @@ const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     formatOnPaste: true,
     fixedOverflowWidgets: true,
     contextmenu: true,
-
 };
 
-const code = ref(`
-# hi
-
-<h1>Heading!</h1>
-
-<abbr title="HyperText Markup Language">HTML</abbr> is a lovely language.
-
-<section>
-    And here is *markdown* in **JSX**!
-</section>
-
-<h2>Hello, Venus!</h2>
-<h2>Hello, Mars!</h2>
-
-<main>
-    <article>
-    # Hello!
-    </article>
-</main>
-
-# Heading (rank 1)
-## Heading 2
-### 3
-#### 4
-##### 5
-###### 6
-
-> Block quote
-
-* Unordered
-* List
-
-1. Ordered
-2. List
-
-A paragraph, introducing a thematic break:
-
----
-
-\`\`\`js
-some.code()
-\`\`\`
-
-a [link](https://example.com), an ![image](./image.png), some *emphasis*,
-something **strong**, and finally a little \`code()\`.
-`.trim());
-const monacoRef = shallowRef<MonacoEditor>();
-const codeEditorRef = shallowRef<editor.IStandaloneCodeEditor>();
+const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
 const submitted = ref(false);
 
-function handleBeforeMount(monaco: MonacoEditor) {
-    monacoRef.value = monaco;
-
+onMounted(() => {
     for (const [themeName, theme] of Object.entries(themes)) {
         // console.log(themeName, theme);
         monaco.editor.defineTheme(themeName, theme as editor.IStandaloneThemeData);
     }
-    monaco.languages.register({ id: 'mdx' });
+    monaco.languages.register({ id: 'mdx', mimetypes: ['text/mdx'] });
     monaco.languages.setLanguageConfiguration('mdx', mdxLangConf);
     monaco.languages.setMonarchTokensProvider('mdx', mdxLang);
-}
 
-function handleMount(editor: editor.IStandaloneCodeEditor, monaco: MonacoEditor) {
-    codeEditorRef.value = editor;
+    editorRef.value = monaco.editor.create(document.getElementById('monaco-editor')!, MONACO_EDITOR_OPTIONS);
     selectedTheme.value = 'Tomorrow Night Bright';
-}
+});
 
 // your action
 function formatCode() {
-    codeEditorRef.value?.getAction('editor.action.formatDocument')!.run();
+    editorRef.value?.getAction('editor.action.formatDocument')!.run();
 }
 
-const errors = ref<unknown[]>([]);
-
+const submitErrors = reactive<unknown[]>([]);
 async function submitPage() {
-    errors.value.length = 0;
+    submitErrors.length = 0;
     try {
-        await compile(code.value, mdxOptions);
+        await compile(editorRef.value!.getValue(), mdxOptions);
     } catch (err) {
-        errors.value.push(err);
+        submitErrors.push(err);
         return;
     }
 
     if (!user.value) {
-        errors.value.push('not signed in');
+        submitErrors.push('not signed in');
         throw new Error('Not signed in');
     }
 
     if (!activeFile.value) {
-        errors.value.push('file path is empty');
+        submitErrors.push('file path is empty');
         throw new Error('file path is empty');
     }
 
     const { client, did } = user.value;
 
-    const { rkey } = await client.uploadPage(activeFile.value, code.value);
+    const { rkey } = await client.uploadPage(activeFile.value, editorRef.value!.getValue());
     submitted.value = true;
     setTimeout(() => {
         router.push(`/page/${did}/${rkey}`);
@@ -131,13 +103,12 @@ async function submitPage() {
 }
 
 const selectedTheme = ref<(keyof typeof themeNames)>('Visual Studio Dark');
-
 watch(selectedTheme, theme => {
-    monacoRef.value?.editor.setTheme(themeNames[theme]);
+    monaco.editor.setTheme(themeNames[theme]);
 });
 
 const files = ref<(IoGithubAtwebFile.Record & { uri: AtUri })[]>([]);
-const activeFile = ref<string>();
+const activeFile = ref<string>('');
 watch(user, async user => {
     if (!user) return;
 
@@ -150,10 +121,14 @@ async function setActiveFile(file: IoGithubAtwebFile.Record & { uri: AtUri }) {
     if (!user.value) return;
 
     const page = await downloadFile(user.value.did, file.uri.rkey);
-    code.value = page.blobString;
+    editorRef.value!.setValue(page.blobString);
+
+    monaco.editor.setModelLanguage(
+        editorRef.value!.getModel()!,
+        activeFile.value ? lookupMime(activeFile.value) ?? 'mdx' : 'plaintext'
+    );
 }
 
-import mime from 'mime';
 function getLanguage(activeFile: string) {
     const languages = {
         '.txt': 'plaintext',
@@ -268,10 +243,10 @@ function getLanguage(activeFile: string) {
         </template>
         <template #content>
             <div class="flex">
-                <div class="errors" v-if="errors.length">
+                <div class="errors" v-if="submitErrors.length">
                     Errors:
                     <ul>
-                        <li v-for="error, idx in errors" :key="idx">
+                        <li v-for="error, idx in submitErrors" :key="idx">
                             {{ String(error) }}
                         </li>
                     </ul>
@@ -297,7 +272,9 @@ function getLanguage(activeFile: string) {
                     />
                 </div>
 
-                <Monaco
+                <div id="monaco-editor" style="height: calc(100vh - 69.6px - 68px)"></div>
+
+                <!-- <Monaco
                     class="flex-monaco"
                     v-model:value="code"
                     theme="vs-dark"
@@ -309,7 +286,7 @@ function getLanguage(activeFile: string) {
                     defaultPath="test.mdx"
                     defaultLanguage="mdx"
                     height="calc(100vh - 70px - 75px - 10px)"
-                />
+                /> -->
             </div>
         </template>
     </VaLayout>

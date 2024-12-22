@@ -3,16 +3,10 @@ import './assets/main.scss';
 // import './custom-elements.ts';
 
 import { createApp } from 'vue';
-import { loader } from '@guolao/vue-monaco-editor';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { createVuesticEssential, VaDropdownPlugin, VaModalPlugin, VaToastPlugin } from "vuestic-ui";
 
 import App from './App.vue';
 import router from './router.ts';
-
-loader.config({
-    monaco,
-});
 
 const app = createApp(App);
 
