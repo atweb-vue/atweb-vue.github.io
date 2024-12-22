@@ -59,10 +59,10 @@ declare module '@atcute/client/lexicons' {
         }
     }
 
-    namespace IoGithubAtwebFile {
+    namespace IoGithubAtwebSite {
         /** An atweb website's metadata. */
         interface Record {
-            $type: 'io.github.atweb.file';
+            $type: 'io.github.atweb.site';
             /** This record's creation date. */
             createdAt: string;
             /** Website description, if any. */
@@ -140,7 +140,7 @@ declare module '@atcute/client/lexicons' {
         'io.github.atweb.file': IoGithubAtwebFile.Record;
         'io.github.atweb.ring': IoGithubAtwebRing.Record;
         'io.github.atweb.ringMembership': IoGithubAtwebRingMembership.Record;
-        'io.github.atweb.file': IoGithubAtwebFile.Record;
+        'io.github.atweb.site': IoGithubAtwebSite.Record;
         'blue.zio.atfile.lock': BlueZioAtfileLock.Record;
         'blue.zio.atfile.upload': BlueZioAtfileUpload.Record;
     }
