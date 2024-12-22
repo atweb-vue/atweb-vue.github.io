@@ -23,6 +23,9 @@ importers:
       '@atproto/syntax':
         specifier: ^0.3.1
         version: 0.3.1
+      '@grapoza/vue-tree':
+        specifier: ^7.0.0
+        version: 7.0.0(typescript@5.7.2)
       '@mdx-js/language-service':
         specifier: ^0.6.0
         version: 0.6.0
@@ -713,6 +716,9 @@ packages:
 
   '@floating-ui/vue@1.1.5':
     resolution: {integrity: sha512-ynL1p5Z+woPVSwgMGqeDrx6HrJfGIDzFyESFkyqJKilGW1+h/8yVY29Khn0LaU6wHBRwZ13ntG6reiHWK6jyzw==}
+
+  '@grapoza/vue-tree@7.0.0':
+    resolution: {integrity: sha512-JMIAY8YLriAkFnlrpdzMrYz+nJIWouy7U6VAN08E5+0zE1LgfRei2TTwZ1GUeG/F1ndteblavTQwjLXUHS/j6w==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -3758,6 +3764,12 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+
+  '@grapoza/vue-tree@7.0.0(typescript@5.7.2)':
+    dependencies:
+      vue: 3.5.13(typescript@5.7.2)
+    transitivePeerDependencies:
+      - typescript
 
   '@humanfs/core@0.19.1': {}
 

@@ -26,6 +26,7 @@
     "@atcute/oauth-browser-client": "^1.0.7",
     "@atcute/tid": "^1.0.1",
     "@atproto/syntax": "^0.3.1",
+    "@grapoza/vue-tree": "^7.0.0",
     "@mdx-js/language-service": "^0.6.0",
     "@mdx-js/mdx": "^3.1.0",
     "@noble/hashes": "^1.6.1",
