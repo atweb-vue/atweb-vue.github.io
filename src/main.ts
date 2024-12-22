@@ -3,6 +3,7 @@ import './assets/main.scss';
 
 import { createApp } from 'vue';
 import { loader } from '@guolao/vue-monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 // import { Quasar, type QuasarPluginOptions } from 'quasar';
 
 // Import icon libraries
@@ -15,7 +16,7 @@ import App from './App.vue';
 import router from './router.ts';
 
 loader.config({
-    monaco: await import('monaco-editor/esm/vs/editor/editor.api'),
+    monaco,
 });
 
 const app = createApp(App);
