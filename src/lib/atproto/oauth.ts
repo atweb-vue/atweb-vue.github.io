@@ -12,7 +12,7 @@ configureOAuth({
 export class AtpOauthClient {
     constructor() {}
 
-    async authenticate(handle: string) {
+    async authenticate(handle: string, showInputCodeModal: () => Promise<string>) {
         const { identity, metadata } = await resolveFromIdentity(handle);
 
         // passing `identity` is optional,
@@ -32,8 +32,8 @@ export class AtpOauthClient {
         window.open(authUrl, '_blank', 'noopener,noreferrer');
 
         // TODO setup a redirect instead
-        const hash = prompt('Input the code that was displayed on the page');
-        if (!hash) throw new Error('User cancelled authentication');
+
+        const hash = await showInputCodeModal();
 
         // `createAuthorizationUrl` asks for the server to redirect here with the
         // parameters assigned in the hash, not the search string.

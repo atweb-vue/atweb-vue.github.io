@@ -55,7 +55,7 @@ watchImmediate([account, agents], ([account, agents]) => {
 const oauthClient = new AtpOauthClient();
 export async function authenticateIfNecessary(
     handle: string,
-    refreshOnly = false,
+    refreshOnlyOrShowInputCodeModal: boolean | (() => Promise<string>),
 ) {
     if (!agents.value || !account.value || account.value.handle !== handle) {
         let session: Session | undefined;
@@ -70,9 +70,9 @@ export async function authenticateIfNecessary(
 
         console.log('seession', session);
 
-        if (refreshOnly && !session) return false;
+        if (refreshOnlyOrShowInputCodeModal === true && !session) return false;
 
-        session ??= await oauthClient.authenticate(handle);
+        session ??= await oauthClient.authenticate(handle, refreshOnlyOrShowInputCodeModal as () => Promise<string>);
 
         const oauthAgent = new OAuthUserAgent(session);
 

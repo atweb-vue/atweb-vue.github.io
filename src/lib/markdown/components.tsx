@@ -21,6 +21,7 @@ import NewBlink from '@/components/custom-elements/NewBlink.ce.vue';
 import LesbiBadge from '@/components/custom-elements/LesbiBadge.ce.vue';
 import EightyEightThirtyOneBadge from '@/components/custom-elements/EightyEightThirtyOneBadge.ce.vue';
 import UserbarBadge from '@/components/custom-elements/UserbarBadge.ce.vue';
+import RingLink from '@/components/custom-elements/RingLink.ce.vue';
 
 type Props = Record<string, any>;
 
@@ -75,5 +76,6 @@ export const components: MDXComponents = {
     LesbiBadge: LesbiBadge,
     Badge: EightyEightThirtyOneBadge,
     Userbar: UserbarBadge,
+    RingLink: RingLink,
     ...(extraComponents as unknown as MDXComponents)
 };

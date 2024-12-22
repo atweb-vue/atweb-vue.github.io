@@ -9,7 +9,7 @@ import router from '@/router';
 import type { IoGithubAtwebRing } from '@atcute/client/lexicons';
 import { now as tidNow } from '@atcute/tid';
 import { AtUri } from '@atproto/syntax';
-import { computedAsync, useBrowserLocation, type ElementOf } from '@vueuse/core';
+import { computedAsync, useBrowserLocation, useClipboard, type ElementOf } from '@vueuse/core';
 import { computed, ref, shallowRef, watch, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import type { RouteLocationAsPath, RouteLocationAsRelative, RouteLocationAsString, RouteLocationNormalizedLoadedGeneric } from 'vue-router';
@@ -160,7 +160,7 @@ async function addMember(ring: Ring, handle: string) {
 
     await user.value!.client.updateRingMembers(
         ring.uri.rkey,
-        [...ring.members, AtUri.make(did, 'io.github.atweb.ringMembership', membershipTid)],
+        [...ring.members, AtUri.make(did, 'io.github.atweb.ringMembership', ring.uri.rkey)],
         ring.cid
     );
 
@@ -182,11 +182,13 @@ async function reloadRings() {
     }
 }
 
-function resolveRoute(route: RouteLocationAsString | RouteLocationAsRelative | RouteLocationAsPath) {
-    // https://stackoverflow.com/a/70989279
-    const resolved = router.resolve(route);
-    const absoluteURL = new URL(resolved.href, window.location.origin).href;
-    return absoluteURL;
+const { copy } = useClipboard();
+function copyRingMdx(ring: Ring) {
+    copy(
+        `<RingLink direction="previous" ring-uri="${ring.uri.toString()}" self="${user.value!.did}">prev</RingLink>\n` +
+            `${ring.name}\n` +
+            `<RingLink direction="next" ring-uri="${ring.uri.toString()}" self="${user.value!.did}">next</RingLink>`
+    );
 }
 </script>
 
@@ -263,6 +265,9 @@ function resolveRoute(route: RouteLocationAsString | RouteLocationAsRelative | R
                 <p>( <code>{{ selectedRing.uri }}</code> )</p>
                 <p><b>{{ selectedRing.members?.length ?? 0 }}</b> member(s)</p>
                 <p>Managed by <a class="va-link" :href="`https://bsky.app/profile/${selectedRing.uri.host}`">@{{ getMemberName(selectedRing.uri) }}</a></p>
+
+                <VaButton @click="copyRingMdx(selectedRing)">Copy ring MDX code</VaButton>
+
                 <div v-for="member in selectedRing.members" :key="member.membership.toString()" class="ring-member-card va-gutter-2">
                     <div class="va-gutter-2">
                         <bluesky-profile-card :actor="getMemberName(member.membership)" allow-unauthenticated="true">

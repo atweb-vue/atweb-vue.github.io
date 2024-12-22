@@ -11,11 +11,27 @@ defineProps<{
 }>();
 
 const handle = ref('');
+const hash = ref('');
 const open = ref(false);
+
+let finishAuthentication: () => void = () => {};
+let cancelAuthentication: () => void = () => {};
+
+const codePasteOpen = ref(false);
 
 watchImmediate(user, user => {
     handle.value = user?.handle ?? '';
 });
+
+async function authenticate() {
+    authenticateIfNecessary(handle.value, () => {
+        return new Promise((resolve, reject) => {
+            finishAuthentication = () => resolve(hash.value);
+            cancelAuthentication = reject;
+            codePasteOpen.value = true;
+        });
+    });
+}
 
 </script>
 <template>
@@ -26,9 +42,19 @@ watchImmediate(user, user => {
         v-model="open"
         ok-text="Sign In"
         cancel-text="Cancel"
-        @ok="authenticateIfNecessary(handle).finally(() => open = false)"
+        @ok="authenticate()"
     >
         <VaInput v-model="handle" label="@handle" placeholder="e.g. you.bsky.social" />
+    </VaModal>
+    <VaModal
+        v-model="codePasteOpen"
+        ok-text="Complete Sign In"
+        cancel-text="Cancel"
+        @ok="finishAuthentication()"
+        @cancel="cancelAuthentication()"
+        @click-outside="cancelAuthentication()"
+    >
+        <VaInput v-model="hash" label="Input displayed code" />
     </VaModal>
 
 </template>

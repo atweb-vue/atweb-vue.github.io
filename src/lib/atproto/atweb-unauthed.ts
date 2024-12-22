@@ -264,6 +264,7 @@ async function *getMembershipStatuses(owner: string, members: IoGithubAtwebRing.
 
         yield {
             membership: uri,
+            mainPage: result.value?.mainPage ? new AtUri(result.value.mainPage) : undefined,
             isMember,
             isOwner,
         };

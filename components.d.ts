@@ -20,6 +20,7 @@ declare module 'vue' {
     'NewBlink.ce': typeof import('./src/components/custom-elements/NewBlink.ce.vue')['default']
     'OmitVanillaCss.ce': typeof import('./src/components/custom-elements/OmitVanillaCss.ce.vue')['default']
     'OnekoKitty.ce': typeof import('./src/components/custom-elements/OnekoKitty.ce.vue')['default']
+    'RingLink.ce': typeof import('./src/components/custom-elements/RingLink.ce.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SignInGate: typeof import('./src/components/SignInGate.vue')['default']
