@@ -1,10 +1,6 @@
 import { KittyAgent } from './kitty-agent';
-import { parseAtUri } from '../utils';
-import type { At, IoGithubAtwebFile, IoGithubAtwebRing } from '@atcute/client/lexicons';
-import { parse as parseMime } from 'file-type-mime';
-import { toString as ui8ToString, fromString as ui8FromString } from 'uint8arrays';
-import { user, type Account, type User } from './signed-in-user';
-import { getDidAndPds } from './pds-helpers';
+import type { At, IoGithubAtwebFile } from '@atcute/client/lexicons';
+import { user } from './signed-in-user';
 import { AtUri } from '@atproto/syntax';
 import { filepathToRkey } from './rkey';
 import { lookupMime } from '../mime';

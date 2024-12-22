@@ -1,7 +1,6 @@
-import { CredentialManager, simpleFetchHandler } from "@atcute/client";
+import { simpleFetchHandler } from "@atcute/client";
 import { KittyAgent } from "./kitty-agent";
 import type { At, IoGithubAtwebRing } from "@atcute/client/lexicons";
-import { parseAtUri } from "../utils";
 import { getDidAndPds } from "./pds-helpers";
 import type { Awaitable } from "@vueuse/core";
 import { AtUri } from "@atproto/syntax";
@@ -85,7 +84,7 @@ export async function getGetBlobUrl(
         const { pds } = await getDidAndPds(did);
         return formatGetBlobUrl(pds, did as At.DID, cid, useCdn);
     } else if (uri?.startsWith('at://')) {
-        const at = parseAtUri(uri as At.Uri);
+        const at = new AtUri(uri);
 
         const { did, pds } = await getDidAndPds(at.host);
 
