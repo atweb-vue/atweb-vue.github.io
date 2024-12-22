@@ -193,14 +193,14 @@ export async function getRingsUserIsAMemberOf(didOrHandle: string) {
         repo: didOrHandle,
     });
 
-    const rings: Array<Awaited<ReturnType<typeof getRing>>> = [];
+    const rings: Array<Awaited<ReturnType<typeof getRing>> & { mainPage: AtUri }> = [];
     for (const record of records) {
         const uri = new AtUri(record.value.ring);
 
         const entry = await tryGetRing(uri.host, uri.rkey);
 
         if (entry) {
-            rings.push(entry);
+            rings.push({...entry, mainPage: new AtUri(record.value.mainPage)});
         }
     }
 

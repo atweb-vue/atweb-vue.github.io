@@ -3,8 +3,9 @@ import SignInGate from '@/components/SignInGate.vue';
 import { getRing, getRingsUserIsAMemberOf } from '@/lib/atproto/atweb-unauthed';
 import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
 import { getDidAndPds } from '@/lib/atproto/pds-helpers';
+import { rkeyToFilepath } from '@/lib/atproto/rkey';
 import { user, type User } from '@/lib/atproto/signed-in-user';
-import { watchImmediateAsync } from '@/lib/vue-utils';
+import { resolveRoute, watchImmediateAsync } from '@/lib/vue-utils';
 import router from '@/router';
 import type { IoGithubAtwebRing } from '@atcute/client/lexicons';
 import { now as tidNow } from '@atcute/tid';
@@ -17,9 +18,9 @@ import { useModal } from 'vuestic-ui';
 
 type Ring = Awaited<ReturnType<typeof getRing>>;
 
-const rings = ref<Ring[]>();
+const rings = ref<(Ring & { mainPage: AtUri })[]>();
 const route = useRoute('/rings');
-const selectedRing = ref<Ring>();
+const selectedRing = ref<(Ring & { mainPage: AtUri })>();
 
 await watchImmediateAsync(
     [route, user],
@@ -190,6 +191,19 @@ function copyRingMdx(ring: Ring) {
             `<RingLink direction="next" ring-uri="${ring.uri.toString()}" self="${user.value!.did}">next</RingLink>`
     );
 }
+
+const mainPageLink = ref('');
+watch(selectedRing, selectedRing => {
+    if (!selectedRing) return;
+    mainPageLink.value = rkeyToFilepath(selectedRing.mainPage.rkey);
+});
+
+async function setMainPage(ring: (Ring & { mainPage: AtUri }), mainPageLink: string) {
+    user.value!.client.setMainPage(
+        ring.members.find(e => e.membership.host === user.value!.did)!.membership.rkey,
+        mainPageLink
+    );
+}
 </script>
 
 <template>
@@ -266,7 +280,14 @@ function copyRingMdx(ring: Ring) {
                 <p><b>{{ selectedRing.members?.length ?? 0 }}</b> member(s)</p>
                 <p>Managed by <a class="va-link" :href="`https://bsky.app/profile/${selectedRing.uri.host}`">@{{ getMemberName(selectedRing.uri) }}</a></p>
 
-                <VaButton @click="copyRingMdx(selectedRing)">Copy ring MDX code</VaButton>
+                <div class="va-gutter-2">
+                    <VaButton @click="copyRingMdx(selectedRing)">Copy ring MDX code</VaButton>
+                </div>
+
+                <div class="va-gutter-2">
+                    <VaInput v-model="mainPageLink" label="My main page"></VaInput>
+                    <VaButton @click="setMainPage(selectedRing, mainPageLink)" class="set-my-main-page-button">Set my main page</VaButton>
+                </div>
 
                 <div v-for="member in selectedRing.members" :key="member.membership.toString()" class="ring-member-card va-gutter-2">
                     <div class="va-gutter-2">
@@ -317,6 +338,10 @@ function copyRingMdx(ring: Ring) {
 }
 .ring-member-card:deep(.bluesky-embed) {
     margin: 0;
+}
+.set-my-main-page-button {
+    margin-left: 0.1rem;
+    vertical-align: text-top;
 }
 </style>
 

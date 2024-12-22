@@ -145,13 +145,34 @@ export class AtwebClient {
         await this.agent.put({
             collection: 'io.github.atweb.ringMembership',
             repo: this.user.did,
-            rkey: rkey,
+            rkey,
             record: {
                 $type: 'io.github.atweb.ringMembership',
                 createdAt: new Date().toISOString(),
                 ring: AtUri.make(inviterDid, 'io.github.atweb.ring', rkey).toString(),
                 mainPage: AtUri.make(this.user.did, 'io.github.atweb.page', filepathToRkey(mainPage)).toString(),
             }
+        });
+    }
+
+    async setMainPage(rkey: string, mainPage: string) {
+        const { value, cid } = await this.agent.get({
+            collection: 'io.github.atweb.ringMembership',
+            repo: this.user.did,
+            rkey,
+        });
+
+        await this.agent.put({
+            collection: 'io.github.atweb.ringMembership',
+            repo: this.user.did,
+            rkey,
+            record: {
+                $type: 'io.github.atweb.ringMembership',
+                ring: value.ring,
+                createdAt: value.createdAt,
+                mainPage: AtUri.make(this.user.did, 'io.github.atweb.page', filepathToRkey(mainPage)).toString(),
+            },
+            swapRecord: cid,
         });
     }
 }
