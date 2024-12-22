@@ -11,3 +11,7 @@ onBeforeUnmount(() => {
 
 // onBeforeUnmount(() =>)
 </script>
+
+<template>
+    <span></span>
+</template>
