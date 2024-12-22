@@ -1,4 +1,4 @@
-import { watchOnce, type MapOldSources } from '@vueuse/core';
+import { computedAsync, watchOnce, type MapOldSources } from '@vueuse/core';
 import {
     type Slot,
     type VNode,
@@ -15,6 +15,8 @@ import {
 } from 'vue';
 import type { ReactiveMarker } from '@vue/reactivity/dist/reactivity.d.ts';
 import { useRouter, type RouteLocationAsPath, type RouteLocationAsRelative, type RouteLocationAsString } from 'vue-router';
+import { pageMeta } from './shared-globals';
+import { getRelativeOrAbsoluteBlobUrl } from './component-helpers';
 
 export function getSlotChildrenText(
     children: Slot | VNode[] | VNodeArrayChildren | undefined,
@@ -120,4 +122,24 @@ export function resolveRoute(route: RouteLocationAsString | RouteLocationAsRelat
     const resolved = router.resolve(route);
     const absoluteURL = new URL(resolved.href, window.location.origin).href;
     return absoluteURL;
+}
+
+export function computedAtUrlProperty(src: string | undefined, elementName: string) {
+    return computedAsync(async () => {
+        if (!pageMeta.value) {
+            console.warn(`no pageMeta for ${elementName} ${src}`);
+            return;
+        }
+
+        try {
+            return await getRelativeOrAbsoluteBlobUrl(
+                src,
+                { path: pageMeta.value.filePath, repo: pageMeta.value.did },
+                true
+            );
+        } catch (err) {
+            console.warn(err);
+            return;
+        }
+    });
 }
