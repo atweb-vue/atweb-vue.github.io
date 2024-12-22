@@ -13,6 +13,7 @@ declare module 'vue' {
     'AtStyle.ce': typeof import('./src/components/custom-elements/AtStyle.ce.vue')['default']
     'AtWebStylesheet.ce': typeof import('./src/components/custom-elements/AtWebStylesheet.ce.vue')['default']
     'AtWebTitle.ce': typeof import('./src/components/custom-elements/AtWebTitle.ce.vue')['default']
+    copy: typeof import('./src/components/custom-elements/AtAnchor.ce copy.vue')['default']
     MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MModal: typeof import('./src/components/MModal.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
@@ -20,6 +21,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SignInGate: typeof import('./src/components/SignInGate.vue')['default']
+    SpotifyPlayer: typeof import('./src/components/custom-elements/SpotifyPlayer.vue')['default']
     VaButton: typeof import('vuestic-ui')['VaButton']
     'WebampPlayer.ce': typeof import('./src/components/custom-elements/WebampPlayer.ce.vue')['default']
   }

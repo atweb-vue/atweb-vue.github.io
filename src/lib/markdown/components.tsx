@@ -14,6 +14,7 @@ import AtWebTitle from '@/components/custom-elements/AtWebTitle.ce.vue';
 import { type Slot } from 'vue';
 import type { JSX } from 'vue/jsx-runtime';
 import WebampPlayer from '@/components/custom-elements/WebampPlayer.ce.vue';
+import SpotifyPlayer from '@/components/custom-elements/SpotifyPlayer.vue';
 
 type Props = Record<string, any>;
 
@@ -62,5 +63,6 @@ export const components: MDXComponents = {
     BlueskyProfileCard: 'bluesky-profile-card',
     BlueskyProfileFeed: 'bluesky-profile-feed',
     Webamp: WebampPlayer,
+    Spotify: SpotifyPlayer,
     ...(extraComponents as unknown as MDXComponents)
 };

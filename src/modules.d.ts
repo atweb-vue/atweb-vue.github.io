@@ -5,3 +5,5 @@ declare module '#webamp-lazy' {
     import Webamp from '@/external/webamp/built/types/js/webampLazy';
     export default Webamp;
 }
+
+declare module 'https://open.spotify.com/embed/iframe-api/v1';
