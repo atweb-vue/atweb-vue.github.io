@@ -1,2 +1,2 @@
-import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
+import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
 export default VueMonacoEditor;
