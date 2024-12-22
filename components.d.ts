@@ -7,15 +7,21 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    88x31Badge: typeof import('./src/components/custom-elements/88x31Badge.vue')['default']
     'AtAnchor.ce': typeof import('./src/components/custom-elements/AtAnchor.ce.vue')['default']
     'AtImg.ce': typeof import('./src/components/custom-elements/AtImg.ce.vue')['default']
     'AtLink.ce': typeof import('./src/components/custom-elements/AtLink.ce.vue')['default']
     'AtStyle.ce': typeof import('./src/components/custom-elements/AtStyle.ce.vue')['default']
     'AtWebStylesheet.ce': typeof import('./src/components/custom-elements/AtWebStylesheet.ce.vue')['default']
     'AtWebTitle.ce': typeof import('./src/components/custom-elements/AtWebTitle.ce.vue')['default']
+    copy: typeof import('./src/components/custom-elements/LesbiBadge.ce copy.vue')['default']
+    EightyEightThirtyOneBadge: typeof import('./src/components/custom-elements/EightyEightThirtyOneBadge.vue')['default']
+    'EightyEightThirtyOneBadge.ce': typeof import('./src/components/custom-elements/EightyEightThirtyOneBadge.ce.vue')['default']
+    'LesbiBadge.ce': typeof import('./src/components/custom-elements/LesbiBadge.ce.vue')['default']
     MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MModal: typeof import('./src/components/MModal.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+    'NewBlink.ce': typeof import('./src/components/custom-elements/NewBlink.ce.vue')['default']
     'OmitVanillaCss.ce': typeof import('./src/components/custom-elements/OmitVanillaCss.ce.vue')['default']
     'OnekoKitty.ce': typeof import('./src/components/custom-elements/OnekoKitty.ce.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

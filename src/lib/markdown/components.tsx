@@ -4,6 +4,9 @@ import 'bluesky-profile-feed-embed';
 
 import type { MDXComponents } from './mdx-types';
 
+import type { Slot } from 'vue';
+import type { JSX } from 'vue/jsx-runtime';
+
 import AtImg from '@/components/custom-elements/AtImg.ce.vue';
 import AtLink from '@/components/custom-elements/AtLink.ce.vue';
 import AtAnchor from '@/components/custom-elements/AtAnchor.ce.vue';
@@ -11,11 +14,12 @@ import AtWebStylesheet from '@/components/custom-elements/AtWebStylesheet.ce.vue
 import OmitVanillaCss from '@/components/custom-elements/OmitVanillaCss.ce.vue';
 import AtStyle from '@/components/custom-elements/AtStyle.ce.vue';
 import AtWebTitle from '@/components/custom-elements/AtWebTitle.ce.vue';
-import { type Slot } from 'vue';
-import type { JSX } from 'vue/jsx-runtime';
 import WebampPlayer from '@/components/custom-elements/WebampPlayer.ce.vue';
 import SpotifyPlayer from '@/components/custom-elements/SpotifyPlayer.vue';
 import OnekoKitty from '@/components/custom-elements/OnekoKitty.ce.vue';
+import NewBlink from '@/components/custom-elements/NewBlink.ce.vue';
+import LesbiBadge from '@/components/custom-elements/LesbiBadge.ce.vue';
+import EightyEightThirtyOneBadge from '@/components/custom-elements/EightyEightThirtyOneBadge.ce.vue';
 
 type Props = Record<string, any>;
 
@@ -66,5 +70,8 @@ export const components: MDXComponents = {
     Webamp: WebampPlayer,
     Spotify: SpotifyPlayer,
     Oneko: OnekoKitty,
+    blink: NewBlink,
+    LesbiBadge: LesbiBadge,
+    Badge: EightyEightThirtyOneBadge,
     ...(extraComponents as unknown as MDXComponents)
 };
