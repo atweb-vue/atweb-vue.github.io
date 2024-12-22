@@ -11,7 +11,7 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "lex": "pnpx tsx C:\\Users\\Maxine\\Documents\\GitHub\\atcute-lex-cli-ex\\src\\index.ts generate -o src/lib/lexicon.ts lexicons/*.yml lexicons/ziodotsh/**/*.json"
+    "lex": "tsx ../atcute-lex-cli-ex/src/index.ts generate -o src/lib/atproto/lexicon.ts lexicons/*.yml lexicons/ziodotsh/**/*.json"
   },
   "dependencies": {
     "@atcute/cid": "^1.0.2",
