@@ -1,57 +1,53 @@
 <script setup lang="ts">
-import { onBeforeUnmount, provide, ref, shallowRef, watch } from 'vue';
+import { inject, provide, ref, shallowRef } from 'vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
-import { downloadFile, getGetBlobUrl, type Page } from '@/lib/atproto/atweb-unauthed';
-import { onBeforeRouteLeave, useRoute } from 'vue-router';
+import { downloadFile, getGetBlobUrl, type Page, type PageMeta } from '@/lib/atproto/atweb-unauthed';
+import { useRoute } from 'vue-router';
 import { resolveHandleAnonymously } from '@/lib/atproto/handles/resolve';
-import { page, pageMeta, useVanillaCss } from '@/lib/shared-globals';
-import { watchImmediate } from '@vueuse/core';
 import { watchImmediateAsync } from '@/lib/vue-utils';
 import UsePico from '@/components/UsePico.vue';
 import { frameworkStyles } from '@/lib/framework-styles';
+import { pageKey, pageMetaKey } from '@/lib/injection-keys';
+
+const pageRef = shallowRef<Page>();
+const pageMetaRef = shallowRef<PageMeta>();
+provide(pageKey, pageRef);
+provide(pageMetaKey, pageMetaRef);
+
+const type = ref<'markdown' | 'pre' | 'image' | 'generic' | 'none'>('none');
+const contents = ref<string>('');
 
 const route = useRoute('/page/[handle]/[rkey]/');
 await watchImmediateAsync(
     route,
     async () => {
         const did = await resolveHandleAnonymously(route.params.handle as string);
-        page.value = await downloadFile(did, route.params.rkey as string);
-        pageMeta.value = page.value;
+
+        let page: Page;
+        pageRef.value = pageMetaRef.value = page = await downloadFile(did, route.params.rkey as string);
+
+        console.log('watched', page);
+
+        type.value = 'none';
+        contents.value = '';
+
+        if (page.bodyOriginal.mimeType === 'text/mdx') {
+            console.log('setting md');
+            type.value = 'markdown';
+            contents.value = page.blobString;
+            console.log('set md');
+        } else if (page.bodyOriginal.mimeType.startsWith('image/')) {
+            type.value = 'image';
+            contents.value = await getGetBlobUrl(page.uri, true);
+        } else if (page.bodyOriginal.mimeType.startsWith('text/')) {
+            type.value = 'pre';
+            contents.value = page.blobString;
+        } else {
+            type.value = 'generic';
+            contents.value = await getGetBlobUrl(page.uri);
+        }
     },
 );
-
-onBeforeRouteLeave(() => {
-    page.value = undefined;
-    pageMeta.value = page.value;
-});
-
-const type = ref<'markdown' | 'pre' | 'image' | 'generic' | 'none'>('none');
-const contents = ref<string>('');
-
-await watchImmediateAsync(page, async page => {
-    console.log('watched', page);
-
-    if (page === undefined) return;
-
-    type.value = 'none';
-    contents.value = '';
-
-    if (page.bodyOriginal.mimeType === 'text/mdx') {
-        console.log('setting md');
-        type.value = 'markdown';
-        contents.value = page.blobString;
-        console.log('set md');
-    } else if (page.bodyOriginal.mimeType.startsWith('image/')) {
-        type.value = 'image';
-        contents.value = await getGetBlobUrl(page.uri, true);
-    } else if (page.bodyOriginal.mimeType.startsWith('text/')) {
-        type.value = 'pre';
-        contents.value = page.blobString;
-    } else {
-        type.value = 'generic';
-        contents.value = await getGetBlobUrl(page.uri);
-    }
-});
 
 const adoptedStyleSheet = new CSSStyleSheet();
 adoptedStyleSheet.replace(frameworkStyles);
@@ -72,7 +68,7 @@ adoptedStyleSheet.replace(frameworkStyles);
         <img v-else-if="type == 'image'" :src="contents" />
         <pre v-else-if="type == 'pre'">{{ contents }}</pre>
         <a v-else-if="type == 'generic'" :href="contents">
-            Unknown file type <code>{{ page?.bodyOriginal.mimeType }}</code>.
+            Unknown file type <code>{{ inject(pageKey)?.bodyOriginal.mimeType }}</code>.
             Click to download blob.
         </a>
     </div>

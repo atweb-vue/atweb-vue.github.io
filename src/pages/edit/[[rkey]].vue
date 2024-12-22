@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, reactive, ref, shallowRef, watch } from 'vue';
+import { computed, provide, reactive, ref, shallowRef, watch } from 'vue';
 import type { editor } from 'monaco-editor';
 import { themeNames, themes } from '@/lib/monaco/themes';
 import { user, waitForInitialSession } from '@/lib/atproto/signed-in-user';
 import SignInGate from '@/components/SignInGate.vue';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
 import type { IoGithubAtwebFile } from '@atcute/client/lexicons';
-import { downloadFile } from '@/lib/atproto/atweb-unauthed';
+import { downloadFile, Page, type PageMeta } from '@/lib/atproto/atweb-unauthed';
 import { filepathToRkey, rkeyToFilepath } from '@/lib/atproto/rkey';
 import * as monaco from 'monaco-editor';
 import type { AtUri } from '@atproto/syntax';
@@ -16,9 +16,10 @@ import MonacoEditor from '@/components/MonacoEditor.vue';
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue';
 import { useRoute, useRouter } from 'vue-router';
 import UsePico from '@/components/UsePico.vue';
-import { pageMeta, useVanillaCss } from '@/lib/shared-globals';
+import { useVanillaCss } from '@/lib/shared-globals';
 import { frameworkStyles } from '@/lib/framework-styles';
 import { ShadowRoot } from 'vue-shadow-dom';
+import { pageKey, pageMetaKey } from '@/lib/injection-keys';
 
 for (const [themeName, theme] of Object.entries(themes)) {
     // console.log(themeName, theme);
@@ -36,19 +37,18 @@ const MONACO_EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
     contextmenu: true,
 };
 
+const pageRef = shallowRef<Page>();
+const pageMetaRef = shallowRef<PageMeta>();
+provide(pageKey, pageRef);
+provide(pageMetaKey, pageMetaRef);
+
 const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
 const editorValue = ref('');
+const editorLanguage = ref('plaintext');
 const submitted = ref(false);
 
 function onMonacoMount(editor: editor.IStandaloneCodeEditor) {
     editorRef.value = editor;
-
-    editorRef.value.onDidChangeModelContent(() => {
-        const value = editorRef.value!.getValue();
-        if (value !== editorValue.value) {
-            editorValue.value = value;
-        }
-    });
 }
 
 // your action
@@ -111,36 +111,31 @@ async function setActiveFile(file: IoGithubAtwebFile.Record & { uri: AtUri }) {
 
     if (!user.value) return;
 
-    const page = await downloadFile(user.value.did, file.uri.rkey);
-    pageMeta.value = page;
-    editorRef.value!.setValue(page.blobString);
+    const page = pageRef.value = pageMetaRef.value = await downloadFile(user.value.did, file.uri.rkey);
+    editorValue.value = page.blobString;
     router.push({ params: { rkey: file.uri.rkey }});
 }
 
-watchImmediate(useRoute('/edit/[[rkey]]'), async route => {
-    if (route.params.rkey) {
-        const filePath = rkeyToFilepath(route.params.rkey);
-        if (activeFile.value != route.params.rkey) {
-            activeFile.value = filePath;
+const route = useRoute('/edit/[[rkey]]');
+if (route.params.rkey) {
+    const filePath = rkeyToFilepath(route.params.rkey);
+    if (activeFile.value != route.params.rkey) {
+        activeFile.value = filePath;
 
-            await waitForInitialSession();
+        await waitForInitialSession();
 
-            if (user.value) {
-                const page = await downloadFile(user.value.did, route.params.rkey);
-                pageMeta.value = page;
-                editorRef.value!.setValue(page.blobString);
-            }
+        if (user.value) {
+            const page = pageRef.value = pageMetaRef.value = await downloadFile(user.value.did, route.params.rkey);
+            editorValue.value = page.blobString;
         }
     }
-});
+}
 
-watch(activeFile, activeFile => {
-    monaco.editor.setModelLanguage(
-        editorRef.value!.getModel()!,
-        activeFile ? lookupMime(activeFile) ?? 'mdx' : 'plaintext'
-    );
+watchImmediate(activeFile, activeFile => {
+    editorLanguage.value = activeFile ? lookupMime(activeFile) ?? 'mdx' : 'plaintext';
     if (user) {
-        pageMeta.value = {
+        pageRef.value = undefined;
+        pageMetaRef.value = {
             did: user.value!.did,
             filePath: activeFile,
         };
@@ -190,7 +185,13 @@ await adoptedStyleSheet.replace(frameworkStyles);
                 </div>
             </UsePico>
 
-            <MonacoEditor editor-style="height: calc(100vh - 115.5px - 86.6px)" v-on:mount="onMonacoMount" :editor-options="MONACO_EDITOR_OPTIONS" />
+            <MonacoEditor
+                editor-style="height: calc(100vh - 115.5px - 86.6px)"
+                v-on:mount="onMonacoMount"
+                :editor-options="MONACO_EDITOR_OPTIONS"
+                :language="editorLanguage"
+                v-model:text="editorValue"
+            />
         </div>
         <div class="right" style="min-width: 25vw;" v-if="isMarkdownFile">
             <div style="padding: 1rem; max-height: calc(100vh - 115.5px); overflow: auto;">

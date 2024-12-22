@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import type { editor } from 'monaco-editor';
-import { onBeforeUnmount, onMounted, shallowRef, useTemplateRef } from 'vue';
+import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
 import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api';
-import * as monaco from 'monaco-editor';
+const monaco = await import('monaco-editor');
 // import { activateMarkers, activateAutoInsertion, registerProviders } from '@volar/monaco';
 
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
-import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
-import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-// import mdxWorker from '@/lib/monaco/mdx-lang-server.worker?worker';
-// import type { WorkerLanguageService } from '@volar/monaco/worker';
+const { default: editorWorker } = await import('monaco-editor/esm/vs/editor/editor.worker?worker');
+const { default: jsonWorker } = await import('monaco-editor/esm/vs/language/json/json.worker?worker');
+const { default: cssWorker } = await import('monaco-editor/esm/vs/language/css/css.worker?worker');
+const { default: htmlWorker } = await import('monaco-editor/esm/vs/language/html/html.worker?worker');
+const { default: tsWorker } = await import('monaco-editor/esm/vs/language/typescript/ts.worker?worker');
 
 export type MonacoEditor = typeof monacoEditor;
 
@@ -29,9 +27,6 @@ self.MonacoEnvironment = {
         if (label === 'typescript' || label === 'javascript') {
             return new tsWorker();
         }
-        // if (label === 'mdx') {
-        //     return new mdxWorker();
-        // }
         return new editorWorker();
     }
 };
@@ -42,50 +37,51 @@ const props = defineProps<{
     onBeforeMount?: () => void,
     onMount?: (editor: editor.IStandaloneCodeEditor) => void,
     editorOptions?: editor.IStandaloneEditorConstructionOptions,
+    language: string,
 }>();
+
+const text = defineModel<string>('text', { default: '' });
 
 const editorElement = useTemplateRef('editorElement');
 const editorRef = shallowRef<editor.IStandaloneCodeEditor>();
+const isEditorReady = computed(() => !!editorRef.value);
+const model = computed(() => isEditorReady.value ? editorRef.value!.getModel() : undefined);
+
+watch(() => props.language, language => {
+    if (isEditorReady.value) {
+        monaco.editor.setModelLanguage(editorRef.value!.getModel()!, language);
+    }
+});
+
+watch(text, text => {
+    if (model.value?.getValue() != text) {
+        model.value?.setValue(text);
+    }
+});
 
 onMounted(() => {
     if (!editorElement.value) throw new Error('wtf');
 
-    // monaco.languages.register({ id: 'mdx', extensions: ['.mdx'], mimetypes: ['text/mdx'] });
-
-    // monaco.languages.onLanguage('mdx', () => {
-    //     const worker = monaco.editor.createWebWorker<WorkerLanguageService>({
-    //         moduleId: 'vs/language/my-lang/myLangWorker',
-    //         label: 'mdx',
-    //     });
-    //     activateMarkers(
-    //         worker,
-    //         ['mdx'],
-    //         'mdx-markers-owner',
-    //         // sync files
-    //         () => [],
-    //         monaco.editor
-    //     );
-    //     // auto close tags
-    //     activateAutoInsertion(
-    //         worker,
-    //         ['mdx'],
-    //         // sync files
-    //         () => [],
-    //         monaco.editor
-    //     );
-    //     registerProviders(worker, ['mdx'], () => [], monaco.languages);
-    // });
-
     props.onBeforeMount?.();
+
     editorRef.value = monaco.editor.create(editorElement.value!, props.editorOptions);
+    monaco.editor.setModelLanguage(model.value!, props.language);
+    model.value!.setValue(text.value);
+
+    editorRef.value.onDidChangeModelContent(() => {
+        const value = editorRef.value!.getValue();
+        if (value !== text.value) {
+            text.value = value;
+        }
+    });
+
     props.onMount?.(editorRef.value);
 });
 
 onBeforeUnmount(() => {
+    editorRef.value?.getModel()?.dispose();
     editorRef.value?.dispose();
 });
-
-// height: calc(100vh - 69.6px - 68px)
 </script>
 
 <template>

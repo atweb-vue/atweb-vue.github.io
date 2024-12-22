@@ -12,11 +12,12 @@ import {
     type MultiWatchSources,
     type WatchHandle,
     type Reactive,
+    inject,
 } from 'vue';
 import type { ReactiveMarker } from '@vue/reactivity/dist/reactivity.d.ts';
 import { useRouter, type RouteLocationAsPath, type RouteLocationAsRelative, type RouteLocationAsString } from 'vue-router';
-import { pageMeta } from './shared-globals';
 import { getRelativeOrAbsoluteBlobUrl } from './component-helpers';
+import { pageMetaKey } from './injection-keys';
 
 export function getSlotChildrenText(
     children: Slot | VNode[] | VNodeArrayChildren | undefined,
@@ -125,8 +126,10 @@ export function resolveRoute(route: RouteLocationAsString | RouteLocationAsRelat
 }
 
 export function computedAtUrlProperty(src: string | undefined, elementName: string, useCdn = false) {
+    const pageMeta = inject(pageMetaKey);
+
     return computedAsync(async () => {
-        if (!pageMeta.value) {
+        if (!pageMeta?.value) {
             console.warn(`no pageMeta for ${elementName} ${src}`);
             return;
         }
