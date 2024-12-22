@@ -1,4 +1,5 @@
 # atweb-vue
+Welcome to @web! Take a look around!
 
 ### Custom Elements
 * `<blink>[text]</blink>`: Blinking text.
