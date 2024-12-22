@@ -1,0 +1,66 @@
+{
+    "lexicon": 1,
+    "id": "io.github.atweb.file",
+    "defs": {
+        "main": {
+            "type": "record",
+            "key": "any",
+            "description": "A file on atweb.",
+            "record": {
+                "type": "object",
+                "required": [
+                    "body",
+                    "filePath",
+                    "createdAt",
+                    "modifiedAt"
+                ],
+                "properties": {
+                    "body": {
+                        "type": "blob",
+                        "description": "The contents of the file."
+                    },
+                    "filePath": {
+                        "type": "string",
+                        "description": "The path to the file inside the vault."
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "A descriptive title for the file, if any."
+                    },
+                    "icon": {
+                        "type": "string",
+                        "description": "Link to a remote icon image for the file, if any."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "File description, if any."
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Tags for the file, if any."
+                    },
+                    "aliases": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Aliases for the file, if any."
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "description": "This record's creation date."
+                    },
+                    "modifiedAt": {
+                        "type": "string",
+                        "format": "datetime",
+                        "description": "The file's creation or modification date."
+                    }
+                }
+            }
+        }
+    }
+}
