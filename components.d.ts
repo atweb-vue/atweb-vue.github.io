@@ -20,5 +20,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SignInGate: typeof import('./src/components/SignInGate.vue')['default']
+    VaButton: typeof import('vuestic-ui')['VaButton']
+    'WebampPlayer.ce': typeof import('./src/components/custom-elements/WebampPlayer.ce.vue')['default']
   }
 }

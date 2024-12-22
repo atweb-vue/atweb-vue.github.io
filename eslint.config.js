@@ -8,7 +8,7 @@ import skipFormatting from '@vue/eslint-config-prettier/skip-formatting';
 const rules = [
     {
         rules: {
-            '@typescript-eslint/no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': 'warn',
             '@typescript-eslint/no-explicit-any': 'off',
             'semi': ['warn', 'always']
         },

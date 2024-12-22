@@ -13,6 +13,7 @@ import AtStyle from '@/components/custom-elements/AtStyle.ce.vue';
 import AtWebTitle from '@/components/custom-elements/AtWebTitle.ce.vue';
 import { h, type Slot } from 'vue';
 import type { JSX } from 'vue/jsx-runtime';
+import WebampPlayer from '@/components/custom-elements/WebampPlayer.ce.vue';
 
 type Props = Record<string, any>;
 
@@ -23,7 +24,7 @@ interface Context {
 
 const extraComponents: Record<
     string,
-    (props: Props, context: Context,) => JSX.Element
+    (props: Props, context: Context) => JSX.Element
 > = {
     h1: (_, { slots }) => <h1 class="va-h1">{slots.default()}</h1>,
     h2: (_, { slots }) => <h2 class="va-h2">{slots.default()}</h2>,
@@ -52,5 +53,6 @@ export const components: MDXComponents = {
     BlueskyPost: 'bluesky-post',
     BlueskyProfileCard: 'bluesky-profile-card',
     BlueskyProfileFeed: 'bluesky-profile-feed',
+    Webamp: WebampPlayer,
     ...(extraComponents as unknown as MDXComponents)
 };
