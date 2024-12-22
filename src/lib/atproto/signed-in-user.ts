@@ -97,10 +97,16 @@ function isTokenUsable({ token }: Session): boolean {
     return expires == null || Date.now() + 60_000 <= expires;
 }
 
-export function authenticateOnStartup() {
-    if (account.value) { // automatically sign in if possible
-        authenticateIfNecessary(account.value.handle, true)
-            .then(result =>
-                console.log(`early authentication complete: ${result}`));
+let initialSessionPromise: Promise<void> | undefined;
+export async function waitForInitialSession() {
+    if (!initialSessionPromise) {
+        initialSessionPromise = (async () => {
+            if (account.value) { // automatically sign in if possible
+                const result = await authenticateIfNecessary(account.value.handle, true);
+                console.log(`early authentication complete: ${result}`);
+            }
+        })();
     }
+
+    await initialSessionPromise;
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRouter } from 'vue-router';
-import { authenticateOnStartup } from './lib/atproto/signed-in-user';
+import { waitForInitialSession } from './lib/atproto/signed-in-user';
 import { ref, watch } from 'vue';
 import { useVanillaCss } from './lib/shared-globals';
 import { frameworkStyles } from './lib/framework-styles';
@@ -14,7 +14,7 @@ watch(router.currentRoute, route => {
     useVanillaCss.value = true;
 });
 
-authenticateOnStartup();
+waitForInitialSession();
 
 </script>
 
