@@ -101,27 +101,57 @@ export class AtwebClient {
         return { ...result, uri: new AtUri(result.uri) };
     }
 
-    async updateRing(
+    async updateRingMembers(
         rkey: string,
-        ring: IoGithubAtwebRing.Record,
+        memberships: (string | AtUri | { membership: AtUri; })[],
         swapRecord?: string,
     ) {
+        const { value } = await this.agent.get({
+            collection: 'io.github.atweb.ring',
+            repo: this.user.did,
+            rkey,
+            cid: swapRecord,
+        });
+
         await this.agent.put({
             collection: 'io.github.atweb.ring',
             repo: this.user.did,
             rkey,
-            record: ring,
+            record: {
+                ...value,
+                members: memberships.map(e => ({
+                    membership: typeof e !== 'string' && 'membership' in e
+                        ? e.membership.toString()
+                        : e.toString()
+                }))
+            },
             swapRecord
         });
     }
 
     async deleteRing(
-        rkey: string
+        rkey: string,
+        swapRecord?: string,
     ) {
         await this.agent.delete({
             collection: 'io.github.atweb.ring',
             repo: this.user.did,
             rkey,
+            swapRecord,
+        });
+    }
+
+    async acceptInvite(inviterDid: string, rkey: string, mainPage: string) {
+        await this.agent.put({
+            collection: 'io.github.atweb.ringMembership',
+            repo: this.user.did,
+            rkey: rkey,
+            record: {
+                $type: 'io.github.atweb.ringMembership',
+                createdAt: new Date().toISOString(),
+                ring: AtUri.make(inviterDid, 'io.github.atweb.ring', rkey).toString(),
+                mainPage: AtUri.make(this.user.did, 'io.github.atweb.page', filepathToRkey(mainPage)).toString(),
+            }
         });
     }
 }

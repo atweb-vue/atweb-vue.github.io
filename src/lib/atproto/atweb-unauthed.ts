@@ -5,6 +5,7 @@ import { parseAtUri } from "../utils";
 import { getDidAndPds } from "./pds-helpers";
 import type { Awaitable } from "@vueuse/core";
 import { AtUri } from "@atproto/syntax";
+import { resolveHandleAnonymously } from "./handles/resolve";
 
 const unauthedAgent = new KittyAgent({ handler: simpleFetchHandler({ service: 'https://bsky.social' }) });
 
@@ -186,56 +187,50 @@ export async function downloadFile(did: At.DID, rkey: string): Promise<Page> {
     };
 }
 
-export async function getManagedRings(didOrHandle: string) {
-    const { records } = await unauthedAgent.list({
-        collection: 'io.github.atweb.ring',
-        repo: didOrHandle,
-    });
-
-    return records.map(record => ({
-        ...record.value,
-        uri: new AtUri(record.uri),
-    }));
-}
-
 export async function getRingsUserIsAMemberOf(didOrHandle: string) {
     const { records } = await unauthedAgent.list({
         collection: 'io.github.atweb.ringMembership',
         repo: didOrHandle,
     });
 
-    const rings: Array<IoGithubAtwebRing.Record & { uri: AtUri }> = [];
+    const rings: Array<Awaited<ReturnType<typeof getRing>>> = [];
     for (const record of records) {
         const uri = new AtUri(record.value.ring);
-        if (uri.host === didOrHandle) continue;
 
-        const entry = await unauthedAgent.tryGet({
-            collection: 'io.github.atweb.ring',
-            repo: uri.host,
-            rkey: uri.rkey,
-        });
+        const entry = await tryGetRing(uri.host, uri.rkey);
 
-        if (entry.value) {
-            rings.push({
-                ...entry.value,
-                uri: new AtUri(entry.uri),
-            });
+        if (entry) {
+            rings.push(entry);
         }
     }
 
     return rings;
 }
 
-export async function getMemberRings(didOrHandle: string) {
-    const { records } = await unauthedAgent.list({
+async function arrayFromAsync<T>(generator: AsyncIterable<T>): Promise<T[]> {
+    const arr: T[] = [];
+    for await (const e of generator) {
+        arr.push(e);
+    }
+    return arr;
+}
+
+export async function tryGetRing(repo: string, rkey: string) {
+    const result = await unauthedAgent.tryGet({
         collection: 'io.github.atweb.ring',
-        repo: didOrHandle,
+        repo,
+        rkey,
     });
 
-    return records.map(record => ({
-        ...record.value,
-        uri: new AtUri(record.uri),
-    }));
+    if (!result.value) return undefined;
+
+    return {
+        name: result.value.name,
+        createdAt: result.value.createdAt,
+        members: await arrayFromAsync(getMembershipStatuses(repo, result.value.members ?? [])),
+        cid: result.cid,
+        uri: new AtUri(result.uri),
+    };
 }
 
 export async function getRing(repo: string, rkey: string) {
@@ -244,9 +239,34 @@ export async function getRing(repo: string, rkey: string) {
         repo,
         rkey,
     });
+
     return {
-        ...result.value,
+        name: result.value.name,
+        createdAt: result.value.createdAt,
+        members: await arrayFromAsync(getMembershipStatuses(repo, result.value.members ?? [])),
         cid: result.cid,
         uri: new AtUri(result.uri),
     };
 }
+
+async function *getMembershipStatuses(owner: string, members: IoGithubAtwebRing.Member[]) {
+    owner = await resolveHandleAnonymously(owner);
+
+    for (const member of members) {
+        const uri = new AtUri(member.membership);
+        const result = await unauthedAgent.tryGet({
+            collection: 'io.github.atweb.ringMembership',
+            repo: uri.host,
+            rkey: uri.rkey,
+        });
+        const isMember = !!result.value;
+        const isOwner = isMember && uri.host === owner;
+
+        yield {
+            membership: uri,
+            isMember,
+            isOwner,
+        };
+    }
+}
+

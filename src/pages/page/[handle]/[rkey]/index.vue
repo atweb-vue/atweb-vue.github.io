@@ -8,7 +8,7 @@ import { page } from '@/lib/shared-globals';
 import { watchImmediate } from '@vueuse/core';
 import { watchImmediateAsync } from '@/lib/vue-utils';
 
-const route = useRoute();
+const route = useRoute('/page/[handle]/[rkey]/');
 await watchImmediateAsync(
     route,
     async () => {
