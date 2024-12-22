@@ -6,7 +6,7 @@ import { user, waitForInitialSession } from '@/lib/atproto/signed-in-user';
 import SignInGate from '@/components/SignInGate.vue';
 import { language as mdxLang, conf as mdxLangConf } from '@/lib/monaco/mdx-lang';
 import type { IoGithubAtwebFile } from '@atcute/client/lexicons';
-import { downloadFile, Page, type PageMeta } from '@/lib/atproto/atweb-unauthed';
+import { downloadFile, type Page, type PageMeta } from '@/lib/atproto/atweb-unauthed';
 import { filepathToRkey, rkeyToFilepath } from '@/lib/atproto/rkey';
 import * as monaco from 'monaco-editor';
 import type { AtUri } from '@atproto/syntax';

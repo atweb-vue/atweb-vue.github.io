@@ -68,7 +68,7 @@ adoptedStyleSheet.replace(frameworkStyles);
         <img v-else-if="type == 'image'" :src="contents" />
         <pre v-else-if="type == 'pre'">{{ contents }}</pre>
         <a v-else-if="type == 'generic'" :href="contents">
-            Unknown file type <code>{{ inject(pageKey)?.bodyOriginal.mimeType }}</code>.
+            Unknown file type <code>{{ inject(pageKey)?.value?.bodyOriginal.mimeType }}</code>.
             Click to download blob.
         </a>
     </div>
