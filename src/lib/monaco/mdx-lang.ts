@@ -118,8 +118,8 @@ export const language = {
                 /^\s*export/,
                 { token: 'keyword', next: '@export', nextEmbedded: 'js' },
             ],
-            [/<\w+/, { token: 'type.identifier', next: '@jsx' }],
-            [/<\/?\w+>/, 'type.identifier'],
+            [/<[\w\-]+/, { token: 'type.identifier', next: '@jsx' }],
+            [/<\/?[\w\-]+>/, 'type.identifier'],
             [
                 /^(\s*)(>*\s*)(#{1,6}\s)/,
                 [
