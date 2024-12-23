@@ -50,7 +50,6 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    vuestic: ['vuestic-ui'],
                     monaco: ['monaco-editor'],
                 }
             }
