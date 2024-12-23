@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 import { authenticateIfNecessary, user } from '@/lib/atproto/signed-in-user';
 import { watchImmediate } from '@vueuse/core';
-import { VaButton, VaInput, VaModal } from 'vuestic-ui';
 
 defineProps<{
     signInButtonClass?: string;
