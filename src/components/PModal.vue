@@ -18,10 +18,10 @@ const open = defineModel({
             <slot v-if="open"></slot>
 
             <footer>
-                <button class="secondary" @click="ev => onClickCancel?.(ev)" v-if="!hideOk">
+                <button class="secondary" @click="ev => onClickCancel?.(ev)" v-if="!hideCancel">
                     {{ cancelText ?? 'Cancel' }}
                 </button>
-                <button @click="ev => onClickOk?.(ev)" v-if="!hideCancel">
+                <button @click="ev => onClickOk?.(ev)" v-if="!hideOk">
                     {{ okText ?? 'OK' }}
                 </button>
             </footer>
