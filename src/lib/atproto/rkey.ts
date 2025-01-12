@@ -23,11 +23,10 @@ export function filepathToRkey(filepath: string) {
         // regex excludes : and _ because we use those as control characters
         // regex excludes ~ because using it gives us internal server error
         .replace(/[^A-Za-z0-9.\-]/g, $$ => {
-            if ($$ == '\\' || $$ == '/') {
+            if ($$ === '\\' || $$ === '/') {
                 return ':';
-            } else {
-                return `_${$$.charCodeAt(0).toString(36)}_`;
             }
+            return `_${$$.charCodeAt(0).toString(36)}_`;
         });
 
     filepath = filepath.toLowerCase();
