@@ -190,7 +190,7 @@ export async function downloadFile(did: At.DID, rkey: string): Promise<Page> {
 }
 
 export async function getRingsUserIsAMemberOf(didOrHandle: string) {
-    const { records } = await unauthedAgent.list({
+    const { records } = await unauthedAgent.paginatedList({
         collection: 'io.github.atweb.ringMembership',
         repo: didOrHandle,
     });

@@ -17,7 +17,7 @@ export class AtwebClient {
     }
 
     async listFiles(): Promise<(IoGithubAtwebFile.Record & { uri: AtUri })[]> {
-        const files = await this.agent.list({
+        const files = await this.agent.paginatedList({
             collection: 'io.github.atweb.file',
             repo: this.user.did,
         });
