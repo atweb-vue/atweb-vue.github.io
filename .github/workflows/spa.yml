@@ -60,7 +60,7 @@ jobs:
           pnpm run build-only
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v5
         with:
           # Upload entire repository
           path: './dist'
